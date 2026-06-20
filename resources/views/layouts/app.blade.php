@@ -29,7 +29,10 @@
 
             <!-- Page Content -->
             <main>
-                {{ $slot }}
+                @isset($slot)
+                    {{ $slot }}
+                @endisset
+                @yield('content')
             </main>
         </div>
     </body>
