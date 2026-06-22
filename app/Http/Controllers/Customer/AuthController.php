@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\OtpVerification;
+use App\Services\OtpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -17,21 +19,39 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required',
             'phone' => 'required|unique:customers',
             'password' => 'required|min:8',
         ]);
-        Customer::create([
+        
+        $customer = Customer::create([
             'name' => $request->name,
             'phone' => $request->phone,
             'password' => Hash::make(
                 $request->password
             ),
         ]);
-        return redirect(
-            '/customer/login'
+        
+        $otp = random_int(
+            100000,
+            999999
         );
+        
+        OtpVerification::create([
+            'customer_id' => $customer->id,
+            'otp' => $otp,
+            'expired_at' => now()->addMinutes(5)
+        ]);
+        
+        $otpSent = OtpService::send(
+            $customer->phone,
+            $otp
+        );
+        
+        return redirect(
+            '/customer/verify'
+        )->with('phone', $customer->phone);
     }
 
     public function loginForm()
@@ -45,6 +65,19 @@ class AuthController extends Controller
             'phone' => $request->phone,
             'password' => $request->password
         ];
+        $customer = Customer::where(
+            'phone',
+            $request->phone
+        )->first();
+        if (
+            !$customer->is_verified
+        ) {
+            return back()
+                ->withErrors([
+                    'phone' =>
+                    'Nomor belum diverifikasi'
+                ]);
+        }
         if (
             Auth::guard('customer')
             ->attempt($credentials)

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Customer\AuthController;
+use App\Http\Controllers\OtpController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -8,9 +9,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard-test', function () {
-    return view('dashboard-test');
-});
+// Route::get('/dashboard-test', function () {
+//     return view('dashboard-test');
+// });
 
 Route::get(
     '/customer/register',
@@ -21,6 +22,21 @@ Route::post(
     '/customer/register',
     [AuthController::class, 'register']
 )->name('customer.register');
+
+Route::get(
+    '/customer/verify',
+    [OtpController::class, 'form']
+)->name('customer.verify');
+
+Route::post(
+    '/customer/verify',
+    [OtpController::class, 'verify']
+)->name('customer.verify.otp');
+
+Route::get(
+    '/customer/resend-otp',
+    [OtpController::class, 'resend']
+)->name('customer.resend-otp');
 
 Route::get(
     '/customer/login',
@@ -50,7 +66,7 @@ Route::middleware(['customer'])
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('dashboard-test');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware([
@@ -77,6 +93,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Test role
 Route::middleware([
     'auth',
     'role:admin',

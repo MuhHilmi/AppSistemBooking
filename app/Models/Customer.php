@@ -17,4 +17,11 @@ class Customer extends Authenticatable
         'password',
         'remember_token'
     ];
+
+    public function otps()
+    {
+        return $this->hasMany(
+            OtpVerification::class
+        );
+    }
 }
