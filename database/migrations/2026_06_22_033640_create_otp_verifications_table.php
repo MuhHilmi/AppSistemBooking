@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('otp_verifications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customers_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('customers_id')->constrained('customers')->cascadeOnDelete();
             $table->string('otp');
             $table->timestamp('expired_at');
             $table->boolean('is_used')->default(false);

@@ -28,6 +28,9 @@
 
         <form method="POST" action="{{ route('customer.verify.otp') }}" class="space-y-4">
             @csrf
+            @if(session('phone'))
+                <input type="hidden" name="phone" value="{{ session('phone') }}">
+            @endif
             <div>
                 <label class="block text-sm mb-1">
                     Kode OTP

@@ -39,7 +39,7 @@ class AuthController extends Controller
         );
         
         OtpVerification::create([
-            'customer_id' => $customer->id,
+            'customers_id' => $customer->id,
             'otp' => $otp,
             'expired_at' => now()->addMinutes(5)
         ]);
