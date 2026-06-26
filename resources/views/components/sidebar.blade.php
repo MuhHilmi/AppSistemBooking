@@ -8,12 +8,12 @@
         
             <ul class="mt-5">
                 <li>
-                    <a href="#" class="block px-4 py-2 hover:bg-slate-700">
+                    <a href="{{ route('dashboard') }}" class="block px-4 py-2 hover:bg-slate-700">
                         Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="block px-4 py-2 hover:bg-slate-700">
+                    <a href="{{ route('venues.index') }}" class="block px-4 py-2 hover:bg-slate-700">
                         Venue
                     </a>
                 </li>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Customer\AuthController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VenueController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -85,6 +86,8 @@ Route::middleware([
     Route::get('/owner/dashboard', function () {
         return view('owner.dashboard');
     })->name('owner.dashboard');
+
+    Route::resource('venues', VenueController::class);
 });
 
 Route::middleware('auth')->group(function () {
