@@ -7,9 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class OtpVerification extends Model
 {
     protected $fillable = [
-        'customer_id',
+        'customers_id',
         'otp',
-        'expider_at',
+        'expired_at',
         'is_used'
     ];
+
+    public function customer()
+    {
+        return $this->belongsTo(
+            Customer::class,
+            'customers_id'
+        );
+    }
 }

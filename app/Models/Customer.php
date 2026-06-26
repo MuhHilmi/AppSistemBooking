@@ -21,7 +21,8 @@ class Customer extends Authenticatable
     public function otps()
     {
         return $this->hasMany(
-            OtpVerification::class
+            OtpVerification::class,
+            'customers_id'
         );
     }
 }

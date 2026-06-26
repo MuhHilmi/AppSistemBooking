@@ -18,10 +18,32 @@ class OtpController extends Controller
 
     public function verify(Request $request)
     {
-        $otp = OtpVerification::where(
-            'otp',
-            $request->otp
-        )->where('is_used', false)->latest()->first();
+        $request->validate([
+            'otp' => 'required',
+            'phone' => 'nullable|string'
+        ]);
+
+        $phone = session('phone') ?? $request->input('phone');
+
+        if (!$phone) {
+            return back()->withErrors([
+                'otp' => 'Informasi nomor tidak ditemukan. Silakan minta ulang OTP.'
+            ]);
+        }
+
+        $customer = Customer::where('phone', $phone)->first();
+
+        if (!$customer) {
+            return back()->withErrors([
+                'otp' => 'Nomor tidak ditemukan.'
+            ]);
+        }
+
+        $otp = OtpVerification::where('customers_id', $customer->id)
+            ->where('otp', $request->otp)
+            ->where('is_used', false)
+            ->latest()
+            ->first();
 
         if (!$otp)
         {
@@ -38,7 +60,8 @@ class OtpController extends Controller
                     'otp' => 'OTP sudah kadaluarsa'
                 ]);
         }
-        $otp->customer->update([
+
+        $customer->update([
             'is_verified' => true
         ]);
         $otp->update([
@@ -57,7 +80,7 @@ class OtpController extends Controller
         $customer = Customer::where('phone', $request->phone)->first();
         
         $latestOtp = OtpVerification::where(
-            'customer_id',
+            'customers_id',
             $customer->id
         )->latest()->first();
 
@@ -70,7 +93,7 @@ class OtpController extends Controller
         $otp = random_int(100000, 999999);
         
         OtpVerification::create([
-            'customer_id' => $customer->id,
+            'customers_id' => $customer->id,
             'otp' => $otp,
             'expired_at' => now()->addMinutes(5)
         ]);
