@@ -1,0 +1,1 @@
+<input type="text" name="search" value="{{ request('search') }}" placeholder="Cari lapangan..." class="border rounded-lg px-4 py-2 w-full">

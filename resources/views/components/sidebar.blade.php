@@ -18,7 +18,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="block px-4 py-2 hover:bg-slate-700">
+                    <a href="{{ route('fields.index') }}" class="block px-4 py-2 hover:bg-slate-700">
                         Lapangan
                     </a>
                 </li>

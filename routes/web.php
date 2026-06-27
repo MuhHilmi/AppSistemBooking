@@ -4,6 +4,7 @@ use App\Http\Controllers\Customer\AuthController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VenueController;
+use App\Http\Controllers\FieldController;
 use Illuminate\Support\Facades\Route;
 
 // Route Guest
@@ -76,7 +77,7 @@ Route::prefix('owner')
     ->group(function () {
     Route::get('/owner/dashboard', function () {
         return view('owner.dashboard');
-    })->name('owner.dashboard');
+    })->name('dashboard');
 
     Route::get('/test', function () {
         return 'Owner';
@@ -84,8 +85,10 @@ Route::prefix('owner')
 });
 
 // Route Venues Management using role Owner
-Route::middleware(['auth', 'role:owner'])->group(function () {
+Route::middleware(['auth', 'role:owner'])
+    ->group(function () {
     Route::resource('venues', VenueController::class);
+    Route::resource('fields', FieldController::class);
 });
 
 // Route Profile
