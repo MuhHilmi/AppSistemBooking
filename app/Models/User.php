@@ -39,4 +39,9 @@ class User extends Authenticatable
     {
         return $this->role === 'owner';
     }
+
+    public function venues()
+    {
+        return $this->hasMany(Venue::class, 'owner_id');
+    }
 }
