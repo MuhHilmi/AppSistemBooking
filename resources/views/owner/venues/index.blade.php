@@ -12,36 +12,24 @@
     </a>
 </div>
 
-@foreach ($venues as $venue)
-    <div class="grid grid-rows-2 gap-2 items-center">
-        <div>
-            <h1>{{ $venue->name }}</h1>
-            <p>{{ $venue->address }}</p>
-            <div class="flex flex-row gap-4">
-                <div>
-                    <a href="{{ route('venues.show', $venue) }}" class="inline-flex items-center py-2 px-4 bg-green-500 hover:bg-green-700 transition rounded-md font-semibold text-white">
-                        View
-                    </a>
-                </div>
-                <div>
-                    <a
-                        href="{{ route('venues.edit', $venue) }}"
-                        class="inline-flex items-center py-2 px-4 bg-gray-500 hover:bg-gray-700 transition rounded-md font-semibold text-white">
-                        Edit
-                    </a>
-                </div>
-                <div>
-                    <form action="{{ route('venues.destroy', $venue) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" onclick="return confirm('Apakah anda yakin untuk menghapus?')" class="inline-flex items-center py-2 px-4 bg-red-500 hover:bg-red-700 transition rounded-md font-semibold text-white">
-                            Hapus
-                        </button>
-                    </form>
-                </div>
-            </div>
+<div class="container mx-auto px-4 py-5">
+    @if(session('success'))
+        <div class="mb-4 rounded-lg bg-green-100 p-4 text-center text-green-700">
+            {{ session('success') }}
         </div>
-    </div>
-@endforeach
+    @endif
+
+    @if($venues->count())
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            @foreach($venues as $venue)
+                @include('owner.venues.partial.venue-partial', ['item' => $venue])
+            @endforeach
+        </div>
+    @else
+        <div class="py-10 text-center text-gray-500">
+            Belum ada venue.
+        </div>
+    @endif
+</div>
 
 @endsection
