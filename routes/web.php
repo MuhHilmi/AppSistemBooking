@@ -6,117 +6,93 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VenueController;
 use Illuminate\Support\Facades\Route;
 
+// Route Guest
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Route::get('/dashboard-test', function () {
-//     return view('dashboard-test');
-// });
+// Route Customer
+Route::prefix('customer')
+    ->name('customer.')
+    ->group(function() {
+    Route::get('/register', [AuthController::class, 'registerForm'])
+        ->name('register.form');
 
-Route::get(
-    '/customer/register',
-    [AuthController::class, 'registerForm']
-);
+    Route::post('/register', [AuthController::class, 'register'])
+        ->name('register');
 
-Route::post(
-    '/customer/register',
-    [AuthController::class, 'register']
-)->name('customer.register');
+    Route::get('/verify', [OtpController::class, 'form'])
+        ->name('verify');
 
-Route::get(
-    '/customer/verify',
-    [OtpController::class, 'form']
-)->name('customer.verify');
+    Route::post('/verify', [OtpController::class, 'verify'])
+        ->name('verify.otp');
 
-Route::post(
-    '/customer/verify',
-    [OtpController::class, 'verify']
-)->name('customer.verify.otp');
+    Route::get('/resend-otp', [OtpController::class, 'resend'])
+        ->name('resend-otp');
 
-Route::get(
-    '/customer/resend-otp',
-    [OtpController::class, 'resend']
-)->name('customer.resend-otp');
+    Route::get('/login', [AuthController::class, 'loginForm'])
+        ->name('login.form');
 
-Route::get(
-    '/customer/login',
-    [AuthController::class, 'loginForm']
-);
+    Route::post('/login', [AuthController::class, 'login'])
+        ->name('login');
 
-Route::post(
-    '/customer/login',
-    [AuthController::class, 'login']
-)->name('customer.login');
+    Route::post('/logout', [AuthController::class, 'logout'])
+        ->name('logout');
 
-Route::post(
-    '/customer/logout',
-    [AuthController::class, 'logout']
-);
-
-Route::middleware(['customer'])
-->group(function(){
-    Route::get(
-        '/customer/dashboard',
-        function () {
-            return view(
-                'customer.dashboard'
-            );
-        }
-    );
+    Route::middleware(['customer'])->group(function(){
+        Route::get('/dashboard',function () {
+            return view('customer.dashboard');
+        })->name('dashboard');
+    });
 });
 
+// Route verifikasi auth
 Route::get('/dashboard', function () {
     return view('dashboard-test');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware([
-    'auth',
-    'role:admin',
-])->group(function () {
-    Route::get('/admin/dashboard', function () {
+// Route Admin
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['auth', 'role:admin'])
+    ->group(function () {
+    Route::get('/dashboard', function () {
         return view('admin.dashboard');
-    })->name('admin.dashboard');
+    })->name('dashboard');
+
+    Route::get('/test', function () {
+        return 'Super Admin';
+    })->name('test');
+
+    Route::get('/', function () {
+        return view('admin');
+    })->name('index');
 });
 
-Route::middleware([
-    'auth',
-    'role:owner',
-])->group(function () {
+// Route Owner
+Route::prefix('owner')
+    ->name('owner.')
+    ->middleware(['auth','role:owner',])
+    ->group(function () {
     Route::get('/owner/dashboard', function () {
         return view('owner.dashboard');
     })->name('owner.dashboard');
 
+    Route::get('/test', function () {
+        return 'Owner';
+    })->name('test');
+});
+
+// Route Venues Management using role Owner
+Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::resource('venues', VenueController::class);
 });
 
+// Route Profile
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-// Test role
-Route::middleware([
-    'auth',
-    'role:admin',
-])->group(function () {
-    Route::get('/admin-test', function () {
-        return 'Super Admin';
-    });
-});
-
-Route::middleware([
-    'auth',
-    'role:owner',
-])->group(function () {
-    Route::get('/owner-test', function () {
-        return 'Owner';
-    });
-});
-
-Route::get('/admin', function () {
-    return view('admin');
-})->middleware(['auth', 'role:admin']);
 
 require __DIR__.'/auth.php';
