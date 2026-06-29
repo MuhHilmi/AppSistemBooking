@@ -207,7 +207,7 @@ class FieldController extends Controller
         ]);
 
         return redirect()
-            ->route('owner.fields.index')
+            ->route('fields.index')
             ->with(
                 'success',
                 'Lapangan berhasil diperbarui.'

@@ -26,7 +26,7 @@
                         {{ $field->name }}
                     </h2>
                     <p class="text-gray-500">
-                        {{ $field->sport_type }}
+                        {{ ucwords($field->sport_type) }}
                     </p>
                     <div class="mt-4 space-y-2">
                         <div class="flex justify-between">
