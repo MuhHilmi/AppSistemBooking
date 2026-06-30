@@ -3,3 +3,33 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import "tailwindcss";
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    overflow-x:hidden;
+}
+
+section{
+    @apply py-24;
+}
+
+.container-custom{
+    @apply mx-auto max-w-7xl px-6 lg:px-8;
+}
+
+nav a{
+
+    @apply duration-300;
+
+}
+
+nav a:hover{
+
+    @apply text-green-600;
+
+}
