@@ -24,4 +24,11 @@ class Field extends Model
             Venue::class
         );
     }
+
+    public function operatingSchedules()
+    {
+        return $this->hasMany(
+            OperatingSchedule::class
+        );
+    }
 }
