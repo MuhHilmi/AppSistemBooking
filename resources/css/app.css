@@ -4,32 +4,28 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "tailwindcss";
+@import 'tailwindcss';
 
-html{
-    scroll-behavior:smooth;
+html {
+    scroll-behavior: smooth;
 }
 
-body{
-    overflow-x:hidden;
+body {
+    overflow-x: hidden;
 }
 
-section{
+section {
     @apply py-24;
 }
 
-.container-custom{
+.container-custom {
     @apply mx-auto max-w-7xl px-6 lg:px-8;
 }
 
-nav a{
-
+nav a {
     @apply duration-300;
-
 }
 
-nav a:hover{
-
+nav a:hover {
     @apply text-green-600;
-
 }

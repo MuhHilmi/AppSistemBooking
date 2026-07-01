@@ -1,6 +1,6 @@
-@extends('layouts.dashboard')
+@extends ('layouts.dashboard')
 
-@section('content')
+@section ('content')
 
 <div class="max-w-5xl mx-auto px-4 py-6">
 

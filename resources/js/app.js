@@ -1,5 +1,3 @@
-
-
 import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
@@ -12,27 +10,17 @@ import 'bootstrap';
 const button = document.getElementById('scrollTop');
 
 window.addEventListener('scroll', () => {
-
-    if(window.scrollY > 300){
-
+    if (window.scrollY > 300) {
         button.classList.remove('hidden');
-
-    }else{
-
+    } else {
         button.classList.add('hidden');
-
     }
-
 });
 
 button?.addEventListener('click', () => {
-
     window.scrollTo({
+        top: 0,
 
-        top:0,
-
-        behavior:'smooth'
-
+        behavior: 'smooth',
     });
-
 });
