@@ -5,6 +5,7 @@ use App\Http\Controllers\OtpController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VenueController;
 use App\Http\Controllers\FieldController;
+use App\Http\Controllers\OperatingScheduleController;
 use Illuminate\Support\Facades\Route;
 
 // Route Guest
@@ -79,20 +80,29 @@ Route::prefix('owner')
     ->name('owner.')
     ->middleware(['auth','role:owner',])
     ->group(function () {
-    Route::get('/owner/dashboard', function () {
+    Route::get('/dashboard', function () {
         return view('owner.dashboard');
     })->name('dashboard');
 
     Route::get('/test', function () {
         return 'Owner';
     })->name('test');
+
+    Route::get('/fields/{field}/operating-schedules',
+        [OperatingScheduleController::class, 'edit']
+    )->name('operating-schedules.edit');
+
+    Route::put('/fields/{field}/operating-schedules',
+        [OperatingScheduleController::class, 'update']
+    )->name('operating-schedules.update');
 });
 
-// Route Venues Management using role Owner
+// Route Venues Management, Fields, and Operating-Schedules using role Owner
 Route::middleware(['auth', 'role:owner'])
     ->group(function () {
     Route::resource('venues', VenueController::class);
     Route::resource('fields', FieldController::class);
+    Route::resource('operating-schedules', OperatingScheduleController::class);
 });
 
 // Route Profile

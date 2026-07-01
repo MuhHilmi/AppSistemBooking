@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Field;
 use App\Models\Venue;
+use App\Models\OperatingSchedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -115,7 +116,7 @@ class FieldController extends Controller
                 ->store('fields', 'public');
         }
 
-        Field::create([
+        $field = Field::create([
             'venue_id'=>$request->venue_id,
             'name'=>$request->name,
             'slug'=>Str::slug($request->name),
@@ -126,6 +127,16 @@ class FieldController extends Controller
             'thumbnail'=>$thumbnail,
             'status'=>$request->status
         ]);
+
+        for ($day = 1; $day <= 7; $day++) {
+            OperatingSchedule::create([
+                'field_id'    => $field->id,
+                'day_of_week' => $day,
+                'open_time'   => '08:00',
+                'close_time'  => '22:00',
+                'is_open'     => true,
+            ]);
+        }
 
         return redirect()
         ->route('fields.index')

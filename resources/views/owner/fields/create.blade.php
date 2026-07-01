@@ -70,8 +70,7 @@
                                 'futsal',
                                 'badminton',
                                 'basket',
-                                'mini Soccer',
-                                'tenis',
+                                'tennis',
                                 'voli'
                             ] as $sport)
                                     <option
