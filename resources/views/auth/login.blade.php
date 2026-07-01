@@ -32,16 +32,17 @@
             </label>
         </div>
 
-        <div class="block mt-4">
-            <label for="register" class="inline-flex items-center">Register</label>
-        </div>
-
         <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
                 <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
                     {{ __('Forgot your password?') }}
                 </a>
             @endif
+
+            <a href="{{ route('register') }}"
+                class="ms-3 px-3 py-1 border-2 rounded-md hover:bg-gray-100 transition-colors">
+                Register
+            </a>
 
             <x-primary-button class="ms-3">
                 {{ __('Log in') }}
