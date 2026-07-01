@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Route;
 
 // Route Guest
 Route::get('/', function () {
+    return view('landing.index');
+});
+
+Route::get('/laravel', function () {
     return view('welcome');
 });
 
