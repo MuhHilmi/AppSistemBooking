@@ -43,12 +43,18 @@
             {{-- Desktop Button --}}
             <div class="hidden lg:flex items-center gap-3">
                 @if (Route::has('customer.login'))
-                    @auth('customer')
-                        <a href="{{ route('customer.dashboard') }}" class="rounded-xl px-6 py-3 border border-slate-300 hover:border-green-500 hover:text-green-600 transition">
+                    @auth ('customer')
+                        <a
+                            href="{{ route('customer.dashboard') }}"
+                            class="rounded-xl px-6 py-3 border border-slate-300 hover:border-green-500 hover:text-green-600 transition"
+                        >
                             Dashboard
                         </a>
-                        @else
-                        <a href="{{ route('customer.login') }}" class="rounded-xl px-6 py-3 border border-slate-300 hover:border-green-500 hover:text-green-600 transition">
+                    @else
+                        <a
+                            href="{{ route('customer.login') }}"
+                            class="rounded-xl px-6 py-3 border border-slate-300 hover:border-green-500 hover:text-green-600 transition"
+                        >
                             Login
                         </a>
                     @endauth

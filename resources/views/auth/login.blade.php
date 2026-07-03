@@ -60,14 +60,14 @@
                 </a>
             @endif
 
-            <a href="{{ route('register') }}"
-                class="ms-3 px-3 py-1 border-2 rounded-md hover:bg-gray-100 transition-colors">
+            <a
+                href="{{ route('register') }}"
+                class="ms-3 px-3 py-1 border-2 rounded-md hover:bg-gray-100 transition-colors"
+            >
                 Register
             </a>
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
+            <x-primary-button class="ms-3"> {{ __('Log in') }} </x-primary-button>
         </div>
     </form>
 </x-guest-layout>
