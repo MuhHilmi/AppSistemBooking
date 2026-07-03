@@ -42,15 +42,20 @@
 
             {{-- Desktop Button --}}
             <div class="hidden lg:flex items-center gap-3">
-                <a
-                    href="{{ route('login') }}"
-                    class="rounded-xl px-5 py-2.5 border border-slate-300 hover:border-green-500 hover:text-green-600 transition"
-                >
-                    Login
-                </a>
+                @if (Route::has('customer.login'))
+                    @auth('customer')
+                        <a href="{{ route('customer.dashboard') }}" class="rounded-xl px-6 py-3 border border-slate-300 hover:border-green-500 hover:text-green-600 transition">
+                            Dashboard
+                        </a>
+                        @else
+                        <a href="{{ route('customer.login') }}" class="rounded-xl px-6 py-3 border border-slate-300 hover:border-green-500 hover:text-green-600 transition">
+                            Login
+                        </a>
+                    @endauth
+                @endif
 
                 <a
-                    href="{{ route('register') }}"
+                    href="{{ route('customer.register') }}"
                     class="rounded-xl bg-green-600 text-white px-6 py-3 font-medium shadow-lg hover:bg-green-700 transition"
                 >
                     Booking Sekarang
