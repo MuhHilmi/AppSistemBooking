@@ -34,11 +34,15 @@
                 </div>
             @endforeach
         </div>
-        <form action="{{ route('customer.bookings.store', $field) }}" method="POST" id="booking-form">
+        <form
+            action="{{ route('customer.bookings.store', $field) }}"
+            method="POST"
+            id="booking-form"
+        >
             @csrf
-            <input type="hidden" name="field_id" value="{{ $field->id }}">
-            <input type="hidden" id="selected-start-time" name="start_time">
-            <input type="hidden" id="selected-end-time" name="end_time">
+            <input type="hidden" name="field_id" value="{{ $field->id }}" />
+            <input type="hidden" id="selected-start-time" name="start_time" />
+            <input type="hidden" id="selected-end-time" name="end_time" />
             <div class="mt-4">
                 <label class="block font-medium mb-2"> Pilih Tanggal </label>
                 <input
@@ -103,8 +107,7 @@
                         </button>
                     `;
                 } else {
-                    container.innerHTML +=
-                    `
+                    container.innerHTML += `
                     <div
                         class="text-center w-full rounded-lg border border-red-300 bg-red-50 text-red-600 p-3 mb-2">
                         ${slot.start} - ${slot.end}<br>
@@ -117,7 +120,7 @@
 
         function selectSlot(button) {
             // Remove active class from all buttons
-            document.querySelectorAll('.slot-btn').forEach(btn => {
+            document.querySelectorAll('.slot-btn').forEach((btn) => {
                 btn.classList.remove('bg-green-50', 'border-green-500');
                 btn.classList.add('border-green-500');
             });
@@ -132,7 +135,7 @@
         }
 
         // Form validation
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', function (e) {
             if (!startTimeInput.value || !endTimeInput.value) {
                 e.preventDefault();
                 alert('Silakan pilih slot waktu terlebih dahulu');
