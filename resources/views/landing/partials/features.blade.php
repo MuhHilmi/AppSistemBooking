@@ -25,7 +25,7 @@
                     class="overflow-hidden rounded-3xl border border-slate-200 bg-slate-100 shadow-lg"
                 >
                     <img
-                        src="https://placehold.co/800x550/F8FAFC/94A3B8?text=Dashboard+Preview"
+                        src="https://picsum.photos/500"
                         alt="Dashboard"
                         class="w-full"
                     />

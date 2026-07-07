@@ -79,7 +79,7 @@
                 >
                     {{-- Image --}}
                     <img
-                        src="https://placehold.co/700x450/F1F5F9/94A3B8?text=Lapangan"
+                        src="https://picsum.photos/600"
                         alt="{{ $field['name'] }}"
                         class="h-56 w-full object-cover"
                     />
