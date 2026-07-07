@@ -31,4 +31,8 @@ class Field extends Model
             OperatingSchedule::class
         );
     }
+
+    public function bookings() {
+        return $this->hasMany(Booking::class);
+    }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VenueController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\OperatingScheduleController;
+use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Route;
 
 // Route Guest
@@ -49,6 +50,11 @@ Route::prefix('customer')
         Route::get('/dashboard',function () {
             return view('customer.dashboard');
         })->name('dashboard');
+        Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+        Route::get('/bookings/{field}/create', [BookingController::class, 'create'])->name('bookings.create');
+        Route::post('/bookings/{field}', [BookingController::class, 'store'])->name('bookings.store');
+        Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
+        Route::get('/bookings/{field}/slots', [BookingController::class, 'availableSlots'])->name('bookings.slots');
     });
 });
 

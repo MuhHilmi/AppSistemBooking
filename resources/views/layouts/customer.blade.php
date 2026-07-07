@@ -28,7 +28,9 @@
                         Dashboard
                     </a>
 
-                    <a href="#" class="block p-3 rounded-lg hover:bg-indigo-50"> Cari Lapangan </a>
+                    <a href="/customer/bookings" class="block p-3 rounded-lg hover:bg-indigo-50">
+                        Cari Lapangan
+                    </a>
 
                     <a href="#" class="block p-3 rounded-lg hover:bg-indigo-50"> Booking Saya </a>
 
@@ -56,5 +58,7 @@
             @yield ('content')
         </main>
     </div>
+
+    @stack ('script')
 </body>
 </html>
