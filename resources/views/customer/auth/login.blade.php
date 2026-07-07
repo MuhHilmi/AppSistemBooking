@@ -1,7 +1,7 @@
 @extends ('layouts.guest')
 
 @section ('content')
-    <div class="min-h-screen flex items-center justify-center bg-gray-50">
+    <div class="flex items-center justify-center bg-gray-50">
         <div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
             <div class="text-center mb-8">
                 <h1 class="text-3xl font-bold text-indigo-600">Booking Lapangan</h1>
