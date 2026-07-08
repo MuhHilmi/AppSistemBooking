@@ -107,10 +107,7 @@
                 Login
             </a>
 
-            <a
-                href="{{ route('register') }}"
-                class="block text-center rounded-lg bg-green-600 py-3 text-white"
-            >
+            <a href="{{ route('register') }}" class="block text-center rounded-lg bg-green-600 py-3 text-white">
                 Booking Sekarang
             </a>
         </div>

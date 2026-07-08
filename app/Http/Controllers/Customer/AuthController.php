@@ -16,7 +16,6 @@ class AuthController extends Controller
     {
         return view('customer.auth.register');
     }
-
     public function register(Request $request)
     {
         $validated = $request->validate([
@@ -24,7 +23,6 @@ class AuthController extends Controller
             'phone' => 'required|unique:customers',
             'password' => 'required|min:8',
         ]);
-        
         $customer = Customer::create([
             'name' => $request->name,
             'phone' => $request->phone,
@@ -32,23 +30,19 @@ class AuthController extends Controller
                 $request->password
             ),
         ]);
-        
         $otp = random_int(
             100000,
             999999
         );
-        
         OtpVerification::create([
             'customers_id' => $customer->id,
             'otp' => $otp,
             'expired_at' => now()->addMinutes(5)
         ]);
-        
         $otpSent = OtpService::send(
             $customer->phone,
             $otp
         );
-        
         return redirect(
             '/customer/verify'
         )->with('phone', $customer->phone);
@@ -56,7 +50,7 @@ class AuthController extends Controller
 
     public function loginForm()
     {
-        return view('customer.auth.login');
+        return view('customer.auth.login-register');
     }
 
     public function login(Request $request)
