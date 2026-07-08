@@ -26,7 +26,10 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('operating-schedules.index') }}" class="block px-4 py-2 hover:bg-slate-700">
+                    <a
+                        href="{{ route('operating-schedules.index') }}"
+                        class="block px-4 py-2 hover:bg-slate-700"
+                    >
                         Jadwal Operasional
                     </a>
                 </li>

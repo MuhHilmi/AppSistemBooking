@@ -80,7 +80,7 @@
                 {{-- Main Mockup --}}
                 <div class="overflow-hidden rounded-3xl border border-white/60 bg-white shadow-2xl">
                     <img
-                        src="https://placehold.co/900x650/F8FAFC/94A3B8?text=Dashboard+Booking+Lapangan"
+                        src="{{ asset('/img/field/FutsalArenaorStadium.jpeg') }}"
                         alt="Dashboard"
                         class="w-full"
                     />

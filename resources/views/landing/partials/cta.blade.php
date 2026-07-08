@@ -1,4 +1,4 @@
-<section class="relative overflow-hidden py-24">
+<section id="contact" class="relative overflow-hidden py-24">
     {{-- Background --}}
     <div class="absolute inset-0 bg-gradient-to-r from-green-600 to-emerald-600"></div>
 

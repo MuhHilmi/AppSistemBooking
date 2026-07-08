@@ -3,3 +3,6 @@ vendor
 storage
 bootstrap/cache
 public/build
+.agents
+.claude
+.github
