@@ -43,7 +43,7 @@
             {{-- Desktop Button --}}
             <div class="hidden lg:flex items-center gap-3">
                 <a
-                    href="{{ route('login') }}"
+                    href="{{ route('customer.login') }}"
                     class="rounded-xl px-5 py-2.5 border border-slate-300 hover:border-green-500 hover:text-green-600 transition"
                 >
                     Login
@@ -96,10 +96,7 @@
                 Login
             </a>
 
-            <a
-                href="{{ route('register') }}"
-                class="block text-center rounded-lg bg-green-600 py-3 text-white"
-            >
+            <a href="{{ route('register') }}" class="block text-center rounded-lg bg-green-600 py-3 text-white">
                 Booking Sekarang
             </a>
         </div>
