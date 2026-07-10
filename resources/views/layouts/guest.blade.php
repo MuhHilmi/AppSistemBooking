@@ -14,7 +14,11 @@
 
 <body class="min-h-screen bg-emerald-50">
     <main class="min-h-screen">
+        @isset($slot)
         {{ $slot }}
+        @endisset
+
+            @yield('content')
     </main>
 </body>
 
