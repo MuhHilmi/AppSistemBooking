@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\OtpVerification;
 use App\Models\Customer;
 use App\Services\OtpService;
+use Illuminate\Support\Facades\Log;
 
 class OtpController extends Controller
 {
@@ -98,7 +99,25 @@ class OtpController extends Controller
             'expired_at' => now()->addMinutes(5)
         ]);
 
-        OtpService::send($customer->phone, $otp);
+        $otpSent = OtpService::send($customer->phone, $otp);
+
+        if (!$otpSent) {
+            Log::warning('Failed to send OTP via Fonnte', [
+                'customer_id' => $customer->id,
+                'phone' => $customer->phone,
+                'otp' => $otp
+            ]);
+
+            return back()->withErrors([
+                'phone' => 'Gagal mengirim OTP. Silakan coba lagi nanti.'
+            ]);
+        }
+
+        Log::info('OTP resent successfully', [
+            'customer_id' => $customer->id,
+            'phone' => $customer->phone,
+            'otp' => $otp
+        ]);
 
         return back()->with('success', 'OTP telah dikirim ulang ke nomor Anda.');
     }
