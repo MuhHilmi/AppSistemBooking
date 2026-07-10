@@ -2,7 +2,7 @@
 <div x-data="{ isLogin: true }" class="auth-background min-h-screen flex items-center">
     <div class="auth-container w-full">
         <div class="auth-card soft-shadow overflow-hidden">
-            <div class="relative flex min-h-[720px] overflow-hidden">
+            <div class="relative min-h-[720px] overflow-hidden">
                 {{-- IMAGE PANEL --}}
                 <section id="imagePanel" class="hidden lg:block absolute top-0 bottom-0 w-1/2 transition-all duration-700 ease-in-out" :class="isLogin ? 'left-0' : 'left-1/2'">
                     {{-- nanti di Part 3 akan dibuat animasi --}}
@@ -34,15 +34,7 @@
                 {{-- FORM PANEL --}}
                 <div class="flex w-full">
                     {{-- Login Form --}}
-                    <section id="formPanel" class="w-full lg:w-1/2 flex items-center justify-center p-10 lg:p-16 transition-all duration-700" 
-                        x-cloak
-                        x-show="isLogin"
-                        x-transition:enter="transition ease-out duration-500"
-                        x-transition:enter-start="opacity-0 translate-x-10"
-                        x-transition:enter-end="opacity-100 translate-x-0"
-                        x-transition:leave="transition ease-in duration-300"
-                        x-transition:leave-start="opacity-100 translate-x-0"
-                        x-transition:leave-end="opacity-0 -translate-x-10">
+                    <section id="formPanel" class="absolute inset-y-0 left-0 w-full lg:w-1/2 flex items-center justify-center p-10 lg:p-16 transition-all duration-700 z-20" :class="isLogin ? 'translate-x-full opacity-100' : '-translate-x-full opacity-0 pointer-events-none'">
                         <div class="w-full max-w-md">
                             {{-- Logo --}}
                             <div class="flex items-center gap-3">
@@ -107,16 +99,7 @@
                         </div>
                     </section>
                     {{-- Register Form --}}
-                    <section
-                        class="w-full lg:w-1/2 flex items-center justify-center p-10 lg:p-16"
-                        x-cloak
-                        x-show="!isLogin"
-                        x-transition:enter="transition ease-out duration-500"
-                        x-transition:enter-start="opacity-0 -translate-x-10"
-                        x-transition:enter-end="opacity-100 translate-x-0"
-                        x-transition:leave="transition ease-in duration-300"
-                        x-transition:leave-start="opacity-100 translate-x-0"
-                        x-transition:leave-end="opacity-0 translate-x-10">
+                    <section class="absolute inset-y-0 left-0 w-full lg:w-1/2 flex items-center justify-center p-10 lg:p-16 transition-all duration-700 z-10" :class="isLogin ? 'translate-x-[200%] opacity-0 pointer-events-none' : 'translate-x-0 opacity-100'">
                         <div class="w-full max-w-md">
                             <div class="mb-10">
                                 <h1 class="section-title">
