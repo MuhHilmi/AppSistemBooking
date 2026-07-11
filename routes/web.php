@@ -47,9 +47,7 @@ Route::prefix('customer')
         ->name('logout');
 
     Route::middleware(['customer'])->group(function(){
-        Route::get('/dashboard',function () {
-            return view('customer.dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', [BookingController::class, 'dashboardView']) -> name('bookings.dashboardView');
         Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
         Route::get('/bookings/{field}/create', [BookingController::class, 'create'])->name('bookings.create');
         Route::post('/bookings/{field}', [BookingController::class, 'store'])->name('bookings.store');

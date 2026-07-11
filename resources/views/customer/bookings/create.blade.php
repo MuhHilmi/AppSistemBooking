@@ -43,6 +43,11 @@
             <input type="hidden" name="field_id" value="{{ $field->id }}" />
             <input type="hidden" id="selected-start-time" name="start_time" />
             <input type="hidden" id="selected-end-time" name="end_time" />
+            <input type="hidden" name="booking_date" id="booking_date_hidden">
+            <div class="mt-6">
+                <label for="notes">Catatan</label>
+                <textarea name="notes" id="notes" rows="4" class="w-full rounded-lg border"></textarea>
+            </div>
             <div class="mt-4">
                 <label class="block font-medium mb-2"> Pilih Tanggal </label>
                 <input
@@ -54,9 +59,20 @@
                 />
                 <div id="slot-container" class="mt-8"></div>
             </div>
+            <div>
+                <input
+                    type="hidden"
+                    name="start_time"
+                    id="start-time">
+
+                <input
+                    type="hidden"
+                    name="end_time"
+                    id="end-time">
+            </div>
             <div class="flex justify-end mt-8">
                 <button type="submit" class="px-6 py-3 bg-indigo-600 text-white rounded-lg">
-                    Lanjut Pilih Slot
+                    Booking
                 </button>
             </div>
         </form>
@@ -98,7 +114,8 @@
                 if (slot.available) {
                     container.innerHTML += `
                         <button
-                            class="slot-btn w-full rounded-lg border border-green-500 p-3 mb-2 hover:bg-green-50"
+                            type="button"
+                            class="slot-btn w-full rounded-lg border border-green-500 p-3 mb-2 hover:bg-indigo-50 hover:text-black transition"
                             data-start="${slot.start}"
                             data-end="${slot.end}"
                             onclick="selectSlot(this)"
@@ -117,6 +134,18 @@
                 }
             });
         }
+
+        document.addEventListener('click', function(e){
+            if(!e.target.classList.contains('slot-btn')){
+                return;
+            }
+            document.querySelectorAll('.slot-btn').forEach(button => {
+                button.classList.remove('bg-indigo-600', 'text-white');
+            });
+            e.target.classList.add('bg-indigo-600', 'text-white');
+            document.getElementById('start-time').value = e.target.dataset.start;
+            document.getElementById('end-time').value = e.target.dataset.end;
+        });
 
         function selectSlot(button) {
             // Remove active class from all buttons

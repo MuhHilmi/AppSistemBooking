@@ -10,6 +10,7 @@
     @endif
     <div class="p-5">
         <h2 class="text-xl font-semibold">{{ $field -> venue -> name }}</h2>
+        <p class="text-lg">Lapang {{ $field -> name }}</p>
         <p class="text-gray-500">{{ ucwords($field -> sport_type) }}</p>
         <div class="mt-4">
             <span class="text-2xl font-bold">

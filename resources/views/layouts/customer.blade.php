@@ -22,8 +22,6 @@
                 </div>
 
                 <div class="p-4 space-y-2">
-                    <a href="/" class="block p-3 rounded-lg hover:bg-indigo-50"> Halaman Utama </a>
-
                     <a href="/customer/dashboard" class="block p-3 rounded-lg hover:bg-indigo-50">
                         Dashboard
                     </a>

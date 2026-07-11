@@ -26,7 +26,8 @@
             <div class="space-y-6">
                 <div>
                     <h2 class="text-xl font-bold mb-2">{{ $booking->field->venue->name }}</h2>
-                    <p class="text-gray-600">{{ $booking->field->sport_type }}</p>
+                    <p class="text-lg font-semibold">Lapang: {{ $booking -> field -> name }}</p>
+                    <p class="text-gray-600">Tipe Lapang: {{ ucwords($booking->field->sport_type) }}</p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">

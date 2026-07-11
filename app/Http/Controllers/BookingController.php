@@ -21,6 +21,16 @@ class BookingController extends Controller
         return view('customer.bookings.index', compact('fields'));
     }
 
+    public function dashboardView() {
+        $customer = Auth::guard('customer') -> user();
+        $activeBookings = Booking::where('customer_id', $customer -> id) -> whereIn('status', ['pending_payment', 'confirmed']) -> count();
+        $pendingBookings = Booking::where('customer_id', $customer -> id) -> where('status', 'pending_payment') -> count();
+        $confirmedBookings = Booking::where('customer_id', $customer -> id) -> where('status', 'confirmed') -> count();
+        $latestBookings = Booking::with(['field.venue']) -> where('customer_id', $customer -> id) -> latest() -> take(5) -> get();
+
+        return view('customer.dashboard', compact('activeBookings', 'pendingBookings', 'confirmedBookings', 'latestBookings'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -75,9 +85,16 @@ class BookingController extends Controller
         $end = Carbon::parse($request->end_time);
         $duration = $start->diffInHours($end); // Durasi dalam jam
 
+        // JIka ingin list booking berurutan
+        $last = Booking::latest() -> first();
+        $number = $last ? $last -> id + 1 : 1;
+
+        $code = 'BK-' . now()->format('YmdHis') . '-' . rand(100,999);
+        // $code = 'BK-' . now()->format('YmdHis') . '-' . $number; // Gunakan ini jika ingin booking list berurutan
+
         // Buat booking
         $booking = Booking::create([
-            'booking_code' => 'BK-' . now()->format('YmdHis') . '-' . rand(100,999),
+            'booking_code' => $code,
             'field_id' => $request->field_id,
             'customer_id' => Auth::guard('customer')->id(),
             'booking_date' => $request->booking_date,
@@ -87,6 +104,7 @@ class BookingController extends Controller
             'price_per_hour' => $field->price_per_hour,
             'total_price' => $this->calculateTotalPrice($field, $request->start_time, $request->end_time),
             'status' => 'pending_payment',
+            'notes' => $request->notes,
         ]);
 
         return redirect()->route('customer.bookings.show', $booking)
@@ -94,7 +112,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Menampilkan Slot yang sudah dibooking oleh customer
      */
     public function show(Booking $booking)
     {
@@ -103,29 +121,8 @@ class BookingController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Menampilkan Slot yang Tersedia
      */
-    public function edit(Booking $booking)
-    {
-        // 
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Booking $booking)
-    {
-        // 
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Booking $booking)
-    {
-        // 
-    }
-
     public function availableSlots(Request $request, Field $field)
     {
         $request->validate([
