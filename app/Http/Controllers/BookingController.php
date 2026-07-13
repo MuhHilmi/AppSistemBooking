@@ -31,6 +31,15 @@ class BookingController extends Controller
         return view('customer.dashboard', compact('activeBookings', 'pendingBookings', 'confirmedBookings', 'latestBookings'));
     }
 
+    public function dashboardOwnerView() {
+        $today = Booking::whereHas('field.venue', function ($query) { $query->where('owner_id', auth()->id()); }) -> whereDate('booking_date', today()) -> count();
+        $tomorrow = Booking::whereHas('field.venue', function ($query) { $query->where('owner_id', auth()->id()); }) -> whereDate('booking_date', \Carbon\Carbon::tomorrow()) -> count();
+        $pending = Booking::whereHas('field.venue', function ($query) { $query->where('owner_id', auth()->id()); }) -> where('status', 'pending_payment') -> count();
+        $confirmed = Booking::whereHas('field.venue', function ($query) { $query->where('owner_id', auth()->id()); }) -> where('status', 'confirmed') -> count();
+
+        return view('owner.dashboard', compact('today', 'tomorrow', 'pending', 'confirmed'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -116,8 +125,24 @@ class BookingController extends Controller
      */
     public function show(Booking $booking)
     {
-        $booking->load(['field.venue']);
-        return view('customer.bookings.show', compact('booking'));
+        // Digunakan ketika menggunakan policy
+        $this->authorize('view', $booking);
+
+        // Digunakan ketika belum menggunakan policy
+        // if ($booking->customer_id != auth()->id()) {
+        //     abort(403);
+        // }
+
+        $booking->load([
+            'customer',
+            'field',
+            'field.venue',
+        ]);
+
+        return view(
+            'customer.bookings.show',
+            compact('booking')
+        );
     }
 
     /**
@@ -195,5 +220,22 @@ class BookingController extends Controller
         $end = Carbon::parse($endTime);
         $hours = $start->diffInHours($end);
         return $field->price_per_hour * $hours;
+    }
+
+    public function cancel(Booking $booking) {
+        $this->authorize('cancel', $booking);
+
+        if ($booking->status != 'pending_payment') {
+            return back()->with('error', 'Booking tidak dapat dibatalkan!');
+        }
+
+        $booking->update([
+            'status' => 'canceled',
+            'cancelled_by' => 'customer',
+            'canceled_reason' => 'customer_cancelled',
+            'cancelled_at' => now()
+        ]);
+
+        return back()->with('success', 'Booking berhasil dibatalkan');
     }
 }
