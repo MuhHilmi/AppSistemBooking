@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ $title ?? 'Booking Lapangan' }}</title>
+    <title>@yield ('title', 'Booking lapangan')</title>
 
     @vite ([
         'resources/css/app.css',

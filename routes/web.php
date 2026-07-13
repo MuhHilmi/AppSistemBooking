@@ -53,6 +53,7 @@ Route::prefix('customer')
         Route::post('/bookings/{field}', [BookingController::class, 'store'])->name('bookings.store');
         Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
         Route::get('/bookings/{field}/slots', [BookingController::class, 'availableSlots'])->name('bookings.slots');
+        Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
     });
 });
 
@@ -84,9 +85,7 @@ Route::prefix('owner')
     ->name('owner.')
     ->middleware(['auth','role:owner',])
     ->group(function () {
-    Route::get('/dashboard', function () {
-        return view('owner.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [BookingController::class, 'dashboardOwnerView']) -> name('dashboardOwnerView');
 
     Route::get('/test', function () {
         return 'Owner';

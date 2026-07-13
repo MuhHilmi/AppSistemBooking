@@ -1,15 +1,40 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Owner Dashboard') }}
-        </h2>
-    </x-slot>
+@extends('layouts.dashboard')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">{{ __('Welcome dashboard, owner!') }}</div>
-            </div>
+@section('title', 'Dashboard | Owner')
+
+@section('content')
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bg-white rounded-xl shadow p-6">
+            <p class="text-gray-500">
+                Booking Hari Ini
+            </p>
+            <h2 class="text-4xl font-bold">
+                {{ $today }}
+            </h2>
+        </div>
+        <div class="bg-white rounded-xl shadow p-6">
+            <p class="text-gray-500">
+                Booking Besok
+            </p>
+            <h2 class="text-4xl font-bold text-yellow-500">
+                {{ $tomorrow }}
+            </h2>
+        </div>
+        <div class="bg-white rounded-xl shadow p-6">
+            <p class="text-gray-500">
+                Pending
+            </p>
+            <h2 class="text-4xl font-bold text-green-600">
+                {{ $pending }}
+            </h2>
+        </div>
+        <div class="bg-white rounded-xl shadow p-6">
+            <p class="text-gray-500">
+                Lunas
+            </p>
+            <h2 class="text-4xl font-bold text-green-600">
+                {{ $confirmed }}
+            </h2>
         </div>
     </div>
-</x-app-layout>
+@endsection
