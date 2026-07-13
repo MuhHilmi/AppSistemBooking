@@ -30,6 +30,9 @@ return new class extends Migration
                 'canceled',
                 'expired',
             ]);
+            $table->string('cancelled_by')->nullable();
+            $table->string('cancel_reason')->nullable();
+            $table->timestamp('cancelled_at')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
         });
