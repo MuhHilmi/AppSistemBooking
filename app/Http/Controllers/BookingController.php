@@ -23,8 +23,8 @@ class BookingController extends Controller
 
     public function dashboardView() {
         $customer = Auth::guard('customer') -> user();
-        $activeBookings = Booking::where('customer_id', $customer -> id) -> whereIn('status', ['pending_payment', 'confirmed']) -> count();
-        $pendingBookings = Booking::where('customer_id', $customer -> id) -> where('status', 'pending_payment') -> count();
+        $activeBookings = Booking::where('customer_id', $customer -> id) -> whereIn('status', ['waiting_payment_method', 'pending_payment', 'confirmed']) -> count();
+        $pendingBookings = Booking::where('customer_id', $customer -> id) -> where('status', ['waiting_payment_method', 'pending_payment']) -> count();
         $confirmedBookings = Booking::where('customer_id', $customer -> id) -> where('status', 'confirmed') -> count();
         $latestBookings = Booking::with(['field.venue']) -> where('customer_id', $customer -> id) -> latest() -> take(5) -> get();
 
@@ -112,7 +112,8 @@ class BookingController extends Controller
             'duration' => $duration,
             'price_per_hour' => $field->price_per_hour,
             'total_price' => $this->calculateTotalPrice($field, $request->start_time, $request->end_time),
-            'status' => 'pending_payment',
+            'status' => 'waiting_payment_method',
+            'reservation_expires_at' => now()->addMinutes(5),
             'notes' => $request->notes,
         ]);
 
@@ -154,6 +155,9 @@ class BookingController extends Controller
             'date' => ['required', 'date']
         ]);
 
+        $selectedDate = Carbon::parse($request->date);
+        $now = now();
+
         $dayOfWeek = Carbon::parse($request->date)->dayOfWeekIso;
         $schedule = $field->operatingSchedules()
             ->where('day_of_week', $dayOfWeek)
@@ -185,6 +189,11 @@ class BookingController extends Controller
             $slotEnd = $next->copy();
 
             $available = true;
+
+            // Slot yang sudah lewat tidak dapat dipilih
+            if ($selectedDate->isToday() && $slotStart->lte($now)) {
+                $available = false;
+            }
 
             foreach ($bookings as $booking) {
                 $bookingStart = Carbon::parse($booking->start_time);
@@ -222,7 +231,10 @@ class BookingController extends Controller
         return $field->price_per_hour * $hours;
     }
 
-    public function cancel(Booking $booking) {
+    /**
+     * Metode cancel untuk customer
+     */
+    public function cancelCustomer(Booking $booking) {
         $this->authorize('cancel', $booking);
 
         if ($booking->status != 'pending_payment') {
@@ -231,11 +243,47 @@ class BookingController extends Controller
 
         $booking->update([
             'status' => 'canceled',
-            'cancelled_by' => 'customer',
-            'canceled_reason' => 'customer_cancelled',
-            'cancelled_at' => now()
+            'canceled_by' => 'customer',
+            'canceled_reason' => 'customer_canceled',
+            'canceled_at' => now()
         ]);
 
         return back()->with('success', 'Booking berhasil dibatalkan');
+    }
+
+    /**
+     * Metode cancel untuk owner
+     */
+    public function cancelOwner() {
+        $this->authorize('cancel', $booking);
+
+        if ($booking->status != 'pending_payment') {
+            return back()->with('error', 'Booking tidak dapat dibatalkan');
+        }
+
+        $booking->update([
+            'status' => 'canceled',
+            'canceled_by' => 'owner',
+            'cancel_reason' => 'owner_canceled',
+            'canceled_at' => now(),
+        ]);
+
+        return back()->with('success', 'Booking berhasil dibatalkan');
+    }
+
+    /**
+     * Metode cancel berdasarkan durasi waktu
+     */
+    public function cancelDuration() {
+        Booking::where('status', 'pending_payment')
+        ->where('created_at', '<', now()->subMinutes(30))
+        ->update([
+            'status' => 'canceled',
+            'canceled_by' => 'system',
+            'cancel_reason' => 'payment_timeout',
+            'canceled_at' => now(),
+        ]);
+
+        Schedule::command('booking:expire')->everyMinute();
     }
 }
