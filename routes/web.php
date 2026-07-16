@@ -53,7 +53,7 @@ Route::prefix('customer')
         Route::post('/bookings/{field}', [BookingController::class, 'store'])->name('bookings.store');
         Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
         Route::get('/bookings/{field}/slots', [BookingController::class, 'availableSlots'])->name('bookings.slots');
-        Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancel'])->name('bookings.cancel');
+        Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancelCustomer'])->name('bookings.cancel');
     });
 });
 
@@ -98,6 +98,8 @@ Route::prefix('owner')
     Route::put('/fields/{field}/operating-schedules',
         [OperatingScheduleController::class, 'update']
     )->name('operating-schedules.update');
+
+    Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancelOwner'])->name('bookings.cancel');
 });
 
 // Route Venues Management, Fields, and Operating-Schedules using role Owner

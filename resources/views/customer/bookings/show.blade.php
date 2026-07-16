@@ -28,7 +28,7 @@
                             => 'bg-yellow-100 text-yellow-700',
                         'confirmed'
                             => 'bg-green-100 text-green-700',
-                        'cancelled'
+                        'canceled'
                             => 'bg-red-100 text-red-700',
                         default
                             => 'bg-gray-100 text-gray-700',
@@ -114,15 +114,20 @@
                     class="px-5 py-2 rounded-lg border">
                     Kembali
                 </a>
-                @if ($booking->status == 'pending_payment')
-                    <form action="{{ route('customer.bookings.cancel', $booking) }}" method="post" class="inline">
-                        @csrf
-                        @method('PATCH')
-                        <button onclick="return confirm('Batalkan booking ini?')" class="px-4 py-2 rounded-lg bg-red-600 text-white">
-                            Batalkan Booking
-                        </button>
-                    </form>
-                @endif
+                <div class="flex flex-cols gap-4 items-center">
+                    @if ($booking->status == 'waiting_payment_method')
+                        <div>
+                            <a href="#" class="px-4 py-2 rounded-lg bg-green-600 text-white font-semibold">Lanjutkan Pembayaran</a>
+                        </div>
+                        <form action="{{ route('customer.bookings.cancel', $booking) }}" method="post" class="inline">
+                            @csrf
+                            @method('PATCH')
+                            <button onclick="return confirm('Batalkan booking ini?')" class="px-4 py-2 rounded-lg bg-red-600 text-white">
+                                Batalkan Booking
+                            </button>
+                        </form>
+                    @endif
+                </div>
             </div>
         </div>
     </div>

@@ -15,7 +15,7 @@
                 <h2 class="text-4xl font-bold">{{ $activeBookings }}</h2>
             </div>
             <div class="bg-white rounded-xl shadow p-6">
-                <p class="text-gray-500">Pembayaran Tertunda</p>
+                <p class="text-gray-500">Tertunda</p>
                 <h2 class="text-4xl font-bold text-yellow-500">{{ $pendingBookings }}</h2>
             </div>
             <div class="bg-white rounded-xl shadow p-6">
