@@ -23,6 +23,7 @@ return new class extends Migration
             $table->decimal('price_per_hour', 10, 2);
             $table->decimal('total_price', 10, 2);
             $table->enum('status', [
+                'waiting_payment_method',
                 'pending_payment',
                 'paid',
                 'confirmed',
@@ -30,9 +31,13 @@ return new class extends Migration
                 'canceled',
                 'expired',
             ]);
-            $table->string('cancelled_by')->nullable();
+            $table->string('payment_method')->nullable();
+            $table->timestamp('reservation_expires_at')->nullable();
+            $table->timestamp('payment_due_at')->nullable();
+            $table->timestamp('checked_in_at')->nullable();
+            $table->string('canceled_by')->nullable();
             $table->string('cancel_reason')->nullable();
-            $table->timestamp('cancelled_at')->nullable();
+            $table->timestamp('canceled_at')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
         });
