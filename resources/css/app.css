@@ -30,24 +30,22 @@ nav a:hover {
     @apply text-green-600;
 }
 
-.auth-background{
+.auth-background {
     @apply bg-gradient-to-br
     from-emerald-100
     via-white
     to-emerald-50;
 }
 
-.auth-container{
-    @apply
-    max-w-7xl
+.auth-container {
+    @apply max-w-7xl
     mx-auto
     px-6
     py-10;
 }
 
-.auth-card{
-    @apply
-    bg-white
+.auth-card {
+    @apply bg-white
     rounded-[36px]
     overflow-hidden
     shadow-2xl
@@ -55,14 +53,12 @@ nav a:hover {
     border-gray-100;
 }
 
-.soft-shadow{
-    box-shadow:
-        0 15px 50px rgba(0,0,0,.08);
+.soft-shadow {
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
 }
 
-.btn-primary{
-    @apply
-    w-full
+.btn-primary {
+    @apply w-full
     bg-emerald-600
     hover:bg-emerald-700
     text-white
@@ -73,9 +69,8 @@ nav a:hover {
     font-medium;
 }
 
-.input{
-    @apply
-    w-full
+.input {
+    @apply w-full
     rounded-xl
     border
     border-gray-200
@@ -88,15 +83,13 @@ nav a:hover {
     transition-all;
 }
 
-.section-title{
-    @apply
-    text-4xl
+.section-title {
+    @apply text-4xl
     font-bold
     text-gray-800;
 }
 
-.section-subtitle{
-    @apply
-    text-gray-500
+.section-subtitle {
+    @apply text-gray-500
     mt-2;
 }

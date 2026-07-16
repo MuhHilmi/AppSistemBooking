@@ -1,79 +1,135 @@
-@extends ('layouts.customer')
+@extends('layouts.customer')
 
-@section ('content')
-    <div class="max-w-3xl mx-auto py-8">
-        <div class="bg-white rounded-xl shadow p-6">
-            <h1 class="text-3xl font-bold mb-6">Detail Booking</h1>
+@section('content')
 
-            @if (session('success'))
-                <div
-                    class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6"
-                    role="alert"
-                >
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div
-                    class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6"
-                    role="alert"
-                >
-                    {{ session('error') }}
-                </div>
-            @endif
-
-            <div class="space-y-6">
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-xl shadow">
+        <div class="border-b p-6">
+            <h1 class="text-2xl font-bold">
+                Detail Booking
+            </h1>
+        </div>
+        <div class="p-6 space-y-6">
+            <div>
+                <h3 class="text-gray-500">
+                    Kode Booking
+                </h3>
+                <p class="font-bold text-lg">
+                    {{ $booking->booking_code }}
+                </p>
+            </div>
+            <div>
+                <h3 class="text-gray-500 mb-2">
+                    Status
+                </h3>
+                @php
+                    $statusColor = match($booking->status){
+                        'pending_payment'
+                            => 'bg-yellow-100 text-yellow-700',
+                        'confirmed'
+                            => 'bg-green-100 text-green-700',
+                        'canceled'
+                            => 'bg-red-100 text-red-700',
+                        default
+                            => 'bg-gray-100 text-gray-700',
+                    };
+                @endphp
+                <span class="px-4 py-2 rounded-full {{ $statusColor }}">
+                    {{ ucwords(str_replace('_',' ',$booking->status)) }}
+                </span>
+            </div>
+            <div class="border-t pt-6">
+                <h2 class="font-semibold mb-3">
+                    Customer
+                </h2>
+                <p>
+                    {{ $booking->customer->name }}
+                </p>
+            </div>
+            <div class="border-t pt-6">
+                <h2 class="font-semibold mb-3">
+                    Venue
+                </h2>
+                <p>
+                    {{ $booking->field->venue->name }}
+                </p>
+            </div>
+            <div>
+                <h2 class="font-semibold mb-3">
+                    Lapangan
+                </h2>
+                <p>
+                    {{ $booking->field->name }}
+                </p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6 border-t pt-6">
                 <div>
-                    <h2 class="text-xl font-bold mb-2">{{ $booking->field->venue->name }}</h2>
-                    <p class="text-gray-600">{{ $booking->field->sport_type }}</p>
+                    <h3 class="text-gray-500">
+                        Tanggal
+                    </h3>
+                    <p>
+                        {{ \Carbon\Carbon::parse($booking->booking_date)->translatedFormat('d F Y') }}
+                    </p>
                 </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <h3 class="font-bold">Informasi Booking</h3>
-                        <p class="text-gray-500">Tanggal: {{ \Carbon\Carbon::parse($booking->booking_date)->format('d F Y') }}</p>
-                        <p class="text-gray-500">Waktu: {{ $booking->start_time }} - {{ $booking->end_time }}</p>
-                        <p class="text-gray-500">Durasi: {{ \Carbon\Carbon::parse($booking->start_time)->diffInHours(\Carbon\Carbon::parse($booking->end_time)) }} jam</p>
-                    </div>
-
-                    <div>
-                        <h3 class="font-bold">Informasi Pembayaran</h3>
-                        <p class="text-gray-500">Harga per Jam: Rp{{ number_format($booking->field->price_per_hour) }}</p>
-                        <p class="text-gray-500">Total Bayar: Rp{{ number_format($booking->total_price) }}</p>
-                        <p class="text-gray-500">
-                            Status:
-                            <span
-                                class="px-2 py-1 rounded-full text-xs font-medium
-                                {{ $booking->status == 'confirmed' ? 'bg-green-100 text-green-800' : ($booking->status == 'pending_payment' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800') }}
-                            "
-                            >
-                                {{ ucfirst($booking->status) }}
-                            </span>
-                        </p>
-                    </div>
+                <div>
+                    <h3 class="text-gray-500">
+                        Jam
+                    </h3>
+                    <p>
+                        {{ substr($booking->start_time,0,5) }}
+                        -
+                        {{ substr($booking->end_time,0,5) }}
+                    </p>
                 </div>
-
-                <div class="mt-6">
-                    @if ($booking->status == 'pending_payment')
-                        <a
-                            {{-- href="{{ route('customer.payments.create', $booking) }}"  --}}
-                            href="#"
-                            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
-                        >
-                            Lanjutkan Pembayaran
-                        </a>
-                    @elseif ($booking->status == 'confirmed')
-                        <span class="bg-green-100 text-green-800 font-bold py-1 px-3 rounded">
-                            Booking Confirmed
-                        </span>
-                    @else
-                        <span class="bg-red-100 text-red-800 font-bold py-1 px-3 rounded">
-                            Booking Dibatalkan
-                        </span>
+                <div>
+                    <h3 class="text-gray-500">
+                        Durasi
+                    </h3>
+                    <p>
+                        1 Jam
+                    </p>
+                </div>
+            </div>
+            <div class="border-t pt-6">
+                <h2 class="text-gray-500">
+                    Total Harga
+                </h2>
+                <p class="text-3xl font-bold text-indigo-600">
+                    Rp{{ number_format($booking->total_price) }}
+                </p>
+            </div>
+            @if($booking->notes)
+            <div class="border-t pt-6">
+                <h2 class="font-semibold mb-3">
+                    Catatan
+                </h2>
+                <p>
+                    {{ $booking->notes }}
+                </p>
+            </div>
+            @endif
+            <div class="border-t p-6 flex justify-between">
+                <a
+                    href="{{ route('customer.bookings.index') }}"
+                    class="px-5 py-2 rounded-lg border">
+                    Kembali
+                </a>
+                <div class="flex flex-cols gap-4 items-center">
+                    @if ($booking->status == 'waiting_payment_method')
+                        <div>
+                            <a href="#" class="px-4 py-2 rounded-lg bg-green-600 text-white font-semibold">Lanjutkan Pembayaran</a>
+                        </div>
+                        <form action="{{ route('customer.bookings.cancel', $booking) }}" method="post" class="inline">
+                            @csrf
+                            @method('PATCH')
+                            <button onclick="return confirm('Batalkan booking ini?')" class="px-4 py-2 rounded-lg bg-red-600 text-white">
+                                Batalkan Booking
+                            </button>
+                        </form>
                     @endif
                 </div>
             </div>
         </div>
     </div>
+</div>
 @endsection

@@ -47,14 +47,13 @@ Route::prefix('customer')
         ->name('logout');
 
     Route::middleware(['customer'])->group(function(){
-        Route::get('/dashboard',function () {
-            return view('customer.dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', [BookingController::class, 'dashboardView']) -> name('bookings.dashboardView');
         Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
         Route::get('/bookings/{field}/create', [BookingController::class, 'create'])->name('bookings.create');
         Route::post('/bookings/{field}', [BookingController::class, 'store'])->name('bookings.store');
         Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
         Route::get('/bookings/{field}/slots', [BookingController::class, 'availableSlots'])->name('bookings.slots');
+        Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancelCustomer'])->name('bookings.cancel');
     });
 });
 
@@ -86,9 +85,7 @@ Route::prefix('owner')
     ->name('owner.')
     ->middleware(['auth','role:owner',])
     ->group(function () {
-    Route::get('/dashboard', function () {
-        return view('owner.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [BookingController::class, 'dashboardOwnerView']) -> name('dashboardOwnerView');
 
     Route::get('/test', function () {
         return 'Owner';
@@ -101,6 +98,8 @@ Route::prefix('owner')
     Route::put('/fields/{field}/operating-schedules',
         [OperatingScheduleController::class, 'update']
     )->name('operating-schedules.update');
+
+    Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancelOwner'])->name('bookings.cancel');
 });
 
 // Route Venues Management, Fields, and Operating-Schedules using role Owner
