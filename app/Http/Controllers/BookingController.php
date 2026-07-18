@@ -129,7 +129,10 @@ class BookingController extends Controller
      */
     public function show(Booking $booking)
     {
-        dd(auth()->check(), auth()->user(), auth()->id());
+        // Digunakan ketika pengecekkan
+        // dd(auth()->check(), auth()->user(), auth()->id());
+        // dd([ 'default_guard' => auth()->user(), 'customer_guard' => auth('customer')->user(), ]);
+
         // Digunakan ketika menggunakan policy
         $this->authorize('view', $booking);
 
