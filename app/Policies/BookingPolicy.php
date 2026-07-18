@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Booking;
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
@@ -19,10 +20,10 @@ class BookingPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Booking $booking): bool
+    public function view(Customer $customer, Booking $booking): bool
     {
-        // return false;
-        return $user->id == $booking->customer_id;
+        // return false
+        return $customer->id === $booking->customer_id;
     }
 
     /**
@@ -67,11 +68,11 @@ class BookingPolicy
 
     public function cancel(User $user, Booking $booking)
     {
-        return $booking->customer_id == $user->id;
+        return $booking->customer_id === $user->id;
     }
 
     public function ownerCancel(User $user, Booking $booking)
     {
-        return $booking->field->venue->owner_id == $user->id;
+        return $booking->field->venue->owner_id === $user->id;
     }
 }

@@ -24,7 +24,7 @@ class BookingController extends Controller
     public function dashboardView() {
         $customer = Auth::guard('customer') -> user();
         $activeBookings = Booking::where('customer_id', $customer -> id) -> whereIn('status', ['waiting_payment_method', 'pending_payment', 'confirmed']) -> count();
-        $pendingBookings = Booking::where('customer_id', $customer -> id) -> where('status', ['waiting_payment_method', 'pending_payment']) -> count();
+        $pendingBookings = Booking::where('customer_id', $customer -> id) -> whereIn('status', ['waiting_payment_method', 'pending_payment']) -> count();
         $confirmedBookings = Booking::where('customer_id', $customer -> id) -> where('status', 'confirmed') -> count();
         $latestBookings = Booking::with(['field.venue']) -> where('customer_id', $customer -> id) -> latest() -> take(5) -> get();
 
@@ -58,7 +58,7 @@ class BookingController extends Controller
         $request->validate([
             'booking_date' => 'required|date',
             'start_time' => 'required',
-            'end_time' => 'required',
+            'end_time' => 'required|after:start_time',
             'field_id' => 'required|exists:fields,id',
         ]);
 
@@ -81,7 +81,7 @@ class BookingController extends Controller
                     $q->where('start_time', '<', $request->end_time)
                       ->where('end_time', '>', $request->start_time);
                 })
-                ->whereIn('status', ['pending_payment', 'confirmed']);
+                ->whereIn('status', ['waiting_payment_method', 'pending_payment', 'paid', 'confirmed']);
             })
             ->first();
 
@@ -113,12 +113,15 @@ class BookingController extends Controller
             'price_per_hour' => $field->price_per_hour,
             'total_price' => $this->calculateTotalPrice($field, $request->start_time, $request->end_time),
             'status' => 'waiting_payment_method',
-            'reservation_expires_at' => now()->addMinutes(5),
+            'reservation_expires_at' => now()->addMinutes(3),
             'notes' => $request->notes,
         ]);
 
-        return redirect()->route('customer.bookings.show', $booking)
-            ->with('success', 'Booking berhasil dibuat. Silakan lakukan pembayaran.');
+        // Jika ingin diarahkan ke halaman detail booking
+        return redirect()->route('customer.bookings.show', $booking)->with('success', 'Booking berhasil dibuat. Silakan lakukan pembayaran.');
+
+        // JIka ingin diarahkan langsung ke halaman pembayaran
+        // return redirect()->route('customer.bookings.payment', $booking);
     }
 
     /**
@@ -126,11 +129,12 @@ class BookingController extends Controller
      */
     public function show(Booking $booking)
     {
+        dd(auth()->check(), auth()->user(), auth()->id());
         // Digunakan ketika menggunakan policy
         $this->authorize('view', $booking);
 
         // Digunakan ketika belum menggunakan policy
-        // if ($booking->customer_id != auth()->id()) {
+        // if ($booking->customer_id !== auth('customer')->id()) {
         //     abort(403);
         // }
 
@@ -165,7 +169,7 @@ class BookingController extends Controller
 
         $bookings = Booking::where('field_id', $field->id)
             ->where('booking_date', $request->date)
-            ->whereIn('status', ['pending_payment', 'confirmed'])
+            ->whereIn('status', ['waiting_payment_method', 'pending_payment', 'paid', 'confirmed'])
             ->get();
 
         if (!$schedule || !$schedule->is_open) {
@@ -237,14 +241,14 @@ class BookingController extends Controller
     public function cancelCustomer(Booking $booking) {
         $this->authorize('cancel', $booking);
 
-        if ($booking->status != 'pending_payment') {
+        if (!in_array($booking->status, ['waiting_payment_method', 'pending_payment'])) {
             return back()->with('error', 'Booking tidak dapat dibatalkan!');
         }
 
         $booking->update([
             'status' => 'canceled',
             'canceled_by' => 'customer',
-            'canceled_reason' => 'customer_canceled',
+            'cancel_reason' => 'customer_request',
             'canceled_at' => now()
         ]);
 
@@ -254,17 +258,17 @@ class BookingController extends Controller
     /**
      * Metode cancel untuk owner
      */
-    public function cancelOwner() {
-        $this->authorize('cancel', $booking);
+    public function cancelOwner(Booking $booking) {
+        $this->authorize('ownerCancel', $booking);
 
-        if ($booking->status != 'pending_payment') {
+        if (!in_array($booking->status, ['waiting_payment_method', 'pending_payment'])) {
             return back()->with('error', 'Booking tidak dapat dibatalkan');
         }
 
         $booking->update([
             'status' => 'canceled',
             'canceled_by' => 'owner',
-            'cancel_reason' => 'owner_canceled',
+            'cancel_reason' => 'owner_request',
             'canceled_at' => now(),
         ]);
 
@@ -274,16 +278,16 @@ class BookingController extends Controller
     /**
      * Metode cancel berdasarkan durasi waktu
      */
-    public function cancelDuration() {
-        Booking::where('status', 'pending_payment')
-        ->where('created_at', '<', now()->subMinutes(30))
-        ->update([
-            'status' => 'canceled',
-            'canceled_by' => 'system',
-            'cancel_reason' => 'payment_timeout',
-            'canceled_at' => now(),
-        ]);
+    // public function cancelDuration() {
+    //     Booking::where('status', 'pending_payment')
+    //     ->where('created_at', '<', now()->subMinutes(30))
+    //     ->update([
+    //         'status' => 'canceled',
+    //         'canceled_by' => 'system',
+    //         'cancel_reason' => 'payment_timeout',
+    //         'canceled_at' => now(),
+    //     ]);
 
-        Schedule::command('booking:expire')->everyMinute();
-    }
+    //     Schedule::command('booking:expire')->everyMinute();
+    // }
 }
