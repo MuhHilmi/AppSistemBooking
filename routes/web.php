@@ -7,6 +7,7 @@ use App\Http\Controllers\VenueController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\OperatingScheduleController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\BookingPaymentController;
 use Illuminate\Support\Facades\Route;
 
 // Route Guest
@@ -43,24 +44,25 @@ Route::prefix('customer')
     Route::post('/login', [AuthController::class, 'login'])
         ->name('login');
 
-    Route::post('/logout', [AuthController::class, 'logout'])
-        ->name('logout');
 
     Route::middleware(['customer'])->group(function(){
-        Route::get('/dashboard', [BookingController::class, 'dashboardView']) -> name('bookings.dashboardView');
+        Route::get('/dashboard', [BookingController::class, 'dashboardView']) -> name('dashboard');
         Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
         Route::get('/bookings/{field}/create', [BookingController::class, 'create'])->name('bookings.create');
         Route::post('/bookings/{field}', [BookingController::class, 'store'])->name('bookings.store');
         Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
         Route::get('/bookings/{field}/slots', [BookingController::class, 'availableSlots'])->name('bookings.slots');
         Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancelCustomer'])->name('bookings.cancel');
+        Route::get('/bookings/{booking}/payment', [BookingPaymentController::class, 'show'])->name('bookings.payment');
+        Route::post('/bookings/{booking}/payment', [BookingPaymentController::class, 'store'])->name('bookings.payment.store');
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     });
 });
 
 // Route verifikasi auth
-Route::get('/dashboard', function () {
-    return view('dashboard-test');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard-test');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Route Admin
 Route::prefix('admin')
@@ -85,7 +87,7 @@ Route::prefix('owner')
     ->name('owner.')
     ->middleware(['auth','role:owner',])
     ->group(function () {
-    Route::get('/dashboard', [BookingController::class, 'dashboardOwnerView']) -> name('dashboardOwnerView');
+    Route::get('/dashboard', [BookingController::class, 'dashboardOwnerView']) -> name('dashboard');
 
     Route::get('/test', function () {
         return 'Owner';
@@ -100,13 +102,11 @@ Route::prefix('owner')
     )->name('operating-schedules.update');
 
     Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancelOwner'])->name('bookings.cancel');
-});
 
-// Route Venues Management, Fields, and Operating-Schedules using role Owner
-Route::middleware(['auth', 'role:owner'])
-    ->group(function () {
     Route::resource('venues', VenueController::class);
+
     Route::resource('fields', FieldController::class);
+
     Route::resource('operating-schedules', OperatingScheduleController::class);
 });
 
