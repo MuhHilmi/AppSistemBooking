@@ -6,8 +6,9 @@
                 <img
                     src="{{ $field->thumbnail
                         ? asset('storage/'.$field->thumbnail)
-                        : asset('images/no-image.png') }}"
+                        : asset('img/field/MultiField.jpeg') }}"
                     class="h-52 w-full object-cover"
+                    alt="{{ $field->name }}"
                 />
                 <div class="p-5">
                     {{-- Status --}}

@@ -4,7 +4,7 @@
     @if ($field -> thumbnail)
         <img
             src="{{ asset('storage/'.$field->thumbnail) }}"
-            alt="{{ $field -> venue -> name }}"
+            alt="{{ $field->venue->name }}"
             class="w-full h-48 object-cover"
         />
     @endif

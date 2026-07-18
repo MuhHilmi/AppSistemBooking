@@ -117,7 +117,7 @@
                 <div class="flex flex-cols gap-4 items-center">
                     @if ($booking->status == 'waiting_payment_method')
                         <div>
-                            <a href="#" class="px-4 py-2 rounded-lg bg-green-600 text-white font-semibold">Lanjutkan Pembayaran</a>
+                            <a href="{{ route('customer.bookings.payment', $booking) }}" class="px-4 py-2 rounded-lg bg-green-600 text-white font-semibold">Lanjutkan Pembayaran</a>
                         </div>
                         <form action="{{ route('customer.bookings.cancel', $booking) }}" method="post" class="inline">
                             @csrf
