@@ -34,7 +34,7 @@
                 {{-- FORM PANEL --}}
                 <div class="flex w-full">
                     {{-- Login Form --}}
-                    <section id="formPanel" class="absolute inset-y-0 left-0 w-full lg:w-1/2 flex items-center justify-center p-10 lg:p-16 transition-all duration-700 z-20" :class="isLogin ? 'translate-x-full opacity-100' : '-translate-x-full opacity-0 pointer-events-none'">
+                    <section id="formPanel" class="absolute inset-y-0 left-0 w-full lg:w-1/2 flex items-center justify-center p-10 lg:p-16 transition-all duration-700 z-20" :class="isLogin ? 'translate-x-0 opacity-100 lg:translate-x-full' : '-translate-x-full opacity-0 pointer-events-none lg:-translate-x-full lg:opacity-0'">
                         <div class="w-full max-w-md">
                             {{-- Logo --}}
                             <div class="flex items-center gap-3">
@@ -74,10 +74,13 @@
                                         Password
                                     </label>
                                     <input type="password" name="password" class="input" placeholder="Masukkan password">
+                                    @error('password')
+                                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div class="flex justify-between items-center text-sm">
                                     <label class="flex items-center gap-2">
-                                        <input type="checkbox">
+                                        <input type="checkbox" name="remember">
                                         Ingat Saya
                                     </label>
                                     <a href="#" class="text-emerald-600 hover:text-emerald-700">
@@ -99,7 +102,7 @@
                         </div>
                     </section>
                     {{-- Register Form --}}
-                    <section class="absolute inset-y-0 left-0 w-full lg:w-1/2 flex items-center justify-center p-10 lg:p-16 transition-all duration-700 z-10" :class="isLogin ? 'translate-x-[200%] opacity-0 pointer-events-none' : 'translate-x-0 opacity-100'">
+                    <section class="absolute inset-y-0 left-0 w-full lg:w-1/2 flex items-center justify-center p-10 lg:p-16 transition-all duration-700 z-10" :class="isLogin ? 'translate-x-full opacity-0 pointer-events-none lg:translate-x-[200%]' : 'translate-x-0 opacity-100'">
                         <div class="w-full max-w-md">
                             <div class="mb-10">
                                 <h1 class="section-title">
@@ -112,8 +115,17 @@
                             <form action="{{ route('customer.register') }}" method="POST" class="space-y-5">
                                 @csrf
                                 <input type="text" class="input" name="name" placeholder="Nama Lengkap">
+                                @error('name')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                                 <input type="text" class="input" name="phone" placeholder="Nomor HP">
+                                @error('phone')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                                 <input type="password" class="input" name="password" placeholder="Password">
+                                @error('password')
+                                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                                 <input type="password" class="input" name="password_confirmation" placeholder="Konfirmasi Password">
                                 <button class="btn-primary">
                                     Daftar

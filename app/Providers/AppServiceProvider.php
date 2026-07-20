@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Gate;
+use App\Models\Booking;
+use App\Policies\BookingPolicy;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,5 +24,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useTailwind();
+        Gate::policy(Booking::class, BookingPolicy::class);
     }
 }

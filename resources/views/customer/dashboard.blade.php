@@ -38,7 +38,10 @@
                         <p>{{ $booking->field->name }}</p>
                     </div>
                     <div>
-                        <span> {{ $booking->booking_date }} </span>
+                        <span> {{ $booking->booking_date->format('d-m-Y') }} </span>
+                    </div>
+                    <div>
+                        <span> {{ $booking->start_time }} - {{ $booking->end_time }} </span>
                     </div>
                     <div>{{ ucfirst(str_replace('_',' ',$booking->status)) }}</div>
                     <a

@@ -45,7 +45,7 @@
                 @if (Route::has('customer.login'))
                     @auth ('customer')
                         <a
-                            href="{{ route('customer.bookings.dashboardView') }}"
+                            href="{{ route('customer.dashboard') }}"
                             class="rounded-xl px-6 py-3 border border-slate-300 hover:border-green-500 hover:text-green-600 transition"
                         >
                             Dashboard

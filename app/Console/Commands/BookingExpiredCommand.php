@@ -9,7 +9,7 @@ use App\Models\Booking;
 use Carbon\Carbon;
 
 #[Signature('booking:expire')]
-#[Description('Cancel expired pending payment bookings')]
+#[Description('Cancel expired reservations and pending payment bookings')]
 class BookingExpiredCommand extends Command
 {
     /**
@@ -17,10 +17,26 @@ class BookingExpiredCommand extends Command
      */
     public function handle()
     {
-        $expiredBookings = Booking::where('status', 'pending_payment')
-            ->where('created_at', '<', now()->subMinutes(30))
+        $expiredReservations = Booking::where('status', 'waiting_payment_method')
+            ->whereNotNull('reservation_expires_at')
+            ->where('reservation_expires_at', '<', now())
             ->get();
-        foreach ($expiredBookings as $booking) {
+
+        foreach ($expiredReservations as $booking) {
+            $booking->update([
+                'status' => 'canceled',
+                'canceled_by' => 'system',
+                'cancel_reason' => 'reservation_timeout',
+                'canceled_at' => now(),
+            ]);
+        }
+
+        $expiredPayments = Booking::where('status', 'pending_payment')
+            ->whereNotNull('payment_due_at')
+            ->where('payment_due_at', '<', now())
+            ->get();
+
+        foreach ($expiredPayments as $booking) {
             $booking->update([
                 'status' => 'canceled',
                 'canceled_by' => 'system',
@@ -28,7 +44,13 @@ class BookingExpiredCommand extends Command
                 'canceled_at' => now(),
             ]);
         }
-        $this->info('Expired bookings processed successfully.');
+
+        $this->info(sprintf(
+            'Expired bookings processed successfully. Reservations: %d, Payments: %d.',
+            $expiredReservations->count(),
+            $expiredPayments->count(),
+        ));
+
         return self::SUCCESS;
     }
 }
