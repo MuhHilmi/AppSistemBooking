@@ -57,7 +57,10 @@
                         <span class="text-sm font-medium text-gray-500">
                             Batas Pembayaran
                         </span>
-                        <span id="payment-countdown" data-deadline="{{ $booking->payment_due_at->toIso8601String() }}"
+                        @php
+                            $paymentDeadline = $booking->payment_due_at ?? $booking->reservation_expires_at;
+                        @endphp
+                        <span id="payment-countdown" data-deadline="{{ $paymentDeadline?->toIso8601String() }}"
                             class="text-lg font-bold text-red-600">
                         </span>
                     </div>
@@ -94,12 +97,18 @@
 </div>
 @endsection
 
-@push('scripts')
+@push('script')
     <script>
         const countdown = document.getElementById('payment-countdown')
-        const deadline = new Date(countdown.dataset.deadline)
+        const deadlineStr = countdown.dataset.deadline
+        const deadline = deadlineStr ? new Date(deadlineStr) : null
 
         function updateCountdown() {
+            if (!deadline) {
+                countdown.innerHTML = '-';
+                return;
+            }
+
             const now = new Date();
             const distance = deadline - now;
 
@@ -108,19 +117,18 @@
                 setTimeout(() => {
                     window.location.reload();
                 }, 2000);
+                return;
             }
 
-            return;
-        }
+            const hours = Math.floor(distance / (1000 * 60 * 60))
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        const hours = Math.floor(distance / (1000 * 60 * 60))
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        if (hours > 0) {
-            countdown.innerHTML = `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-        } else {
-            countdown.innerHTML = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+            if (hours > 0) {
+                countdown.innerHTML = `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+            } else {
+                countdown.innerHTML = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+            }
         }
 
         updateCountdown();

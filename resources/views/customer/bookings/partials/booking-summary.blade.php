@@ -51,7 +51,7 @@
                     Durasi
                 </dt>
                 <dd class="w-2/3 text-right text-sm font-semibold text-gray-900">
-                    {{ $booking->duration_hours }} Jam
+                    {{ $booking->duration }} Jam
                 </dd>
             </div>
             <div class="flex items-start justify-between py-3">

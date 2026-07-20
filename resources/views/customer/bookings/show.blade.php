@@ -48,6 +48,18 @@
                             @case('pending_payment')
                                 Menunggu pembayaran
                                 @break
+                            @case('confirmed')
+                                Terkonfirmasi
+                                @break
+                            @case('paid')
+                                Sudah dibayar
+                                @break
+                            @case('completed')
+                                Selesai
+                                @break
+                            @case('canceled')
+                                Dibatalkan
+                                @break
                             @default
                                 Status tidak diketahui
                         @endswitch
@@ -144,6 +156,11 @@
                                 Batalkan Booking
                             </button>
                         </form>
+                    @endif
+                    @if ($booking->status == 'pending_payment')
+                        <div>
+                            <a href="{{ route('customer.bookings.payment.pending', $booking) }}" class="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold">Cek Pembayaran</a>
+                        </div>
                     @endif
                 </div>
             </div>

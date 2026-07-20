@@ -43,7 +43,7 @@
             <input type="hidden" name="field_id" value="{{ $field->id }}" />
             <input type="hidden" id="selected-start-time" name="start_time" />
             <input type="hidden" id="selected-end-time" name="end_time" />
-            <input type="hidden" name="booking_date" id="booking_date_hidden">
+            {{-- <input type="hidden" name="booking_date" id="booking_date_hidden"> --}}
             <div class="mt-6">
                 <label for="notes">Catatan</label>
                 <textarea name="notes" id="notes" rows="4" class="w-full rounded-lg border"></textarea>
@@ -135,17 +135,17 @@
             });
         }
 
-        document.addEventListener('click', function(e){
-            if(!e.target.classList.contains('slot-btn')){
-                return;
-            }
-            document.querySelectorAll('.slot-btn').forEach(button => {
-                button.classList.remove('bg-indigo-600', 'text-white');
-            });
-            e.target.classList.add('bg-indigo-600', 'text-white');
-            document.getElementById('start-time').value = e.target.dataset.start;
-            document.getElementById('end-time').value = e.target.dataset.end;
-        });
+        // document.addEventListener('click', function(e){
+        //     if(!e.target.classList.contains('slot-btn')){
+        //         return;
+        //     }
+        //     document.querySelectorAll('.slot-btn').forEach(button => {
+        //         button.classList.remove('bg-indigo-600', 'text-white');
+        //     });
+        //     e.target.classList.add('bg-indigo-600', 'text-white');
+        //     document.getElementById('start-time').value = e.target.dataset.start;
+        //     document.getElementById('end-time').value = e.target.dataset.end;
+        // });
 
         function selectSlot(button) {
             // Remove active class from all buttons

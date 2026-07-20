@@ -64,6 +64,10 @@ class BookingPaymentController extends Controller
                 break;
         }
 
+        if ($booking->status === 'pending_payment') {
+            return redirect()->route('customer.bookings.payment.pending', $booking)->with('success', 'Metode pembayaran berhasil dipilih.');
+        }
+
         return redirect()->route('customer.bookings.show', $booking)->with('success', 'Metode pembayaran berhasil dipilih.');
     }
 
