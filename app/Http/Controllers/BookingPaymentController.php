@@ -48,7 +48,6 @@ class BookingPaymentController extends Controller
                     'payment_due_at' => null
                 ]);
                 break;
-            
             case 'transfer':
                 $booking->update([
                     'payment_method' => 'transfer',
@@ -80,6 +79,19 @@ class BookingPaymentController extends Controller
         }
 
         return view('customer.bookings.payment', compact('booking'));
+    }
+
+    public function pending(Booking $booking)
+    {
+        $this->authorize('view', $booking);
+
+        if ($booking->status !== 'pending_payment') {
+            return redirect()->route('customer.bookings.show', $booking);
+        }
+
+        $booking->load('field.venue', 'customer');
+
+        return view('customer.bookings.payment-pending', compact('booking'));
     }
 
     /**

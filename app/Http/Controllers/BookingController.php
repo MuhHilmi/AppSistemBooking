@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Booking;
 use App\Models\Field;
-use Illuminate\Http\Request;
-use Carbon\Carbon;
 use App\Models\OperatingSchedule;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
 {
@@ -124,6 +125,48 @@ class BookingController extends Controller
         // return redirect()->route('customer.bookings.payment', $booking);
     }
 
+    public function updatePaymentMethod() {
+        // $this->authorize('update', $booking);
+
+        $request->validate(['payment_method' => 'require|in:cash,transfer, qris']);
+
+        if ($booking->status !== 'waiting_payment_method') {
+            return redirect()->route('customer.bookings.show', $booking);
+        }
+
+        DB::transaction(function () use ($booking, $request) {
+            switch ($request->payment_method) {
+                case 'cash':
+                    $booking->update([
+                        'payment_method' => 'cash',
+                        'status' => 'confirmed',
+                        'payment_due_at' => null,
+                    ]);
+                    break;
+                case 'transfer':
+                    $booking->update([
+                        'payment_method' => 'transfer',
+                        'status' => 'pending_payment',
+                        'payment_due_at' => now()->addMinutes(30),
+                    ]);
+                    break;
+                case 'qris':
+                    $booking->update([
+                        'payment_method' => 'qris',
+                        'status' => 'pending_payment',
+                        'payment_due_at' => now()->addMinutes(30),
+                    ]);
+                    break;
+            }
+        });
+
+        if ($booking->payment_method === 'cash') {
+            return redirect()->route('customer.bookings.show', $booking)->with('success', 'Booking berhasil dikonfirmasi.');
+        }
+
+        return redirect()->route('customer.bookings.payment.pending', $booking);
+    }
+
     /**
      * Menampilkan Slot yang sudah dibooking oleh customer
      */
@@ -140,6 +183,10 @@ class BookingController extends Controller
         // if ($booking->customer_id !== auth('customer')->id()) {
         //     abort(403);
         // }
+
+        if ($booking->status !== 'waiting_payment_method') {
+            return redirect()->route('customer.bookings.show', $booking);
+        }
 
         $booking->load([
             'customer',
