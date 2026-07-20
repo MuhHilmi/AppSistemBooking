@@ -59,7 +59,7 @@
                 />
                 <div id="slot-container" class="mt-8"></div>
             </div>
-            <div>
+            {{-- <div>
                 <input
                     type="hidden"
                     name="start_time"
@@ -69,7 +69,7 @@
                     type="hidden"
                     name="end_time"
                     id="end-time">
-            </div>
+            </div> --}}
             <div class="flex justify-end mt-8">
                 <button type="submit" class="px-6 py-3 bg-indigo-600 text-white rounded-lg">
                     Booking

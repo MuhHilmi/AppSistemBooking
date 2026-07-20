@@ -24,11 +24,11 @@
             >Booking</a
         >
     </div>
-    @if ($fields -> isEmpty())
+    {{-- @if ($fields -> isEmpty())
         <div class="col-span-full">
             <div class="bg-white rounded-xl p-10 text-center">
                 <h2 class="text-xl font-semibold">Belum ada lapang yang tersedia</h2>
             </div>
         </div>
-    @endif
+    @endif --}}
 </div>

@@ -6,7 +6,7 @@
         <div>
             @include ('customer.bookings.partials.filter')
         </div>
-        <div class="grid md:grid-cols2 lg:grid-cols-3 gap-6">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             @if ($fields -> isEmpty())
                 <div class="col-span-full">
                     <div class="bg-white rounded-xl p-10 text-center">

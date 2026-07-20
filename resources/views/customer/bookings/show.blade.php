@@ -10,57 +10,75 @@
             </h1>
         </div>
         <div class="p-6 space-y-6">
-            <div>
-                <h3 class="text-gray-500">
-                    Kode Booking
-                </h3>
-                <p class="font-bold text-lg">
-                    {{ $booking->booking_code }}
-                </p>
-            </div>
-            <div>
-                <h3 class="text-gray-500 mb-2">
-                    Status
-                </h3>
-                @php
-                    $statusColor = match($booking->status){
-                        'pending_payment'
-                            => 'bg-yellow-100 text-yellow-700',
-                        'confirmed'
-                            => 'bg-green-100 text-green-700',
-                        'canceled'
-                            => 'bg-red-100 text-red-700',
-                        default
-                            => 'bg-gray-100 text-gray-700',
-                    };
-                @endphp
-                <span class="px-4 py-2 rounded-full {{ $statusColor }}">
-                    {{ ucwords(str_replace('_',' ',$booking->status)) }}
-                </span>
+            <div class="grid md:grid-cols-2">
+                <div>
+                    <h3 class="text-gray-500">
+                        Kode Booking
+                    </h3>
+                    <p class="font-bold text-lg">
+                        {{ $booking->booking_code }}
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-gray-500 mb-2">
+                        Status
+                    </h3>
+                    @php
+                        $statusColor = match($booking->status){
+                            'pending_payment'
+                                => 'bg-yellow-100 text-yellow-700',
+                            'confirmed'
+                                => 'bg-green-100 text-green-700',
+                            'canceled'
+                                => 'bg-red-100 text-red-700',
+                            'waiting_payment_method'
+                                => 'bg-yellow-100 text-yellow-700',
+                            'paid'
+                                => 'bg-emerald-100 text-emerald-700',
+                            default
+                                => 'bg-gray-100 text-gray-700',
+                        };
+                    @endphp
+                    <span class="px-4 py-2 rounded-full {{ $statusColor }}">
+                        {{-- {{ ucwords(str_replace('_',' ',$booking->status)) }} --}}
+                        @switch($booking->status)
+                            @case('waiting_payment_method')
+                                Pilih metode pembayaran
+                                @break
+                            @case('pending_payment')
+                                Menunggu pembayaran
+                                @break
+                            @default
+                                Status tidak diketahui
+                        @endswitch
+                    </span>
+                </div>
             </div>
             <div class="border-t pt-6">
                 <h2 class="font-semibold mb-3">
-                    Customer
+                    Nama Customer
                 </h2>
                 <p>
                     {{ $booking->customer->name }}
                 </p>
             </div>
-            <div class="border-t pt-6">
-                <h2 class="font-semibold mb-3">
-                    Venue
-                </h2>
-                <p>
-                    {{ $booking->field->venue->name }}
-                </p>
-            </div>
-            <div>
-                <h2 class="font-semibold mb-3">
-                    Lapangan
-                </h2>
-                <p>
-                    {{ $booking->field->name }}
-                </p>
+            <div class="grid md:grid-cols-2 border-t pt-6">
+                <div>
+                    <h2 class="font-semibold mb-3">
+                        Venue
+                    </h2>
+                    <p>
+                        {{ $booking->field->venue->name }}
+                    </p>
+                </div>
+                <div>
+                    <h2 class="font-semibold mb-3">
+                        Lapangan
+                    </h2>
+                    <p>
+                        {{ $booking->field->name }}
+                    </p>
+                </div>
             </div>
             <div class="grid md:grid-cols-3 gap-6 border-t pt-6">
                 <div>
@@ -86,7 +104,7 @@
                         Durasi
                     </h3>
                     <p>
-                        1 Jam
+                        {{ $booking->duration }} Jam
                     </p>
                 </div>
             </div>
