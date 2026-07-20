@@ -56,6 +56,8 @@ Route::prefix('customer')
         Route::get('/bookings/{booking}/payment', [BookingPaymentController::class, 'show'])->name('bookings.payment');
         Route::post('/bookings/{booking}/payment', [BookingPaymentController::class, 'store'])->name('bookings.payment.store');
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+        Route::get('/bookings/{booking}/payment/pending', [BookingPaymentController::class, 'pending'])->name('bookings.payment.pending');
+        Route::get('/bookings/{booking}/payment/check-status', [BookingPaymentController::class, 'checkStatus'])->name('bookings.payment.check-status');
     });
 });
 
