@@ -6,7 +6,7 @@
             <h1 class="text-3xl font-bold text-gray-800">Tempat Usaha</h1>
 
             <a
-                href="{{ route('venues.create') }}"
+                href="{{ route('owner.venues.create') }}"
                 class="rounded-lg bg-indigo-600 px-5 py-2 text-white transition hover:bg-indigo-700"
             >
                 + Tambah Tempat
@@ -47,21 +47,21 @@
 
                             <div class="flex gap-2">
                                 <a
-                                    href="{{ route('venues.show',$venue->id) }}"
+                                    href="{{ route('owner.venues.show',$venue->id) }}"
                                     class="flex-1 rounded-lg bg-blue-500 py-2 text-center text-white hover:bg-blue-600"
                                 >
                                     Detail
                                 </a>
 
                                 <a
-                                    href="{{ route('venues.edit',$venue->id) }}"
+                                    href="{{ route('owner.venues.edit',$venue->id) }}"
                                     class="flex-1 rounded-lg bg-yellow-500 py-2 text-center text-white hover:bg-yellow-600"
                                 >
                                     Edit
                                 </a>
 
                                 <form
-                                    action="{{ route('venues.destroy',$venue->id) }}"
+                                    action="{{ route('owner.venues.destroy',$venue->id) }}"
                                     method="POST"
                                     onsubmit="return confirm('Yakin ingin menghapus?');"
                                 >

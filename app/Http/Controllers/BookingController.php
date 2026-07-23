@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Booking;
 use App\Models\Field;
 use App\Models\OperatingSchedule;
+use App\Models\Venue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -33,12 +34,84 @@ class BookingController extends Controller
     }
 
     public function dashboardOwnerView() {
-        $today = Booking::whereHas('field.venue', function ($query) { $query->where('owner_id', auth()->id()); }) -> whereDate('booking_date', today()) -> count();
-        $tomorrow = Booking::whereHas('field.venue', function ($query) { $query->where('owner_id', auth()->id()); }) -> whereDate('booking_date', \Carbon\Carbon::tomorrow()) -> count();
-        $pending = Booking::whereHas('field.venue', function ($query) { $query->where('owner_id', auth()->id()); }) -> where('status', 'pending_payment') -> count();
-        $confirmed = Booking::whereHas('field.venue', function ($query) { $query->where('owner_id', auth()->id()); }) -> where('status', 'confirmed') -> count();
+        $ownerId = auth()->id();
 
-        return view('owner.dashboard', compact('today', 'tomorrow', 'pending', 'confirmed'));
+        $activeStatuses = ['waitin_payment_method', 'pending_payment', 'paid', 'confirmed'];
+
+        $startOfWeek = now()->startOfWeek();
+        $endOfWeek = now()->endOfWeek();
+
+        $ownerBookings = Booking::whereHas('field.venue', function ($query) use ($ownerId) {
+            $query->where('owner_id', $ownerId);
+        });
+
+        $todayCount = (clone $ownerBookings)
+            ->whereDate('booking_date', today())
+            ->count();
+
+        $todayRevenue = (clone $ownerBookings)
+            ->whereDate('booking_date', today())
+            ->whereIn('status', ['paid', 'confirmed', 'completed'])
+            ->sum('total_price');
+
+        $weekRevenue = (clone $ownerBookings)
+            ->whereDate('booking_date', [$startOfWeek, $endOfWeek])
+            ->whereIn('status', ['paid', 'confirmed', 'completed'])
+            ->sum('total_price');
+
+        $ownerFields = Field::whereHas('venue', function ($query) use ($ownerId) {
+            $query->where('owner_id', $ownerId);
+        })->with('operatingSchedules')->where('status', 1)->get();
+
+        $dayOfWeek = now()->dayOfWeekIso;
+        $totalOperatingHours = 0;
+        foreach ($ownerFields as $field) {
+            $schedule = $field->operatingSchedules->firstWhere('day_of_week', $dayOfWeek);
+            if ($schedule && $schedule->is_open) {
+                $totalOperatingHours += Carbon::parse($schedule->open_time)->diffInHours(Carbon::parse($schedule->close_time));
+            }
+        }
+
+        $bookedHoursToday = (clone $ownerBookings)->whereDate('booking_date', today())->whereIn('status', $activeStatuses)->sum('duration');
+        $occupancyRate = $totalOperatingHours > 0 ? round(($bookedHoursToday / $totalOperatingHours) * 100) : 0;
+
+        $activeFieldsCount = $ownerFields->count();
+
+        $todaySchedule = $ownerFields->map(function ($field) use ($activeStatuses) {
+            return [
+                'field' => $field->name,
+                'sport_type' => $field->sport_type,
+                'bookings' => Booking::where('field_id', $field->id)->whereDate('booking_date', today())->whereIn('status', $activeStatuses)->orderBy('start_time')->get(['start_time', 'end_time', 'status']),
+            ];
+        });
+
+        $needsAttention = (clone $ownerBookings)
+            ->with(['customer', 'field'])
+            ->whereIn('status', ['pending_payment', 'paid'])
+            ->orderBy('booking_date')
+            ->orderBy('start_time')
+            ->take(10)
+            ->get();
+
+        $revenueBySport = (clone $ownerBookings)
+            ->join('fields', 'bookings.field_id', '=', 'fields.id')
+            ->whereBetween('booking_date', [$startOfWeek, $endOfWeek])
+            ->whereIn('bookings.status', ['paid', 'confirmed', 'completed'])
+            ->selectRaw('fields.sport_type, SUM(bookings.total_price) as total')
+            ->groupBy('fields.sport_type')
+            ->orderByDesc('total')
+            ->get();
+
+        return view('owner.dashboard', compact(
+            'todayCount',
+            'todayRevenue',
+            'weekRevenue',
+            'occupancyRate',
+            'activeFieldsCount',
+            'todaySchedule',
+            'needsAttention',
+            'revenueBySport'
+        ));
     }
 
     /**
