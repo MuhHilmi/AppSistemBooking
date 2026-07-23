@@ -9,7 +9,7 @@
                 <p class="text-gray-500 mt-1">Perbarui informasi lapangan.</p>
             </div>
             <a
-                href="{{ route('fields.index') }}"
+                href="{{ route('owner.fields.index') }}"
                 class="px-5 py-2 rounded-lg border border-gray-300 hover:bg-gray-200 transition"
             >
                 Kembali
@@ -29,7 +29,7 @@
         @endif
 
         <form
-            action="{{ route('fields.update', $field) }}"
+            action="{{ route('owner.fields.update', $field) }}"
             method="POST"
             enctype="multipart/form-data"
         >

@@ -7,7 +7,7 @@
 
             <a
                 href="{{ route('owner.venues.create') }}"
-                class="rounded-lg bg-indigo-600 px-5 py-2 text-white transition hover:bg-indigo-700"
+                class="rounded-lg bg-emerald-600 px-5 py-2 text-white transition hover:bg-emerald-700"
             >
                 + Tambah Tempat
             </a>
@@ -27,7 +27,7 @@
                     >
                         {{-- Gambar --}}
                         <img
-                            src="{{ 'storage/'.$venue->photo ?? 'https://via.placeholder.com/600x300' }}"
+                            src="{{ $venue->photo ? asset('storage/'.$venue->photo) : 'https://via.placeholder.com/600x300' }}"
                             class="h-48 w-full object-cover"
                             alt="{{ $venue->name }}"
                         />
@@ -48,7 +48,7 @@
                             <div class="flex gap-2">
                                 <a
                                     href="{{ route('owner.venues.show',$venue->id) }}"
-                                    class="flex-1 rounded-lg bg-blue-500 py-2 text-center text-white hover:bg-blue-600"
+                                    class="flex-1 rounded-lg bg-green-500 py-2 text-center text-white hover:bg-green-600"
                                 >
                                     Detail
                                 </a>

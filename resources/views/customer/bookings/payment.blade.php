@@ -6,7 +6,7 @@
 <div class="mx-auto max-w-4xl px-4 py-8">
 
     {{-- Step indicator --}}
-    <ol class="mb-6 flex items-center text-sm font-medium text-gray-500">
+    {{-- <ol class="mb-6 flex items-center text-sm font-medium text-gray-500">
         <li class="flex items-center text-gray-400">
             <span class="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs">✓</span>
             <span class="ml-2 hidden sm:inline">Booking Dibuat</span>
@@ -21,7 +21,7 @@
             <span class="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-xs">3</span>
             <span class="ml-2 hidden sm:inline">Selesai</span>
         </li>
-    </ol>
+    </ol> --}}
 
     <div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
         {{-- Header --}}

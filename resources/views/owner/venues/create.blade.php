@@ -9,7 +9,7 @@
                 <p class="text-gray-500 mt-1">Tambahkan tempat baru Anda.</p>
             </div>
             <a
-                href="{{ route('venues.index') }}"
+                href="{{ route('owner.venues.index') }}"
                 class="px-5 py-2 rounded-lg border border-gray-300 hover:bg-gray-200 transition"
             >
                 Kembali
@@ -29,7 +29,7 @@
         @endif
 
         <form
-            action="{{ route('venues.store') }}"
+            action="{{ route('owner.venues.store') }}"
             method="post"
             class="space-y-4"
             enctype="multipart/form-data"

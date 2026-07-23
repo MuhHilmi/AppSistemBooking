@@ -16,21 +16,61 @@ class BookingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
+    public function index() {
         $fields = Field::with(['venue'])->where('status', 1)->get();
 
         return view('customer.bookings.index', compact('fields'));
     }
 
     public function dashboardView() {
-        $customer = Auth::guard('customer') -> user();
-        $activeBookings = Booking::where('customer_id', $customer -> id) -> whereIn('status', ['waiting_payment_method', 'pending_payment', 'confirmed']) -> count();
-        $pendingBookings = Booking::where('customer_id', $customer -> id) -> whereIn('status', ['waiting_payment_method', 'pending_payment']) -> count();
-        $confirmedBookings = Booking::where('customer_id', $customer -> id) -> where('status', 'confirmed') -> count();
-        $latestBookings = Booking::with(['field.venue']) -> where('customer_id', $customer -> id) -> latest() -> take(5) -> get();
+        $customerId = auth('customer')->id();
 
-        return view('customer.dashboard', compact('activeBookings', 'pendingBookings', 'confirmedBookings', 'latestBookings'));
+        $upcomingBooking = Booking::with('field.venue')
+            ->where('customer_id', $customerId)
+            ->whereIn('status', ['waiting_payment_method', 'pending_payment', 'paid', 'confirmed'])
+            ->where(function ($query) {
+                $query->where('booking_date', '>', today())->orWhere(function ($query) {
+                    $query->where('booking_date', today())->where('end_time', '>=', now()->format('H:i:s'));
+                });
+            })
+            ->orderByRaw("CASE status
+                            WHEN 'pending_payment' THEN 1
+                            WHEN 'waiting_payment_method' THEN 2
+                            WHEN 'paid' THEN 3
+                            WHEN 'confirmed' THEN 4
+                            ELSE 5
+                        END")
+            ->orderBy('booking_date')
+            ->orderBy('start_time')
+            ->first();
+
+        $frequentFields = Booking::with('field')
+            ->where('customer_id', $customerId)
+            ->select('field_id', DB::raw('COUNT(*) as total'))
+            ->groupBy('field_id')
+            ->orderByDesc('total')
+            ->take(5)
+            ->get()
+            ->pluck('field')
+            ->filter();
+
+        // dd(Booking::where('customer_id', $customerId)->pluck('status')->unique());
+
+        $recentBookings = Booking::with('field')
+            ->where('customer_id', $customerId)
+            ->whereIn('status', ['waiting_payment_method', 'payment_method', 'paid', 'completed', 'confirmed', 'canceled'])
+            ->orderByDesc('booking_date')
+            ->orderByDesc('start_time')
+            ->take(5)
+            ->get();
+
+        // dd($customerId, $recentBookings->toArray());
+
+        return view('customer.dashboard', compact(
+            'upcomingBooking',
+            'frequentFields',
+            'recentBookings'
+        ));
     }
 
     public function dashboardOwnerView() {
@@ -114,11 +154,53 @@ class BookingController extends Controller
         ));
     }
 
+    public function historyCustomer(Request $request) {
+        $customerId = auth('customer')->id();
+        $filter = $request->query('status', 'all');
+
+        $statusGroup = [
+            'pending_payment' => ['waiting_payment_method', 'pending_payment'],
+            'active' => ['paid', 'confirmed'],
+            'completed' => ['completed'],
+            'canceled' => ['canceled'],
+        ];
+
+        $query = Booking::with('field.venue')
+            ->where('customer_id', $customerId)
+            ->orderByDesc('booking_date')
+            ->orderByDesc('start_time');
+
+        if ($filter !== 'all' && isset($statusGroup[$filter])) {
+            $query->whereIn('status', $statusGroup[$filter]);
+        }
+
+        $bookings = $query->paginate(10)->withQueryString();
+
+        $groupedBookings = $bookings->getCollection()->groupBy(function ($booking) {
+            $date = Carbon::parse($booking->booking_date);
+
+            if ($date->isToday()) {
+                return 'Hari ini';
+            }
+
+            if ($date->between(now()->startOfWeek(), now()->endOfWeek())) {
+                return 'Minggu ini';
+            }
+
+            return 'Lebih awal';
+        });
+
+        return view('customer.bookings.history', [
+            'groupedBookings' => $groupedBookings,
+            'bookings' => $bookings,
+            'activeFilter' => $filter,
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Field $field)
-    {
+    public function create(Field $field) {
         $field -> load(['venue', 'operatingSchedules']);
 
         return view('customer.bookings.create', compact('field'));
@@ -127,8 +209,7 @@ class BookingController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $request->validate([
             'booking_date' => 'required|date',
             'start_time' => 'required',
@@ -245,8 +326,7 @@ class BookingController extends Controller
     /**
      * Menampilkan Slot yang sudah dibooking oleh customer
      */
-    public function show(Booking $booking)
-    {
+    public function show(Booking $booking) {
         // Digunakan ketika pengecekkan
         // dd(auth()->check(), auth()->user(), auth()->id());
         // dd([ 'default_guard' => auth()->user(), 'customer_guard' => auth('customer')->user(), ]);

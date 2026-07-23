@@ -44,7 +44,7 @@
             <nav class="flex-1 px-3 py-5 space-y-0.5">
                 <p class="px-3 text-[11px] uppercase tracking-wider text-white/40 font-600 mb-2">Utama</p>
 
-                <a href="{{ route('owner.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 bg-white/10 text-white">
+                <a href="{{ route('owner.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.dashboard') ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
                     <img src="{{ asset('img/icon/dashboard.svg') }}" alt="Icon Dashboard" class="w-4 h-4">
                     Dashboard
                 </a>
@@ -52,11 +52,11 @@
                     <img src="{{ asset('img/icon/booking.svg') }}" alt="Icon Booking" class="w-4 h-4">
                     Booking
                 </a>
-                <a href="{{ route('owner.venues.index')}}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 text-white/70 hover:bg-white/10 hover:text-white transition">
+                <a href="{{ route('owner.venues.index')}}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.venues.index') ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
                     <img src="{{ asset('img/icon/home.svg') }}" alt="Icon Venue" class="w-4 h-4">
                     Venue
                 </a>
-                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 text-white/70 hover:bg-white/10 hover:text-white transition">
+                <a href="{{ route('owner.fields.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.fields.index') ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
                     <img src="{{ asset('img/icon/soccer-field.svg') }}" alt="Icon Lapang" class="w-4 h-4">
                     Lapang
                 </a>

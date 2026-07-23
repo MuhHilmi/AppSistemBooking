@@ -2,13 +2,13 @@
 
 @section('title', 'Dashboard')
 
-@section('header-actions')
-    <a href="{{-- route('owner.bookings.index') --}}#"
+{{-- @section('header-actions')
+    <a href="{{ route('owner.bookings.index') }}"
        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--primary)] text-white text-[13.5px] font-600 hover:bg-[var(--primary-dark)] transition">
         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
         Booking baru
     </a>
-@endsection
+@endsection --}}
 
 @section('content')
 

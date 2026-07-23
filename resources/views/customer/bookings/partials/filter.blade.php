@@ -6,7 +6,7 @@
 
             {{-- Jenis --}}
             @include ('customer.bookings.partials.search-type')
-            <button class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Filter</button>
+            <button class="bg-green-600 hover:bg-green-700 text-white rounded-lg">Filter</button>
         </div>
     </form>
 </div>

@@ -52,13 +52,13 @@
 
                 <div class="mt-6 flex gap-4">
                     <a
-                        href="{{ route('fields.index') }}"
+                        href="{{ route('owner.fields.index') }}"
                         class="inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
                     >
                         Kembali
                     </a>
                     <a
-                        href="{{ route('fields.edit', $field->id) }}"
+                        href="{{ route('owner.fields.edit', $field->id) }}"
                         class="inline-block bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
                     >
                         Edit
