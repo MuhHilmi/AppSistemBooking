@@ -1,5 +1,7 @@
 @extends ('layouts.customer')
 
+@section ('title', 'Cari Lapang')
+
 @section ('content')
     <div class="max-w-7xl mx-auto py-8">
         <h1 class="text-3xl font-bold mb-8">Booking Lapang</h1>

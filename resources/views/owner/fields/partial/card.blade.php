@@ -42,19 +42,19 @@
                     {{-- Button --}}
                     <div class="grid grid-cols-3 gap-2 mt-6">
                         <a
-                            href="{{ route('fields.show',$field) }}"
-                            class="bg-gray-100 hover:bg-gray-200 rounded-lg py-2 text-center"
+                            href="{{ route('owner.fields.show',$field) }}"
+                            class="bg-green-500 text-white hover:bg-green-200 rounded-lg py-2 text-center"
                         >
                             Detail
                         </a>
                         <a
-                            href="{{ route('fields.edit',$field) }}"
+                            href="{{ route('owner.fields.edit',$field) }}"
                             class="bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg py-2 text-center"
                         >
                             Edit
                         </a>
                         <form
-                            action="{{ route('fields.destroy',$field) }}"
+                            action="{{ route('owner.fields.destroy',$field) }}"
                             method="POST"
                             onsubmit="return confirm('Hapus lapangan ini?');"
                         >
@@ -77,8 +77,8 @@
         <h2 class="text-2xl font-semibold text-gray-700">Belum Ada Lapangan</h2>
         <p class="text-gray-500 mt-2">Silakan tambahkan lapangan pertama Anda.</p>
         <a
-            href="{{ route('fields.create') }}"
-            class="inline-block mt-5 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg"
+            href="{{ route('owner.fields.create') }}"
+            class="inline-block mt-5 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg"
         >
             Tambah Lapangan
         </a>

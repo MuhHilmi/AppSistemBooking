@@ -20,7 +20,7 @@
         </div>
         <a
             href="{{ route('customer.bookings.create', $field) }}"
-            class="mt-5 inline-flex w-full justify-center rounded-lg bg-indigo-600 px-4 py-3 text-white hover:bg-indigo-700"
+            class="mt-5 inline-flex w-full justify-center rounded-lg bg-green-600 px-4 py-3 text-white hover:bg-green-700"
             >Booking</a
         >
     </div>

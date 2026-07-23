@@ -9,7 +9,7 @@
                 <p class="text-gray-500 mt-1">Tambahkan lapangan baru ke venue Anda.</p>
             </div>
             <a
-                href="{{ route('fields.index') }}"
+                href="{{ route('owner.fields.index') }}"
                 class="px-5 py-2 rounded-lg border border-gray-300 hover:bg-gray-200 transition"
             >
                 Kembali
@@ -28,7 +28,7 @@
             </div>
         @endif
 
-        <form action="{{ route('fields.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('owner.fields.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="grid lg:grid-cols-3 gap-6">
                 {{-- Form --}}

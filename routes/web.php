@@ -48,6 +48,8 @@ Route::prefix('customer')
     Route::middleware(['customer'])->group(function(){
         Route::get('/dashboard', [BookingController::class, 'dashboardView']) -> name('dashboard');
         Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+        Route::get('/bookings/history', [BookingController::class, 'historyCustomer'])->name('bookings.history');
         Route::get('/bookings/{field}/create', [BookingController::class, 'create'])->name('bookings.create');
         Route::post('/bookings/{field}', [BookingController::class, 'store'])->name('bookings.store');
         Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
@@ -55,7 +57,6 @@ Route::prefix('customer')
         Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancelCustomer'])->name('bookings.cancel');
         Route::get('/bookings/{booking}/payment', [BookingPaymentController::class, 'show'])->name('bookings.payment');
         Route::post('/bookings/{booking}/payment', [BookingPaymentController::class, 'store'])->name('bookings.payment.store');
-        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('/bookings/{booking}/payment/pending', [BookingPaymentController::class, 'pending'])->name('bookings.payment.pending');
         Route::get('/bookings/{booking}/payment/check-status', [BookingPaymentController::class, 'checkStatus'])->name('bookings.payment.check-status');
     });

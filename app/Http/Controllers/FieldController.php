@@ -139,7 +139,7 @@ class FieldController extends Controller
         }
 
         return redirect()
-        ->route('fields.index')
+        ->route('owner.fields.index')
         ->with('success', 'Tempat berhasil ditambahkan');
     }
 
@@ -218,7 +218,7 @@ class FieldController extends Controller
         ]);
 
         return redirect()
-            ->route('fields.index')
+            ->route('owner.fields.index')
             ->with(
                 'success',
                 'Lapangan berhasil diperbarui.'

@@ -67,7 +67,7 @@ class VenueController extends Controller
         ]);
 
         return redirect()
-        ->route('venues.index')
+        ->route('owner.venues.index')
         ->with('success', 'Tempat berhasil ditambahkan');
     }
 

@@ -1,9 +1,9 @@
-@props (['active'])
+@props(['route', 'active' => null])
 
 @php
-$classes = ($active ?? false)
-            ? 'inline-flex items-center px-1 pt-1 border-b-2 border-indigo-400 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out'
-            : 'inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out';
+    $isActive = request()->routeIs($active ?? $route);
 @endphp
 
-<a {{ $attributes->merge(['class' => $classes]) }}> {{ $slot }} </a>
+<a href="{{ route($route) }}" {{ $attributes->merge(['class' => 'px-3 py-2 rounded-lg text-[13.5px] font-500 transition ' . ($isActive ? 'text-[var(--primary)] bg-[var(--primary-tint)]' : 'text-[var(--ink-soft)] hover:bg-[var(--bg)]')]) }}>
+    {{ $slot }}
+</a>
