@@ -155,6 +155,6 @@ class VenueController extends Controller
 
         $venue->delete();
 
-        return redirect()->route('venues.index')->with('success', 'Venue berhasil dihapus');
+        return redirect()->route('owner.venues.index')->with('success', 'Venue berhasil dihapus');
     }
 }

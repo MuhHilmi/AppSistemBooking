@@ -9,7 +9,7 @@
                 <p class="text-gray-500 mt-1">Ubah venue Anda sesuai dengan kebutuhan.</p>
             </div>
             <a
-                href="{{ route('venues.index') }}"
+                href="{{ route('owner.venues.index') }}"
                 class="px-5 py-2 rounded-lg border border-gray-300 hover:bg-gray-200 transition"
             >
                 Kembali
@@ -30,7 +30,7 @@
 
         {{-- Form --}}
         <form
-            action="{{ route('venues.update', $venue) }}"
+            action="{{ route('owner.venues.update', $venue) }}"
             method="POST"
             enctype="multipart/form-data"
             class="space-y-4"

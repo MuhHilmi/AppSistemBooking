@@ -48,13 +48,13 @@
 
                 <div class="mt-6 flex gap-4">
                     <a
-                        href="{{ route('venues.index') }}"
+                        href="{{ route('owner.venues.index') }}"
                         class="inline-block bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
                     >
                         Kembali
                     </a>
                     <a
-                        href="{{ route('venues.edit', $venue->id) }}"
+                        href="{{ route('owner.venues.edit', $venue->id) }}"
                         class="inline-block bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
                     >
                         Edit
