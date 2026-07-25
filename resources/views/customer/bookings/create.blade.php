@@ -113,23 +113,23 @@
             slots.forEach((slot) => {
                 if (slot.available) {
                     container.innerHTML += `
-                        <button
-                            type="button"
-                            class="slot-btn w-full rounded-lg border border-green-500 p-3 mb-2 hover:bg-indigo-50 hover:text-black transition"
-                            data-start="${slot.start}"
-                            data-end="${slot.end}"
-                            onclick="selectSlot(this)"
-                        >
+                        <button type="button" class="slot-btn w-full rounded-lg border border-green-500 p-3 mb-2 hover:bg-indigo-50 hover:text-black transition" data-start="${slot.start}" data-end="${slot.end}" onclick="selectSlot(this)">
                             ${slot.start} - ${slot.end}
                         </button>
                     `;
+                } else if (slot.reason === 'past') {
+                    container.innerHTML += `
+                        <div class="text-center w-full rounded-lg border border-gray-300 bg-gray-100 text-gray-500 p-3 mb-2">
+                            ${slot.start} - ${slot.end}<br>
+                            (Waktu sudah lewat)
+                        </div>
+                    `;
                 } else {
                     container.innerHTML += `
-                    <div
-                        class="text-center w-full rounded-lg border border-red-300 bg-red-50 text-red-600 p-3 mb-2">
-                        ${slot.start} - ${slot.end}<br>
-                        (Sudah dibooking)
-                    </div>
+                        <div class="text-center w-full rounded-lg border border-red-300 bg-red-50 text-red-600 p-3 mb-2">
+                            ${slot.start} - ${slot.end}<br>
+                            (Sudah dibooking)
+                        </div>
                     `;
                 }
             });
