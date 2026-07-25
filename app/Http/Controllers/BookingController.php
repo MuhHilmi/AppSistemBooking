@@ -231,7 +231,7 @@ class BookingController extends Controller
 
             // Memeriksa perulangan fitur booking
             $existingBooking = Booking::where('field_id', $request->field_id)
-                ->where('booking_date', $request->booking_date)
+                ->whereDate('booking_date', $request->booking_date)
                 ->where(function ($query) use ($request) {
                     $query->where(function ($q) use ($request) {
                         $q->where('start_time', '<', $request->end_time)
@@ -369,7 +369,7 @@ class BookingController extends Controller
             ->first();
 
         $bookings = Booking::where('field_id', $field->id)
-            ->where('booking_date', $request->date)
+            ->whereDate('booking_date', $request->date)
             ->whereIn('status', ['waiting_payment_method', 'pending_payment', 'paid', 'confirmed'])
             ->get();
 
@@ -394,21 +394,21 @@ class BookingController extends Controller
             $slotEnd = $next->copy();
 
             $available = true;
+            $reason = null;
 
             // Slot yang sudah lewat tidak dapat dipilih
             if ($selectedDate->isToday() && $slotStart->lte($now)) {
                 $available = false;
+                $reason = 'past';
             }
 
             foreach ($bookings as $booking) {
                 $bookingStart = Carbon::parse($booking->start_time);
                 $bookingEnd = Carbon::parse($booking->end_time);
 
-                if (
-                    $slotStart->lessThan($bookingEnd) &&
-                    $slotEnd->greaterThan($bookingStart)
-                ) {
+                if ($slotStart->lessThan($bookingEnd) && $slotEnd->greaterThan($bookingStart)) {
                     $available = false;
+                    $reason = 'booked';
                     break;
                 }
             }
@@ -417,8 +417,8 @@ class BookingController extends Controller
                 'start' => $start->format('H:i'),
                 'end' => $next->format('H:i'),
                 'available' => $available,
+                'reason' => $reason,   // tambahan
             ];
-
             $start = $next;
         }
 
