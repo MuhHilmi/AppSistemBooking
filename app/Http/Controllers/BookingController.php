@@ -16,8 +16,24 @@ class BookingController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() {
-        $fields = Field::with(['venue'])->where('status', 1)->get();
+        public function index(Request $request) {
+        $search = $request->query('search');
+        $sportType = $request->query('sport_type');
+
+        $fields = Field::with(['venue'])
+            ->where('status', 1)
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhereHas('venue', function ($vq) use ($search) {
+                            $vq->where('name', 'like', "%{$search}%");
+                        });
+                });
+            })
+            ->when($sportType, function ($query) use ($sportType) {
+                $query->where('sport_type', $sportType);
+            })
+            ->get();
 
         return view('customer.bookings.index', compact('fields'));
     }
