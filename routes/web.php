@@ -5,15 +5,18 @@ use App\Http\Controllers\OtpController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VenueController;
 use App\Http\Controllers\FieldController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\OperatingScheduleController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BookingPaymentController;
 use Illuminate\Support\Facades\Route;
 
 // Route Guest
-Route::get('/', function () {
-    return view('landing.index');
-});
+Route::get('/', [LandingController::class, 'index'])
+    ->name('landing');
+
+Route::get('/lapangan', [LandingController::class, 'allFields'])
+    ->name('fields.index');
 
 Route::get('/laravel', function () {
     return view('welcome');

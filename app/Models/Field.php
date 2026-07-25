@@ -18,6 +18,12 @@ class Field extends Model
         'status'
     ];
 
+    protected $appends = [
+        'thumbnail_url',
+        'price_formatted',
+        'sport_type_label',
+    ];
+
     public function venue()
     {
         return $this->belongsTo(
@@ -34,5 +40,24 @@ class Field extends Model
 
     public function bookings() {
         return $this->hasMany(Booking::class);
+    }
+
+    public function getThumbnailUrlAttribute(): string
+    {
+        if ($this->thumbnail) {
+            return asset('storage/'.$this->thumbnail);
+        }
+
+        return 'https://picsum.photos/seed/'.$this->slug.'/800/500';
+    }
+
+    public function getPriceFormattedAttribute(): string
+    {
+        return number_format((float) $this->price_per_hour, 0, ',', '.');
+    }
+
+    public function getSportTypeLabelAttribute(): string
+    {
+        return ucfirst($this->sport_type);
     }
 }
