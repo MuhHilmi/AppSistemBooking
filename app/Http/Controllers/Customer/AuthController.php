@@ -55,6 +55,11 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        $request->validate([
+            'phone' => 'required',
+            'password' => 'required',
+        ]);
+
         $credentials = [
             'phone' => $request->phone,
             'password' => $request->password
@@ -63,29 +68,21 @@ class AuthController extends Controller
             'phone',
             $request->phone
         )->first();
-        if (
-            !$customer->is_verified
-        ) {
-            return back()
-                ->withErrors([
-                    'phone' =>
-                    'Nomor belum diverifikasi'
-                ]);
+
+        if (!$customer) {
+            return back()->withErrors(['phone' => 'Nomor HP belum terdaftar']);
         }
-        if (
-            Auth::guard('customer')
-            ->attempt($credentials)
-        ) {
+
+        if (!$customer->is_verified) {
+            return back()->withErrors(['phone' => 'Nomor belum diverifikasi']);
+        }
+        if (Auth::guard('customer')->attempt($credentials)) {
             $request
                 ->session()
                 ->regenerate();
-            return redirect(
-                '/customer/dashboard'
-            );
+            return redirect('/customer/dashboard');
         }
-        return back()->withErrors([
-            'phone' => 'Login gagal'
-        ]);
+        return back()->withErrors(['phone' => 'Login gagal']);
     }
 
     public function logout(Request $request)

@@ -18,11 +18,9 @@
             </span>
             <span class="text-gray-500"> / jam </span>
         </div>
-        <a
-            href="{{ route('customer.bookings.create', $field) }}"
-            class="mt-5 inline-flex w-full justify-center rounded-lg bg-green-600 px-4 py-3 text-white hover:bg-green-700"
-            >Booking</a
-        >
+        <button type="button" x-on:click="openModal(@js($field))" class="mt-5 inline-flex w-full justify-center rounded-lg bg-green-600 px-4 py-3 text-white hover:bg-green-700">
+            Lihat Detail
+        </button>
     </div>
     {{-- @if ($fields -> isEmpty())
         <div class="col-span-full">
