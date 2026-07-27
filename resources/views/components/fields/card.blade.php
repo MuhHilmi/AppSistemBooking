@@ -23,7 +23,7 @@
         <div class="mt-4 flex items-center justify-between">
             <span class="text-slate-500">👥 {{ $field->capacity }} orang</span>
             <span class="text-slate-500">
-                📍 {{ $field->venue->name ?? $field->venue->city ?? '-' }}
+                📍 {{ $field->venue->name ?? '-' }}
             </span>
         </div>
 

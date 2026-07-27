@@ -42,9 +42,7 @@ class OperatingScheduleController extends Controller
      */
     public function show(OperatingSchedule $operatingSchedule)
     {
-        $field = Field::findOrFail($fieldId);
-
-        $schedules = $field->operatingSchedules;
+        return redirect()->route('operating-schedules.edit', $operatingSchedule->field_id);
     }
 
     /**
@@ -75,6 +73,9 @@ class OperatingScheduleController extends Controller
         $schedule = OperatingSchedule::findOrFail(
             $day['id']
         );
+
+        abort_if($schedule->field_id !== $field->id, 403);
+
         if(
             isset($day['is_open']) &&
             $day['open_time'] >= $day['close_time']
@@ -89,7 +90,7 @@ class OperatingScheduleController extends Controller
     }
 
     return redirect()
-        ->route('operating-schedules.index')
+        ->route('owner.operating-schedules.index')
         ->with('success', 'Jadwal berhasil diperbarui.');
     }
 

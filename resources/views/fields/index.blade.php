@@ -7,7 +7,7 @@
     @include('landing.partials.navbar')
 
     <div class="pt-32 pb-24">
-        <div class="container-custome">
+        <div class="container-custom">
             {{-- Heading --}}
             <div class="mx-auto max-w-3xl text-center">
                 <span class="inline-flex rounded-full bg-green-100 px-4 py-2 text-sm font-semibold text-green-700">Semua Lapangan</span>

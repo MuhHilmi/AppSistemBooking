@@ -8,6 +8,7 @@ use App\Models\OperatingSchedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class FieldController extends Controller
 {
@@ -98,7 +99,10 @@ class FieldController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'venue_id' => 'required|exists:venues,id',
+            'venue_id' => [
+                'required',
+                Rule::exists('venues', 'id')->where('owner_id', auth()->id()),
+            ],
             'name' => 'required|max:255',
             'sport_type' => 'required',
             'price_per_hour' => 'required|numeric|min:0',
@@ -185,7 +189,10 @@ class FieldController extends Controller
         $this->authorizeField($field);
 
         $request->validate([
-            'venue_id' => 'required|exists:venues,id',
+            'venue_id' => [
+                'required',
+                Rule::exists('venues', 'id')->where('owner_id', auth()->id()),
+            ],
             'name' => 'required|max:255',
             'sport_type' => 'required',
             'price_per_hour' => 'required|numeric|min:0',

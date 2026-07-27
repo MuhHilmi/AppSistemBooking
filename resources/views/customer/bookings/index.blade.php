@@ -8,18 +8,23 @@
         <div>
             @include ('customer.bookings.partials.filter')
         </div>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @if ($fields -> isEmpty())
-                <div class="col-span-full">
-                    <div class="bg-white rounded-xl p-10 text-center">
-                        <h2 class="text-xl font-semibold">Belum ada lapang yang tersedia</h2>
+        <div x-data="{ showModal: false, selectedField: null, openModal(field) { this.selectedField = field; this.showModal = true; }, closeModal() { this.showModal = false; } }"
+            x-on:keydown.escape.window="closeModal()">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                @if ($fields -> isEmpty())
+                    <div class="col-span-full">
+                        <div class="bg-white rounded-xl p-10 text-center">
+                            <h2 class="text-xl font-semibold">Belum ada lapang yang tersedia</h2>
+                        </div>
                     </div>
-                </div>
-            @else
-                @foreach ($fields as $field)
-                    @include ('customer.bookings.partials.field-card', ['field' => $field])
-                @endforeach
-            @endif
+                @else
+                    @foreach ($fields as $field)
+                        @include ('customer.bookings.partials.field-card', ['field' => $field])
+                    @endforeach
+                @endif
+            </div>
+
+            @include ('customer.bookings.partials.field-detail-modal')
         </div>
     </div>
 @endsection

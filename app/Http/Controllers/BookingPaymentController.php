@@ -98,6 +98,16 @@ class BookingPaymentController extends Controller
         return view('customer.bookings.payment-pending', compact('booking'));
     }
 
+    public function checkStatus(Booking $booking)
+    {
+        abort_unless($booking->customer_id == auth('customer')->id(), 403);
+
+        return response()->json([
+            'status' => $booking->status,
+            'is_final' => in_array($booking->status, ['confirmed', 'paid', 'completed', 'canceled']),
+        ]);
+    }
+
     /**
      * Show the form for editing the specified resource.
      */

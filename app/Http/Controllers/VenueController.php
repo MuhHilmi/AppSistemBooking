@@ -76,6 +76,8 @@ class VenueController extends Controller
      */
     public function show(Venue $venue)
     {
+        $this->authorize('view', $venue);
+
         return view('owner.venues.show', compact('venue'));
     }
 

@@ -10,6 +10,6 @@
     };
 @endphp
 
-<span class="inline-flex items-center rounded-fll px-3 py-1 text-sm font-semibold {{ $badge['bg'] }} {{ $badge['text'] }}">
+<span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold {{ $badge['bg'] }} {{ $badge['text'] }}">
     {{ Str::headline($status) }}
 </span>
