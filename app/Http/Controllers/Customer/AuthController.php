@@ -91,9 +91,6 @@ class AuthController extends Controller
             ->logout();
         $request
             ->session()
-            ->invalidate();
-        $request
-            ->session()
             ->regenerateToken();
         return redirect(
             '/customer/login'

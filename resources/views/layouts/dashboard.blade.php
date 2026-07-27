@@ -81,7 +81,7 @@
             </nav>
 
             <div class="px-3 py-4 border-t border-white/10">
-                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 text-white/70 hover:bg-white/10 hover:text-white transition">
+                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('profile.*') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
                     <div class="w-7 h-7 rounded-full bg-[var(--primary)] flex items-center justify-center text-[12px] font-600">{{ substr(auth()->user()->name ?? 'O', 0, 1) }}</div>
                     <span class="truncate">{{ auth()->user()->name ?? 'Owner' }}</span>
                 </a>
