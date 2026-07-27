@@ -44,13 +44,13 @@
             </nav>
 
             <div class="flex items-center gap-3">
-                @yield('header-actions')
-                {{-- TODO: web.php belum punya route profil untuk guard customer
-                    (profile.edit ada tapi di bawah middleware('auth') / guard default).
-                    Ganti href ini setelah route customer.profile dibuat. --}}
-                <span class="hidden md:flex w-8 h-8 rounded-full bg-[var(--primary-tint)] items-center justify-center text-[12px] font-600 text-[var(--primary-dark)]">
+                <form action="{{ route('customer.logout') }}" method="post">
+                    @csrf
+                    <button type="submit" class="px-4 py-2 rounded-lg bg-red-500 text-white font-semibold">Logout</button>
+                </form>
+                <a href="{{ route('customer.profile.edit') }}" class="hidden md:flex w-8 h-8 rounded-full bg-[var(--primary-tint)] items-center justify-center text-[12px] font-600 text-[var(--primary-dark)]">
                     {{ strtoupper(substr(auth('customer')->user()->name ?? 'P', 0, 1)) }}
-                </span>
+                </a>
             </div>
         </div>
     </header>
@@ -60,23 +60,25 @@
             @yield('content')
         </main>
 
-        <nav class="md:hidden fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-[var(--surface)] border-t border-[var(--line)] flex items-center justify-around h-16">
-            <a href="{{ route('customer.dashboard') }}" class="flex flex-col items-center justify-center gap-1 h-14 w-14 rounded-lg {{ request()->routeIs('customer.dashboard') ? 'bg-green-50 text-[var(--primary)]' : 'text-[var(--ink-soft)]' }}">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
-                <span class="text-[10.5px] font-500">Beranda</span>
-            </a>
-            <a href="{{ route('customer.bookings.index') }}" class="flex flex-col items-center justify-center gap-1 h-14 w-14 rounded-lg {{ request()->routeIs('customer.bookings.index') ? 'bg-green-50 text-[var(--primary)]' : 'text-[var(--ink-soft)]' }}">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-                <span class="text-[10.5px] font-500">Cari</span>
-            </a>
-            <a href="{{ route('customer.bookings.history') }}" class="flex flex-col items-center justify-center gap-1 h-14 w-14 rounded-lg {{ request()->routeIs('customer.bookings.history') ? 'bg-green-50 text-[var(--primary)]' : 'text-[var(--ink-soft)]' }}">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18"/></svg>
-                <span class="text-[10.5px] font-500">Booking</span>
-            </a>
-            <a href="#" class="flex flex-col items-center justify-center gap-1 h-14 w-14 rounded-lg {{ request()->routeIs('customer.dashboard') ? 'bg-green-50 text-[var(--primary)]' : 'text-[var(--ink-soft)]' }}">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
-                <span class="text-[10.5px] font-500">Profil</span>
-            </a>
+        <nav class="md:hidden fixed bottom-0 left-0 right-0 w-full bg-[var(--surface)] border-t border-[var(--line)] h-20">
+            <div class="w-full h-full flex justify-around items-center">
+                <a href="{{ route('customer.dashboard') }}" class="flex flex-col items-center justify-center gap-1 h-14 w-14 rounded-lg {{ request()->routeIs('customer.dashboard') ? 'bg-green-50 text-[var(--primary)]' : 'text-[var(--ink-soft)]' }}">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+                    <span class="text-[10.5px] font-500">Beranda</span>
+                </a>
+                <a href="{{ route('customer.bookings.index') }}" class="flex flex-col items-center justify-center gap-1 h-14 w-14 rounded-lg {{ request()->routeIs('customer.bookings.index') ? 'bg-green-50 text-[var(--primary)]' : 'text-[var(--ink-soft)]' }}">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                    <span class="text-[10.5px] font-500">Cari</span>
+                </a>
+                <a href="{{ route('customer.bookings.history') }}" class="flex flex-col items-center justify-center gap-1 h-14 w-14 rounded-lg {{ request()->routeIs('customer.bookings.history') ? 'bg-green-50 text-[var(--primary)]' : 'text-[var(--ink-soft)]' }}">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18"/></svg>
+                    <span class="text-[10.5px] font-500">Booking</span>
+                </a>
+                <a href="{{ route('customer.profile.edit') }}" class="flex flex-col items-center justify-center gap-1 h-14 w-14 rounded-lg {{ request()->routeIs('customer.profile.*') ? 'bg-green-50 text-[var(--primary)]' : 'text-[var(--ink-soft)]' }}">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+                    <span class="text-[10.5px] font-500">Profil</span>
+                </a>
+            </div>
         </nav>
     </div>
 

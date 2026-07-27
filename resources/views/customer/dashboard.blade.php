@@ -2,12 +2,6 @@
 
 @section('title', 'Beranda')
 
-@section('header-actions')
-    <button aria-label="Notifikasi" class="w-9 h-9 flex items-center justify-center text-[var(--ink-soft)]">
-        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
-    </button>
-@endsection
-
 @section('content')
 
     <p class="text-[13px] text-[var(--ink-soft)] mb-0.5">Halo,</p>

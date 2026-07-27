@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Customer\AuthController;
+use App\Http\Controllers\Customer\ProfileController as CustomerProfileController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VenueController;
@@ -62,6 +63,10 @@ Route::prefix('customer')
         Route::post('/bookings/{booking}/payment', [BookingPaymentController::class, 'store'])->name('bookings.payment.store');
         Route::get('/bookings/{booking}/payment/pending', [BookingPaymentController::class, 'pending'])->name('bookings.payment.pending');
         Route::get('/bookings/{booking}/payment/check-status', [BookingPaymentController::class, 'checkStatus'])->name('bookings.payment.check-status');
+
+        Route::get('/profile', [CustomerProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile/password', [CustomerProfileController::class, 'updatePassword'])->name('profile.password.update');
+        Route::delete('/profile', [CustomerProfileController::class, 'destroy'])->name('profile.destroy');
     });
 });
 
@@ -119,7 +124,6 @@ Route::prefix('owner')
 // Route Profile
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
