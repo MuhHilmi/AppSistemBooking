@@ -78,6 +78,13 @@
                     <img src="{{ asset('img/icon/settings.svg') }}" alt="Icon Pengaturan" class="w-4 h-4">
                     Pengaturan
                 </a>
+                <form action="{{ route('logout')}}" method="post">
+                    @csrf
+                    <button type="submit" class="mt-2 w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-semibold text-white/70 bg-red-500 hover:bg-red-700 hover:text-white transition">
+                        <img src="{{ asset('img/icon/sign-out-alt.svg') }}" alt="Icon Logout" class="w-4 h-4">
+                        Logout
+                    </button>
+                </form>
             </nav>
 
             <div class="px-3 py-4 border-t border-white/10">
