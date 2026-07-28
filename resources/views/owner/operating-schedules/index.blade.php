@@ -15,7 +15,7 @@ $days = [
 @section ('content')
     <div class="max-w-7xl mx-auto">
         <h1 class="text-3xl font-bold mb-6">Jadwal Operasional</h1>
-        <div class="grid gap-6">
+        <div class="grid grid-cols-3 gap-6">
             @foreach ($fields as $field)
                 <div class="bg-white rounded-xl shadow p-6">
                     <div class="flex justify-between items-center">

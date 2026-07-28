@@ -46,9 +46,11 @@
             <div class="flex items-center gap-3">
                 <form action="{{ route('customer.logout') }}" method="post">
                     @csrf
-                    <button type="submit" class="px-4 py-2 rounded-lg bg-red-500 text-white font-semibold">Logout</button>
+                    <button type="submit" class="p-4 rounded-full bg-red-500 text-white font-semibold">
+                        <img src="{{ asset('img/icon/sign-out-alt.svg') }}" alt="Icon Logout" class="w-4 h-4">
+                    </button>
                 </form>
-                <a href="{{ route('customer.profile.edit') }}" class="hidden md:flex w-8 h-8 rounded-full bg-[var(--primary-tint)] items-center justify-center text-[12px] font-600 text-[var(--primary-dark)]">
+                <a href="{{ route('customer.profile.edit') }}" class="hidden md:flex w-12 h-12 rounded-full bg-[var(--primary-tint)] items-center justify-center text-[12px] font-600 text-[var(--primary-dark)]">
                     {{ strtoupper(substr(auth('customer')->user()->name ?? 'P', 0, 1)) }}
                 </a>
             </div>
