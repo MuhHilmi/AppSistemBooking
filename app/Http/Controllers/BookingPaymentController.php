@@ -44,8 +44,8 @@ class BookingPaymentController extends Controller
             case 'cash':
                 $booking->update([
                     'payment_method' => 'cash',
-                    'status' => 'confirmed',
-                    'payment_due_at' => null
+                    'status' => 'pending_payment',
+                    'payment_due_at' => null, // cash dikonfirmasi manual oleh owner, tidak ada batas waktu otomatis
                 ]);
                 break;
             case 'transfer':
@@ -87,7 +87,7 @@ class BookingPaymentController extends Controller
 
     public function pending(Booking $booking)
     {
-        $this->authorize('view', $booking);
+        abort_unless($booking->customer_id == auth('customer')->id(), 403);
 
         if ($booking->status !== 'pending_payment') {
             return redirect()->route('customer.bookings.show', $booking);
@@ -98,6 +98,10 @@ class BookingPaymentController extends Controller
         return view('customer.bookings.payment-pending', compact('booking'));
     }
 
+    /**
+     * Endpoint ringan untuk polling status booking dari halaman payment-pending
+     * (dipakai untuk auto-refresh begitu integrasi Midtrans/webhook sudah aktif).
+     */
     public function checkStatus(Booking $booking)
     {
         abort_unless($booking->customer_id == auth('customer')->id(), 403);
