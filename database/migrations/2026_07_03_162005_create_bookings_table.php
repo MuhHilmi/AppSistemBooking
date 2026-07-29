@@ -31,6 +31,10 @@ return new class extends Migration
                 'canceled',
             ]);
             $table->string('payment_method')->nullable();
+            $table->string('snap_token')->nullable();
+            $table->string('midtrans_order_id')->nullable();
+            $table->string('midtrans_transaction_id')->nullable();
+            $table->string('midtrans_payment_type')->nullable();
             $table->timestamp('reservation_expires_at')->nullable();
             $table->timestamp('payment_due_at')->nullable();
             $table->timestamp('checked_in_at')->nullable();

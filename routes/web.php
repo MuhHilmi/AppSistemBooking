@@ -10,6 +10,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\OperatingScheduleController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\BookingPaymentController;
+use App\Http\Controllers\MidtransWebhookController;
 use Illuminate\Support\Facades\Route;
 
 // Route Guest
@@ -22,6 +23,9 @@ Route::get('/lapangan', [LandingController::class, 'allFields'])
 Route::get('/laravel', function () {
     return view('welcome');
 });
+
+// Webhook Midtrans - dipanggil server-to-server oleh Midtrans, bukan browser customer.
+Route::post('/midtrans/callback', [MidtransWebhookController::class, 'handle'])->name('midtrans.callback');
 
 // Route Customer
 Route::prefix('customer')

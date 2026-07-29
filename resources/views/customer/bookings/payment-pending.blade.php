@@ -73,20 +73,28 @@
                 </div>
             </div>
 
-            {{-- Placeholder Midtrans --}}
-            <div class="rounded-lg border border-dashed border-indigo-300 bg-indigo-50 p-5">
+            {{-- Pembayaran Midtrans --}}
+            <div class="rounded-lg border border-indigo-200 bg-indigo-50 p-5">
                 <h3 class="font-semibold text-indigo-900">
-                    Informasi Pembayaran
+                    Selesaikan Pembayaran
                 </h3>
                 <p class="mt-2 text-sm text-indigo-700">
-                    Informasi pembayaran akan ditampilkan di sini setelah integrasi Midtrans dilakukan.
+                    Klik tombol di bawah untuk membuka halaman pembayaran Midtrans
+                    ({{ $booking->payment_method === 'transfer' ? 'Transfer Bank / Virtual Account' : 'QRIS / GoPay' }}).
                 </p>
+
+                <button id="pay-button" type="button"
+                    class="mt-4 inline-flex items-center justify-center rounded-lg bg-indigo-600 px-5 py-3 font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60">
+                    Bayar Sekarang
+                </button>
+
+                <p id="pay-error" class="mt-2 hidden text-sm text-red-600"></p>
             </div>
 
             {{-- Action Button --}}
             <div class="flex flex-col gap-3 sm:flex-row">
-                <a href="{{ route('customer.bookings.payment.pending', $booking) }}" class="inline-flex items-center justify-center rounded-lg bg-amber-500 px-5 py-3 font-medium text-white transition hover:bg-amber-600">
-                    Refresh Status
+                <a href="{{ route('customer.bookings.payment.pending', $booking) }}" class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-3 font-medium text-gray-700 transition hover:bg-gray-100">
+                    Refresh Halaman
                 </a>
                 <a href="{{ route('customer.bookings.show', $booking) }}" class="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-3 font-medium text-gray-700 transition hover:bg-gray-100">
                     Kembali ke Detail Booking
@@ -98,7 +106,59 @@
 @endsection
 
 @push('script')
+    @if ($booking->snap_token)
+        <script src="{{ config('midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}"
+            data-client-key="{{ config('midtrans.client_key') }}"></script>
+    @endif
+
     <script>
+        const payButton = document.getElementById('pay-button');
+        const payError = document.getElementById('pay-error');
+        const snapToken = @json($booking->snap_token);
+        const checkStatusUrl = "{{ route('customer.bookings.payment.check-status', $booking) }}";
+        const bookingShowUrl = "{{ route('customer.bookings.show', $booking) }}";
+
+        if (!snapToken) {
+            payButton.disabled = true;
+            payError.textContent = 'Token pembayaran tidak tersedia. Silakan refresh halaman.';
+            payError.classList.remove('hidden');
+        }
+
+        function openSnap() {
+            if (!snapToken || typeof window.snap === 'undefined') return;
+
+            window.snap.pay(snapToken, {
+                onSuccess: function () {
+                    window.location.href = bookingShowUrl;
+                },
+                onPending: function () {
+                    // Biarkan polling di bawah yang mengurus refresh status
+                },
+                onError: function () {
+                    payError.textContent = 'Pembayaran gagal diproses. Silakan coba lagi.';
+                    payError.classList.remove('hidden');
+                },
+                onClose: function () {
+                    // User menutup popup tanpa menyelesaikan pembayaran, tidak apa-apa,
+                    // dia masih bisa klik "Bayar Sekarang" lagi.
+                }
+            });
+        }
+
+        payButton?.addEventListener('click', openSnap);
+
+        // Polling status pembayaran otomatis setiap 5 detik
+        setInterval(function () {
+            fetch(checkStatusUrl)
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.is_final) {
+                        window.location.href = bookingShowUrl;
+                    }
+                })
+                .catch(() => {});
+        }, 5000);
+
         const countdown = document.getElementById('payment-countdown')
         const deadlineStr = countdown.dataset.deadline
         const deadline = deadlineStr ? new Date(deadlineStr) : null

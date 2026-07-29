@@ -128,6 +128,38 @@
                     Rp{{ number_format($booking->total_price) }}
                 </p>
             </div>
+            @if(in_array($booking->status, ['paid', 'confirmed', 'completed']) && $booking->payment_method)
+            <div class="border-t pt-6">
+                <h2 class="font-semibold mb-3">
+                    Informasi Pembayaran
+                </h2>
+                <div class="grid md:grid-cols-3 gap-6 text-sm">
+                    <div>
+                        <h3 class="text-gray-500">Metode</h3>
+                        <p class="font-medium">
+                            @switch($booking->payment_method)
+                                @case('cash') Cash @break
+                                @case('transfer') Transfer Bank @break
+                                @case('qris') QRIS @break
+                                @default {{ ucfirst($booking->payment_method) }}
+                            @endswitch
+                        </p>
+                    </div>
+                    @if($booking->midtrans_payment_type)
+                    <div>
+                        <h3 class="text-gray-500">Channel Pembayaran</h3>
+                        <p class="font-medium">{{ str_replace('_', ' ', ucfirst($booking->midtrans_payment_type)) }}</p>
+                    </div>
+                    @endif
+                    @if($booking->midtrans_transaction_id)
+                    <div>
+                        <h3 class="text-gray-500">ID Transaksi</h3>
+                        <p class="font-mono text-xs">{{ $booking->midtrans_transaction_id }}</p>
+                    </div>
+                    @endif
+                </div>
+            </div>
+            @endif
             @if($booking->notes)
             <div class="border-t pt-6">
                 <h2 class="font-semibold mb-3">
