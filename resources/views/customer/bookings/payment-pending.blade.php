@@ -8,10 +8,18 @@
         {{-- Header --}}
         <div class="border-b border-gray-200 px-6 py-5">
             <h1 class="text-2xl font-bold text-gray-900">
-                Menunggu Pembayaran
+                @if ($booking->payment_method === 'cash')
+                    Menunggu Konfirmasi Pembayaran
+                @else
+                    Menunggu Pembayaran
+                @endif
             </h1>
             <p class="mt-1 text-sm text-gray-500">
-                Silakan selesaikan pembayaran sebelum batas waktu berakhir.
+                @if ($booking->payment_method === 'cash')
+                    Silakan datang ke venue dan lakukan pembayaran tunai. Booking akan aktif setelah dikonfirmasi oleh pengelola.
+                @else
+                    Silakan selesaikan pembayaran sebelum batas waktu berakhir.
+                @endif
             </p>
         </div>
         <div class="space-y-6 p-6">
@@ -53,17 +61,19 @@
                             Rp{{ number_format($booking->total_price, 0, ',', '.') }}
                         </span>
                     </div>
+                    @unless ($booking->payment_method === 'cash')
                     <div class="flex items-center justify-between px-5 py-4">
                         <span class="text-sm font-medium text-gray-500">
                             Batas Pembayaran
                         </span>
                         @php
-                            $paymentDeadline = $booking->payment_due_at ?? $booking->reservation_expires_at;
+                            $paymentDeadline = $booking->payment_due_at;
                         @endphp
                         <span id="payment-countdown" data-deadline="{{ $paymentDeadline?->toIso8601String() }}"
                             class="text-lg font-bold text-red-600">
                         </span>
                     </div>
+                    @endunless
                     <div class="flex items-center justify-between px-5 py-4">
                         <span class="text-sm font-medium text-gray-500">
                             Status
@@ -73,23 +83,36 @@
                 </div>
             </div>
 
-            {{-- Pembayaran Midtrans --}}
-            <div class="rounded-lg border border-indigo-200 bg-indigo-50 p-5">
-                <h3 class="font-semibold text-indigo-900">
-                    Selesaikan Pembayaran
-                </h3>
-                <p class="mt-2 text-sm text-indigo-700">
-                    Klik tombol di bawah untuk membuka halaman pembayaran Midtrans
-                    ({{ $booking->payment_method === 'transfer' ? 'Transfer Bank / Virtual Account' : 'QRIS / GoPay' }}).
-                </p>
+            @if ($booking->payment_method === 'cash')
+                {{-- Instruksi Cash --}}
+                <div class="rounded-lg border border-dashed border-amber-300 bg-amber-50 p-5">
+                    <h3 class="font-semibold text-amber-900">
+                        Bayar di Tempat
+                    </h3>
+                    <p class="mt-2 text-sm text-amber-800">
+                        Booking Anda sudah tercatat. Silakan datang ke venue sesuai jadwal dan lakukan pembayaran tunai kepada pengelola.
+                        Status booking akan otomatis berubah menjadi <strong>Terkonfirmasi</strong> setelah pengelola mengonfirmasi pembayaran Anda diterima.
+                    </p>
+                </div>
+            @else
+              {{-- Pembayaran Midtrans --}}
+              <div class="rounded-lg border border-indigo-200 bg-indigo-50 p-5">
+                  <h3 class="font-semibold text-indigo-900">
+                      Selesaikan Pembayaran
+                  </h3>
+                  <p class="mt-2 text-sm text-indigo-700">
+                      Klik tombol di bawah untuk membuka halaman pembayaran Midtrans
+                      ({{ $booking->payment_method === 'transfer' ? 'Transfer Bank / Virtual Account' : 'QRIS / GoPay' }}).
+                  </p>
 
-                <button id="pay-button" type="button"
-                    class="mt-4 inline-flex items-center justify-center rounded-lg bg-indigo-600 px-5 py-3 font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60">
-                    Bayar Sekarang
-                </button>
+                  <button id="pay-button" type="button"
+                      class="mt-4 inline-flex items-center justify-center rounded-lg bg-indigo-600 px-5 py-3 font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60">
+                      Bayar Sekarang
+                  </button>
 
-                <p id="pay-error" class="mt-2 hidden text-sm text-red-600"></p>
-            </div>
+                  <p id="pay-error" class="mt-2 hidden text-sm text-red-600"></p>
+              </div>
+            @endif
 
             {{-- Action Button --}}
             <div class="flex flex-col gap-3 sm:flex-row">
@@ -160,6 +183,8 @@
         }, 5000);
 
         const countdown = document.getElementById('payment-countdown')
+
+        if (countdown) {
         const deadlineStr = countdown.dataset.deadline
         const deadline = deadlineStr ? new Date(deadlineStr) : null
 
@@ -195,5 +220,6 @@
         setInterval(() => {
             updateCountdown()
         }, 1000);
+        }
     </script>
 @endpush
