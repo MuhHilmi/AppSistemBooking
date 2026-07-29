@@ -78,8 +78,9 @@
 
         {{-- ===== Perlu perhatian ===== --}}
         <div class="col-span-2 bg-[var(--surface)] border border-[var(--line)] rounded-xl overflow-hidden">
-            <div class="px-5 py-4 border-b border-[var(--line)]">
+            <div class="px-5 py-4 border-b border-[var(--line)] flex items-center justify-between">
                 <p class="font-display font-600 text-[14.5px]">Perlu dikonfirmasi</p>
+                <a href="{{ route('owner.bookings.index') }}" class="text-[12.5px] font-600 text-[var(--primary)] hover:underline">Lihat Semua</a>
             </div>
             <div class="divide-y divide-[var(--line)]">
                 @forelse($needsAttention as $booking)
@@ -91,10 +92,21 @@
                                 {{ \Carbon\Carbon::parse($booking->start_time)->format('H:i') }}–{{ \Carbon\Carbon::parse($booking->end_time)->format('H:i') }}
                             </p>
                         </div>
-                        <span class="shrink-0 text-[11.5px] font-600 px-2.5 py-1 rounded-md
-                            {{ $booking->status === 'paid' ? 'bg-[var(--primary-tint)] text-[var(--primary-dark)]' : 'bg-[var(--amber-tint)] text-[var(--amber)]' }}">
-                            {{ $booking->status === 'paid' ? 'Perlu verifikasi' : 'Menunggu bayar' }}
-                        </span>
+                        @if ($booking->payment_method === 'cash' && $booking->status === 'pending_payment')
+                            <form method="POST" action="{{ route('owner.bookings.confirm-cash', $booking) }}"
+                                onsubmit="return confirm('Konfirmasi bahwa customer sudah membayar cash?');" class="shrink-0">
+                                @csrf
+                                @method('PATCH')
+                                <button class="text-[11.5px] font-600 px-2.5 py-1.5 rounded-md bg-[var(--primary)] text-white hover:bg-[var(--primary-dark)]">
+                                    Konfirmasi Cash
+                                </button>
+                            </form>
+                        @else
+                            <span class="shrink-0 text-[11.5px] font-600 px-2.5 py-1 rounded-md
+                                {{ $booking->status === 'paid' ? 'bg-[var(--primary-tint)] text-[var(--primary-dark)]' : 'bg-[var(--amber-tint)] text-[var(--amber)]' }}">
+                                {{ $booking->status === 'paid' ? 'Perlu verifikasi' : 'Menunggu bayar' }}
+                            </span>
+                        @endif
                     </div>
                 @empty
                     <p class="px-5 py-8 text-center text-[13px] text-[var(--ink-soft)]">Tidak ada booking yang perlu perhatian.</p>

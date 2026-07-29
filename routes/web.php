@@ -9,6 +9,7 @@ use App\Http\Controllers\FieldController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\OperatingScheduleController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\Owner\BookingController as OwnerBookingController;
 use App\Http\Controllers\BookingPaymentController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,27 +28,19 @@ Route::get('/laravel', function () {
 Route::prefix('customer')
     ->name('customer.')
     ->group(function() {
-    Route::get('/register', [AuthController::class, 'registerForm'])
-        ->name('register.form');
+    Route::get('/register', [AuthController::class, 'registerForm'])->name('register.form');
 
-    Route::post('/register', [AuthController::class, 'register'])
-        ->name('register');
+    Route::post('/register', [AuthController::class, 'register'])->name('register');
 
-    Route::get('/verify', [OtpController::class, 'form'])
-        ->name('verify');
+    Route::get('/verify', [OtpController::class, 'form'])->name('verify');
 
-    Route::post('/verify', [OtpController::class, 'verify'])
-        ->name('verify.otp');
+    Route::post('/verify', [OtpController::class, 'verify'])->name('verify.otp');
 
-    Route::get('/resend-otp', [OtpController::class, 'resend'])
-        ->name('resend-otp');
+    Route::get('/resend-otp', [OtpController::class, 'resend'])->name('resend-otp');
 
-    Route::get('/login', [AuthController::class, 'loginForm'])
-        ->name('login.form');
+    Route::get('/login', [AuthController::class, 'loginForm'])->name('login.form');
 
-    Route::post('/login', [AuthController::class, 'login'])
-        ->name('login');
-
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
 
     Route::middleware(['customer'])->group(function(){
         Route::get('/dashboard', [BookingController::class, 'dashboardView']) -> name('dashboard');
@@ -80,17 +73,11 @@ Route::prefix('admin')
     ->name('admin.')
     ->middleware(['auth', 'role:admin'])
     ->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', function () { return view('admin.dashboard'); })->name('dashboard');
 
-    Route::get('/test', function () {
-        return 'Super Admin';
-    })->name('test');
+    Route::get('/test', function () { return 'Super Admin'; })->name('test');
 
-    Route::get('/', function () {
-        return view('admin');
-    })->name('index');
+    Route::get('/', function () { return view('admin'); })->name('index');
 });
 
 // Route Owner
@@ -104,15 +91,18 @@ Route::prefix('owner')
         return 'Owner';
     })->name('test');
 
-    Route::get('/fields/{field}/operating-schedules',
-        [OperatingScheduleController::class, 'edit']
-    )->name('operating-schedules.edit');
+    Route::get('/fields/{field}/operating-schedules', [OperatingScheduleController::class, 'edit'])->name('operating-schedules.edit');
 
-    Route::put('/fields/{field}/operating-schedules',
-        [OperatingScheduleController::class, 'update']
-    )->name('operating-schedules.update');
+    Route::put('/fields/{field}/operating-schedules', [OperatingScheduleController::class, 'update'])->name('operating-schedules.update');
 
     Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancelOwner'])->name('bookings.cancel');
+
+    Route::get('/bookings', [OwnerBookingController::class, 'index'])->name('bookings.index');
+    Route::get('/bookings/create', [OwnerBookingController::class, 'create'])->name('bookings.create');
+    Route::post('/bookings', [OwnerBookingController::class, 'store'])->name('bookings.store');
+    Route::get('/bookings/customers/search', [OwnerBookingController::class, 'searchCustomers'])->name('bookings.customers.search');
+    Route::get('/fields/{field}/slots', [BookingController::class, 'availableSlots'])->name('bookings.slots');
+    Route::patch('/bookings/{booking}/confirm-cash', [OwnerBookingController::class, 'confirmCashPayment'])->name('bookings.confirm-cash');
 
     Route::resource('venues', VenueController::class);
 

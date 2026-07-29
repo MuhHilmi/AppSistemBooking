@@ -92,7 +92,7 @@ class BookingController extends Controller
     public function dashboardOwnerView() {
         $ownerId = auth()->id();
 
-        $activeStatuses = ['waitin_payment_method', 'pending_payment', 'paid', 'confirmed'];
+        $activeStatuses = ['waiting_payment_method', 'pending_payment', 'paid', 'confirmed'];
 
         $startOfWeek = now()->startOfWeek();
         $endOfWeek = now()->endOfWeek();
@@ -301,17 +301,10 @@ class BookingController extends Controller
      * Menampilkan Slot yang sudah dibooking oleh customer
      */
     public function show(Booking $booking) {
-        // Digunakan ketika pengecekkan
-        // dd(auth()->check(), auth()->user(), auth()->id());
-        // dd([ 'default_guard' => auth()->user(), 'customer_guard' => auth('customer')->user(), ]);
-
-        // Digunakan ketika menggunakan policy
-        $this->authorize('view', $booking);
-
-        // Digunakan ketika belum menggunakan policy
-        // if ($booking->customer_id !== auth('customer')->id()) {
-        //     abort(403);
-        // }
+        // Catatan: guard customer bukan guard default ('web'), jadi $this->authorize()
+        // (yang menggunakan Auth::user() dari guard default) tidak akan pernah berhasil
+        // untuk customer. Gunakan pengecekan manual berbasis guard customer.
+        abort_unless($booking->customer_id === auth('customer')->id(), 403);
 
         $booking->load([
             'customer',
@@ -414,7 +407,7 @@ class BookingController extends Controller
      * Metode cancel untuk customer
      */
     public function cancelCustomer(Booking $booking) {
-        $this->authorize('cancel', $booking);
+        abort_unless($booking->customer_id === auth('customer')->id(), 403);
 
         if (!in_array($booking->status, ['waiting_payment_method', 'pending_payment'])) {
             return back()->with('error', 'Booking tidak dapat dibatalkan!');
