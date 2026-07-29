@@ -5,10 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BookingController;
 use App\Models\Booking;
+use App\Services\MidtransService;
 use Illuminate\Validation\Rule;
 
 class BookingPaymentController extends Controller
 {
+    public function __construct(protected MidtransService $midtrans)
+    {
+        //
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -49,18 +55,19 @@ class BookingPaymentController extends Controller
                 ]);
                 break;
             case 'transfer':
-                $booking->update([
-                    'payment_method' => 'transfer',
-                    'status' => 'pending_payment',
-                    'payment_due_at' => now()->addMinutes(30)
-                ]);
-                break;
             case 'qris':
                 $booking->update([
-                    'payment_method' => 'qris',
+                    'payment_method' => $request->payment_method,
                     'status' => 'pending_payment',
                     'payment_due_at' => now()->addMinutes(30)
                 ]);
+
+                try {
+                    $this->midtrans->createSnapTokenForBooking($booking);
+                } catch (\Exception $e) {
+                    report($e);
+                    return back()->with('error', 'Gagal membuat transaksi pembayaran. Silakan coba lagi.');
+                }
                 break;
         }
 
@@ -105,6 +112,23 @@ class BookingPaymentController extends Controller
     public function checkStatus(Booking $booking)
     {
         abort_unless($booking->customer_id == auth('customer')->id(), 403);
+
+        // Fallback: kalau masih pending & sudah pernah dapat order_id dari Midtrans,
+        // tanya langsung ke Midtrans (berguna kalau webhook belum/tidak sampai, misal saat testing lokal).
+        if ($booking->status === 'pending_payment' && $booking->midtrans_order_id) {
+            try {
+                $transaction = \Midtrans\Transaction::status($booking->midtrans_order_id);
+
+                $booking->applyMidtransStatus(
+                    transactionStatus: $transaction->transaction_status,
+                    fraudStatus: $transaction->fraud_status ?? null,
+                    paymentType: $transaction->payment_type ?? null,
+                    transactionId: $transaction->transaction_id ?? null,
+                );
+            } catch (\Exception $e) {
+                report($e);
+            }
+        }
 
         return response()->json([
             'status' => $booking->status,
