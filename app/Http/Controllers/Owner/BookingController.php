@@ -52,7 +52,7 @@ class BookingController extends Controller
             $query->whereDate('booking_date', '<=', $request->date_to);
         }
 
-        $bookings = $query->orderByDesc('booking_date')
+        $bookings = $query->orderByDesc('booking_code')
             ->orderByDesc('start_time')
             ->paginate(15)
             ->withQueryString();
