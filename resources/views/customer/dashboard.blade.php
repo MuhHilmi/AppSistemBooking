@@ -4,8 +4,10 @@
 
 @section('content')
 
-    <p class="text-[13px] text-[var(--ink-soft)] mb-0.5">Halo,</p>
-    <p class="font-display font-600 text-[19px] mb-5">{{ auth('customer')->user()->name ?? 'Pelanggan' }}</p>
+    <div class="bg-white px-4 py-2 mb-4 rounded-lg shadow-lg">
+        <p class="text-[13px] text-[var(--ink-soft)] mb-0.5">Halo,</p>
+        <p class="font-display font-600 text-[19px]">{{ auth('customer')->user()->name ?? 'Pelanggan' }}</p>
+    </div>
 
     {{-- ===== Booking mendatang / perlu perhatian ===== --}}
     @if($upcomingBooking)
@@ -53,61 +55,63 @@
         </div>
     @endif
 
-    {{-- ===== Aksi cepat ===== --}}
-    <div class="grid grid-cols-2 gap-2.5 mb-6">
-        {{-- TODO: belum ada route browse/search lapang di web.php — arahkan ke '/' sementara, ganti ke route pencarian begitu dibuat --}}
-        <a href="{{ route('customer.bookings.index') }}" class="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-3.5 flex flex-col gap-2">
-            <svg class="w-[18px] h-[18px] text-[var(--ink)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-            <span class="text-[13px] font-500">Cari lapang</span>
-        </a>
-        <a href="{{ route('customer.bookings.history') }}" class="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-3.5 flex flex-col gap-2">
-            <svg class="w-[18px] h-[18px] text-[var(--ink)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>
-            <span class="text-[13px] font-500">Riwayat booking</span>
-        </a>
-    </div>
-
-    {{-- ===== Booking lagi ===== --}}
-    @if($frequentFields->isNotEmpty())
-        <p class="text-[13px] font-500 mb-2">Booking lagi</p>
-        <div class="flex gap-2 overflow-x-auto mb-6 pb-0.5 -mx-5 px-5">
-            @foreach($frequentFields as $field)
-                <a href="{{ route('customer.bookings.create', $field->id) }}" class="shrink-0 bg-[var(--surface)] border border-[var(--line)] rounded-lg px-3 py-2 text-[12.5px] font-500 whitespace-nowrap">
-                    {{ $field->name }}
-                </a>
-            @endforeach
-        </div>
-    @endif
-
-    {{-- ===== Riwayat terbaru ===== --}}
-    <p class="text-[13px] font-500 mb-2">Riwayat terbaru</p>
-    <div class="space-y-2">
-        @forelse($recentBookings as $booking)
-            @php
-                $statusMap = [
-                    'completed' => ['label' => 'Selesai', 'class' => 'bg-[var(--primary-tint)] text-[var(--primary-dark)]'],
-                    'canceled' => ['label' => 'Dibatalkan', 'class' => 'bg-[var(--danger-tint)] text-[var(--danger)]'],
-                    'paid' => ['label' => 'Dibayar', 'class' => 'bg-blue-100 text-blue-700'],
-                    'confirmed' => ['label' => 'Dikonfirmasi', 'class' => 'bg-green-100 text-green-700'],
-                    'waiting_payment_method' => ['label' => 'Menunggu Metode Pembayaran', 'class' => 'bg-yellow-100 text-yellow-700'],
-                    'pending_payment' => ['label' => 'Menunggu Pembayaran', 'class' => 'bg-yellow-100 text-yellow-700'],
-                ];
-                $statusInfo = $statusMap[$booking->status] ?? ['label' => ucfirst($booking->status), 'class' => 'bg-gray-100 text-gray-700'];
-            @endphp
-            <a href="{{ route('customer.bookings.show', $booking->id) }}" class="bg-[var(--surface)] border border-[var(--line)] rounded-lg px-3.5 py-2.5 flex items-center justify-between">
-                <div>
-                    <p class="text-[13px] font-500">{{ $booking->field->name ?? '—' }}</p>
-                    <p class="text-[11.5px] text-[var(--ink-soft)] tabular mt-0.5">
-                        {{ \Carbon\Carbon::parse($booking->booking_date)->translatedFormat('d M') }},
-                        {{ \Carbon\Carbon::parse($booking->start_time)->format('H:i') }}–{{ \Carbon\Carbon::parse($booking->end_time)->format('H:i') }}
-                    </p>
-                </div>
-                <span class="text-[11px] font-500 px-2 py-1 rounded-md {{ $statusInfo['class'] }}">
-                    {{ $statusInfo['label'] }}
-                </span>
+    <div class="bg-white p-4 rounded-lg shadow-lg">
+        {{-- ===== Aksi cepat ===== --}}
+        <div class="grid grid-cols-2 gap-2.5 mb-6">
+            {{-- TODO: belum ada route browse/search lapang di web.php — arahkan ke '/' sementara, ganti ke route pencarian begitu dibuat --}}
+            <a href="{{ route('customer.bookings.index') }}" class="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-3.5 flex flex-col gap-2 hover:-translate-y-1 hover:shadow-lg transition">
+                <svg class="w-[18px] h-[18px] text-[var(--ink)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                <span class="text-[13px] font-500">Cari lapang</span>
             </a>
-        @empty
-            <p class="text-[13px] text-[var(--ink-soft)] text-center py-8">Belum ada riwayat booking.</p>
-        @endforelse
+            <a href="{{ route('customer.bookings.history') }}" class="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-3.5 flex flex-col gap-2 hover:-translate-y-1 hover:shadow-lg transition">
+                <svg class="w-[18px] h-[18px] text-[var(--ink)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>
+                <span class="text-[13px] font-500">Riwayat booking</span>
+            </a>
+        </div>
+    
+        {{-- ===== Booking lagi ===== --}}
+        @if($frequentFields->isNotEmpty())
+            <p class="text-[13px] font-500 mb-2">Booking lagi</p>
+            <div class="flex gap-2 overflow-x-auto mb-6 pb-0.5 -mx-5 px-5">
+                @foreach($frequentFields as $field)
+                    <a href="{{ route('customer.bookings.create', $field->id) }}" class="shrink-0 bg-[var(--surface)] border border-[var(--line)] rounded-lg px-3 py-2 text-[12.5px] font-500 whitespace-nowrap hover:-translate-y-1 hover:shadow-lg transition">
+                        {{ $field->name }}
+                    </a>
+                @endforeach
+            </div>
+        @endif
+    
+        {{-- ===== Riwayat terbaru ===== --}}
+        <p class="text-[13px] font-500 mb-2">Riwayat terbaru</p>
+        <div class="space-y-2">
+            @forelse($recentBookings as $booking)
+                @php
+                    $statusMap = [
+                        'completed' => ['label' => 'Selesai', 'class' => 'bg-[var(--primary-tint)] text-[var(--primary-dark)]'],
+                        'canceled' => ['label' => 'Dibatalkan', 'class' => 'bg-[var(--danger-tint)] text-[var(--danger)]'],
+                        'paid' => ['label' => 'Dibayar', 'class' => 'bg-blue-100 text-blue-700'],
+                        'confirmed' => ['label' => 'Dikonfirmasi', 'class' => 'bg-green-100 text-green-700'],
+                        'waiting_payment_method' => ['label' => 'Menunggu Metode Pembayaran', 'class' => 'bg-yellow-100 text-yellow-700'],
+                        'pending_payment' => ['label' => 'Menunggu Pembayaran', 'class' => 'bg-yellow-100 text-yellow-700'],
+                    ];
+                    $statusInfo = $statusMap[$booking->status] ?? ['label' => ucfirst($booking->status), 'class' => 'bg-gray-100 text-gray-700'];
+                @endphp
+                <a href="{{ route('customer.bookings.show', $booking->id) }}" class="bg-[var(--surface)] border border-[var(--line)] rounded-lg px-3.5 py-2.5 flex items-center justify-between">
+                    <div>
+                        <p class="text-[13px] font-500">{{ $booking->field->name ?? '—' }}</p>
+                        <p class="text-[11.5px] text-[var(--ink-soft)] tabular mt-0.5">
+                            {{ \Carbon\Carbon::parse($booking->booking_date)->translatedFormat('d M') }},
+                            {{ \Carbon\Carbon::parse($booking->start_time)->format('H:i') }}–{{ \Carbon\Carbon::parse($booking->end_time)->format('H:i') }}
+                        </p>
+                    </div>
+                    <span class="text-[11px] font-500 px-2 py-1 rounded-md {{ $statusInfo['class'] }}">
+                        {{ $statusInfo['label'] }}
+                    </span>
+                </a>
+            @empty
+                <p class="text-[13px] text-[var(--ink-soft)] text-center py-8">Belum ada riwayat booking.</p>
+            @endforelse
+        </div>
     </div>
 
 @endsection

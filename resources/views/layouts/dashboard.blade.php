@@ -35,7 +35,7 @@
     <div class="flex min-h-screen">
 
         {{-- Sidebar --}}
-        <aside class="w-64 shrink-0 bg-[var(--primary-dark)] text-white flex flex-col">
+        <aside class="w-64 shrink-0 bg-[var(--primary-dark)] text-white flex flex-col h-screen sticky top-0 overflow-y-auto">
             <div class="flex items-center gap-2.5 px-6 h-16 border-b border-white/10">
                 <div class="w-8 h-8 rounded-md bg-[var(--primary)] flex items-center justify-center font-display font-700 text-sm">L</div>
                 <span class="font-display font-600 text-[15px] tracking-tight">Kelola Lapang</span>

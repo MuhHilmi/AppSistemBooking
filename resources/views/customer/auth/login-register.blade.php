@@ -7,7 +7,7 @@
                 <section id="imagePanel" class="hidden lg:block absolute top-0 bottom-0 w-1/2 transition-all duration-700 ease-in-out" :class="isLogin ? 'left-0' : 'left-1/2'">
                     {{-- nanti di Part 3 akan dibuat animasi --}}
                     <div class="absolute inset-5 rounded-[30px] overflow-hidden">
-                        <img src="https://picsum.photos/900/1200" alt="Booking Lapangan" class="w-full h-full object-cover">
+                        <img src="{{ asset('img/field/MultiField.jpeg') }}" alt="Booking Lapangan" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-br from-emerald-900/60 via-emerald-800/20 to-black/40">
                         </div>
                         <div class="absolute inset-0 flex flex-col justify-between p-10">

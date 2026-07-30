@@ -63,15 +63,17 @@
                 </div>
 
                 {{-- Customer --}}
-                <div class="bg-white rounded-xl shadow p-6" x-data="{ mode: 'existing', customerId: '', customerLabel: '', query: '', results: [] }">
+                <div class="bg-white rounded-xl shadow p-6"
+                    x-data="{ mode: 'existing', customerId: '', customerLabel: '', query: '', results: [] }"
+                    x-init="$watch('mode', () => { customerId = ''; customerLabel = ''; query = ''; results = []; $refs.customerName.value = ''; $refs.customerPhone.value = ''; })">
                     <label class="block font-medium text-gray-700 mb-2">Customer</label>
 
                     <div class="flex gap-4 mb-4 text-sm">
                         <label class="flex items-center gap-2">
-                            <input type="radio" x-model="mode" value="existing"> Customer Terdaftar
+                            <input type="radio" name="customer_mode" x-model="mode" value="existing"> Customer Terdaftar
                         </label>
                         <label class="flex items-center gap-2">
-                            <input type="radio" x-model="mode" value="new"> Customer Baru
+                            <input type="radio" name="customer_mode" x-model="mode" value="new"> Customer Baru
                         </label>
                     </div>
 
@@ -223,6 +225,17 @@
             if (!startTimeInput.value || !endTimeInput.value) {
                 e.preventDefault();
                 alert('Silakan pilih slot waktu terlebih dahulu');
+                return;
+            }
+
+            const mode = document.querySelector('input[name="mode"]:checked')?.value; // lihat catatan di bawah
+            const customerId = document.querySelector('input[name="customer_id"]').value;
+            const customerName = document.getElementById('customer_name').value.trim();
+            const customerPhone = document.getElementById('customer_phone').value.trim();
+
+            if (!customerId && !(customerName && customerPhone)) {
+                e.preventDefault();
+                alert('Silakan pilih customer terdaftar atau isi data customer baru');
             }
         });
 

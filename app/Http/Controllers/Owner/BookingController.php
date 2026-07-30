@@ -126,8 +126,8 @@ class BookingController extends Controller
             'start_time' => 'required',
             'end_time' => 'required|after:start_time',
             'customer_id' => 'nullable|exists:customers,id',
-            'customer_name' => 'required_without:customer_id|string|max:255',
-            'customer_phone' => 'required_without:customer_id|string|max:20',
+            'customer_name' => 'nullable|required_without:customer_id|string|max:255',
+            'customer_phone' => 'nullable|required_without:customer_id|string|max:20',
             'notes' => 'nullable|string',
         ]);
 
@@ -165,8 +165,15 @@ class BookingController extends Controller
             $end = Carbon::parse($request->end_time);
             $duration = $start->diffInHours($end);
 
+            // JIka ingin list booking berurutan
+            $last = Booking::latest() -> first();
+            $number = $last ? $last -> id + 1 : 1;
+
+            // $code = 'BK-' . now()->format('YmdHis') . '-' . rand(100,999);
+            $code = 'BK-' . now()->format('YmdHis') . '-' . $number; // Gunakan ini jika ingin booking list berurutan
+
             $booking = Booking::create([
-                'booking_code' => 'BK-' . now()->format('YmdHis') . '-' . rand(100, 999),
+                'booking_code' => $code,
                 'field_id' => $field->id,
                 'customer_id' => $customer->id,
                 'booking_date' => $request->booking_date,
