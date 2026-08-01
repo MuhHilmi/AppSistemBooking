@@ -20,7 +20,7 @@
                 <span
                     class="inline-flex items-center rounded-full bg-green-100 px-4 py-2 text-sm font-semibold text-green-700"
                 >
-                    🚀 Booking Lapangan Kini Lebih Mudah
+                    Booking Lapangan Kini Lebih Mudah
                 </span>
 
                 <h1 class="mt-6 text-5xl font-black leading-tight text-slate-900 lg:text-7xl">
@@ -92,7 +92,7 @@
                         <div
                             class="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-2xl"
                         >
-                            ⚽
+                            <img src="{{ asset('img/icon/png/soccer-ball-variant.png') }}" alt="Icon" class="h-6 w-6">
                         </div>
 
                         <div>
@@ -109,7 +109,7 @@
                         <div
                             class="flex h-12 w-12 items-center justify-center rounded-full bg-yellow-100"
                         >
-                            ⭐
+                            <img src="{{ asset('img/icon/png/star.png') }}" alt="Icon" class="h-6 w-6">
                         </div>
 
                         <div>
@@ -124,7 +124,7 @@
                 <div
                     class="absolute left-20 -bottom-8 rounded-2xl bg-green-600 px-6 py-4 text-white shadow-xl"
                 >
-                    <p class="text-sm">✔ Jadwal Real-Time</p>
+                    <p class="text-sm">Jadwal Real-Time</p>
                 </div>
             </div>
         </div>

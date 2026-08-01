@@ -70,18 +70,18 @@
         <div class="mt-24 grid gap-8 md:grid-cols-2 xl:grid-cols-3">
             @php
                 $features = [
-                    ['icon' => '📅', 'title' => 'Jadwal Real-Time', 'desc' => 'Lihat ketersediaan lapangan secara langsung.'],
-                    ['icon' => '💳', 'title' => 'Pembayaran Mudah', 'desc' => 'Berbagai metode pembayaran tersedia.'],
-                    ['icon' => '📍', 'title' => 'Lokasi Lengkap', 'desc' => 'Cari lapangan berdasarkan lokasi terdekat.'],
-                    ['icon' => '🔔', 'title' => 'Notifikasi', 'desc' => 'Informasi booking dikirim secara otomatis.'],
-                    ['icon' => '⭐', 'title' => 'Rating & Ulasan', 'desc' => 'Lihat pengalaman pengguna lain sebelum memesan.'],
-                    ['icon' => '📱', 'title' => 'Responsive', 'desc' => 'Nyaman digunakan di desktop maupun smartphone.'],
+                    ['icon' => 'calendar.png', 'title' => 'Jadwal Real-Time', 'desc' => 'Lihat ketersediaan lapangan secara langsung.'],
+                    ['icon' => 'atm-card.png', 'title' => 'Pembayaran Mudah', 'desc' => 'Berbagai metode pembayaran tersedia.'],
+                    ['icon' => 'placeholder.png', 'title' => 'Lokasi Lengkap', 'desc' => 'Cari lapangan berdasarkan lokasi terdekat.'],
+                    ['icon' => 'bell.png', 'title' => 'Notifikasi', 'desc' => 'Informasi booking dikirim secara otomatis.'],
+                    ['icon' => 'star.png', 'title' => 'Rating & Ulasan', 'desc' => 'Lihat pengalaman pengguna lain sebelum memesan.'],
+                    ['icon' => 'smartphone.png', 'title' => 'Responsive', 'desc' => 'Nyaman digunakan di desktop maupun smartphone.'],
                 ];
             @endphp
             @foreach ($features as $feature)
                 <div class="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition duration-300 hover:-translate-y-2 hover:shadow-xl">
                     <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-green-100 text-3xl">
-                        {{ $feature['icon'] }}
+                        <img src="{{ asset('img/icon/png/'.$feature['icon']) }}" alt="Icon" class="h-6 w-6">
                     </div>
                     <h3 class="mt-6 text-xl font-bold text-slate-900">{{ $feature['title'] }}</h3>
                     <p class="mt-3 leading-7 text-slate-600">{{ $feature['desc'] }}</p>

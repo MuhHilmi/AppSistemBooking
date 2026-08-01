@@ -61,7 +61,7 @@
 
                     {{-- Venue / Location --}}
                     <p class="mt-2 flex flex-wrap items-center gap-1 text-slate-500">
-                        📍 <span x-text="selectedField.venue?.name"></span>
+                        <img src="{{ asset('img/icon/png/placeholder.png') }}" alt="Icon" class="h-6 w-6"> <span x-text="selectedField.venue?.name"></span>
                         <template x-if="selectedField.venue?.address">
                             <span>&mdash; <span x-text="selectedField.venue.address"></span></span>
                         </template>

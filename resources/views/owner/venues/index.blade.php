@@ -40,9 +40,9 @@
                             </p>
 
                             <div class="mb-4 space-y-2 text-sm text-gray-500">
-                                <div>📍 {{ $venue->address }}</div>
+                                <div class="flex gap-2"><img src="{{ asset('img/icon/png/placeholder.png') }}" alt="Icon" class="h-4 w-4"> {{ $venue->address }}</div>
 
-                                <div>📞 {{ $venue->phone }}</div>
+                                <div class="flex gap-2"><img src="{{ asset('img/icon/png/call.png') }}" alt="Icon" class="h-4 w-4"> {{ $venue->phone }}</div>
                             </div>
 
                             <div class="flex gap-2">
