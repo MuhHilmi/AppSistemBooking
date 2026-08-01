@@ -13,7 +13,7 @@
 @section('content')
 
     {{-- ===== Ringkasan ===== --}}
-    <div class="grid grid-cols-4 gap-4 mb-6">
+    <div class="grid grid-cols-3 gap-4 mb-6">
         <div class="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-5">
             <p class="text-[12.5px] text-[var(--ink-soft)] font-500 mb-1.5">Booking hari ini</p>
             <p class="font-display font-700 text-[28px] tabular leading-none">{{ $todayCount }}</p>
@@ -22,7 +22,7 @@
             <p class="text-[12.5px] text-[var(--ink-soft)] font-500 mb-1.5">Pendapatan hari ini</p>
             <p class="font-display font-700 text-[28px] tabular leading-none">Rp{{ number_format($todayRevenue, 0, ',', '.') }}</p>
         </div>
-        <div class="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-5">
+        {{-- <div class="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-5">
             <p class="text-[12.5px] text-[var(--ink-soft)] font-500 mb-1.5">Okupansi hari ini</p>
             <div class="flex items-end gap-2">
                 <p class="font-display font-700 text-[28px] tabular leading-none">{{ $occupancyRate }}%</p>
@@ -30,7 +30,7 @@
             <div class="mt-2 h-1.5 rounded-full bg-[var(--line)] overflow-hidden">
                 <div class="h-full rounded-full bg-[var(--primary)]" style="width: {{ min($occupancyRate, 100) }}%"></div>
             </div>
-        </div>
+        </div> --}}
         <div class="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-5">
             <p class="text-[12.5px] text-[var(--ink-soft)] font-500 mb-1.5">Lapang aktif</p>
             <p class="font-display font-700 text-[28px] tabular leading-none">{{ $activeFieldsCount }}</p>

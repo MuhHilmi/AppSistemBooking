@@ -17,7 +17,7 @@
             {{-- Left --}}
             <div>
                 <div class="overflow-hidden rounded-3xl border border-slate-200 bg-slate-100 shadow-lg">
-                    <img src="https://picsum.photos/500" alt="Dashboard" class="w-full" />
+                    <img src="{{ asset('img/field/MultiField.jpeg') }}" alt="Dashboard" class="w-full" />
                 </div>
             </div>
             {{-- Right --}}

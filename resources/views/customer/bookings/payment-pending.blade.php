@@ -95,23 +95,23 @@
                     </p>
                 </div>
             @else
-              {{-- Pembayaran Midtrans --}}
-              <div class="rounded-lg border border-indigo-200 bg-indigo-50 p-5">
-                  <h3 class="font-semibold text-indigo-900">
-                      Selesaikan Pembayaran
-                  </h3>
-                  <p class="mt-2 text-sm text-indigo-700">
-                      Klik tombol di bawah untuk membuka halaman pembayaran Midtrans
-                      ({{ $booking->payment_method === 'transfer' ? 'Transfer Bank / Virtual Account' : 'QRIS / GoPay' }}).
-                  </p>
+            {{-- Pembayaran Midtrans --}}
+                <div class="rounded-lg border border-indigo-200 bg-indigo-50 p-5">
+                    <h3 class="font-semibold text-indigo-900">
+                        Selesaikan Pembayaran
+                    </h3>
+                    <p class="mt-2 text-sm text-indigo-700">
+                        Klik tombol di bawah untuk membuka halaman pembayaran Midtrans
+                        ({{ $booking->payment_method === 'transfer' ? 'Transfer Bank / Virtual Account' : 'QRIS / GoPay' }}).
+                    </p>
 
-                  <button id="pay-button" type="button"
-                      class="mt-4 inline-flex items-center justify-center rounded-lg bg-indigo-600 px-5 py-3 font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60">
-                      Bayar Sekarang
-                  </button>
+                    <button id="pay-button" type="button"
+                        class="mt-4 inline-flex items-center justify-center rounded-lg bg-indigo-600 px-5 py-3 font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60">
+                        Bayar Sekarang
+                    </button>
 
-                  <p id="pay-error" class="mt-2 hidden text-sm text-red-600"></p>
-              </div>
+                    <p id="pay-error" class="mt-2 hidden text-sm text-red-600"></p>
+                </div>
             @endif
 
             {{-- Action Button --}}

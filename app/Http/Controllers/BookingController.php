@@ -267,11 +267,11 @@ class BookingController extends Controller
             $duration = $start->diffInHours($end); // Durasi dalam jam
 
             // JIka ingin list booking berurutan
-            // $last = Booking::latest() -> first();
-            // $number = $last ? $last -> id + 1 : 1;
+            $last = Booking::latest() -> first();
+            $number = $last ? $last -> id + 1 : 1;
 
-            $code = 'BK-' . now()->format('YmdHis') . '-' . rand(100,999);
-            // $code = 'BK-' . now()->format('YmdHis') . '-' . $number; // Gunakan ini jika ingin booking list berurutan
+            // $code = 'BK-' . now()->format('YmdHis') . '-' . rand(100,999);
+            $code = 'BK-' . now()->format('YmdHis') . '-' . $number; // Gunakan ini jika ingin booking list berurutan
 
             // Buat booking
             $booking = Booking::create([
