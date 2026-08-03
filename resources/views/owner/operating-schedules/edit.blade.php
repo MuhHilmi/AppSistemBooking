@@ -1,5 +1,7 @@
 @extends ('layouts.dashboard')
 
+@section ('title', 'Ubah Jadwal Lapang')
+
 @section ('content')
     @php
 
@@ -66,7 +68,8 @@ $days = [
             @endforeach
         </div>
 
-        <div class="flex justify-start">
+        <div class="flex justify-start gap-4">
+            <a href="{{ route('owner.operating-schedules.index') }}" class="px-6 py-2 bg-gray-500 text-white rounded"><- Kembali</a>
             <button class="bg-green-600 text-white px-6 py-2 rounded">Simpan Jadwal</button>
         </div>
     </form>

@@ -12,6 +12,8 @@ $days = [
 
 @extends ('layouts.dashboard')
 
+@section ('title', 'Jadwal Lapangan')
+
 @section ('content')
     <div class="max-w-7xl mx-auto">
         <h1 class="text-3xl font-bold mb-6">Jadwal Operasional</h1>

@@ -1,5 +1,7 @@
 @extends ('layouts.dashboard')
 
+@section ('title', 'Venue')
+
 @section ('content')
     <div class="container mx-auto px-4 py-6">
         <div class="mb-6 flex items-center justify-between">

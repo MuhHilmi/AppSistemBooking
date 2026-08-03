@@ -1,5 +1,7 @@
 @extends ('layouts.dashboard')
 
+@section ('title', 'Buat Lapang')
+
 @section ('content')
     <div class="max-w-5xl mx-auto px-4 py-6">
         {{-- Header --}}

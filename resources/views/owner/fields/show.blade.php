@@ -1,5 +1,7 @@
 @extends ('layouts.dashboard')
 
+@section ('title', 'Detail Lapang')
+
 @section ('content')
     <div class="max-w-4xl mx-auto">
         <div class="bg-white rounded-lg shadow-md overflow-hidden">

@@ -112,7 +112,7 @@
             <header class="h-16 flex items-center justify-between px-8 bg-[var(--surface)] border-b border-[var(--line)]">
                 <div>
                     <h1 class="font-display font-600 text-[17px] leading-tight">@yield('title', 'Dashboard')</h1>
-                    <p class="text-[12.5px] text-[var(--ink-soft)]">{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</p>
+                    <p class="text-[12.5px] text-[var(--ink-soft)]">{{ \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d F Y') }}</p>
                 </div>
                 <div class="flex items-center gap-3">
                     @yield('header-actions')
