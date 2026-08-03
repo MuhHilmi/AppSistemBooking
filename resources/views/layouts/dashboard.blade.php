@@ -58,7 +58,7 @@
                 </a>
                 <a href="{{ route('owner.fields.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.fields.index') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
                     <img src="{{ asset('img/icon/soccer-field.svg') }}" alt="Icon Lapang" class="w-4 h-4">
-                    Lapang
+                    Lapangan
                 </a>
                 <a href="{{ route('owner.operating-schedules.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.operating-schedules.index') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
                     <img src="{{ asset('img/icon/calendar-clock.svg') }}" alt="Icon Lapang" class="w-4 h-4">
