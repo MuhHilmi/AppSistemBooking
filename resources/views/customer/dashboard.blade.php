@@ -16,7 +16,7 @@
             $isPaid = $upcomingBooking->status === 'paid';
         @endphp
 
-        <div class="rounded-xl p-4 mb-5 {{ $isUnpaid ? 'bg-[var(--amber-tint)]' : 'bg-[var(--primary-tint)]' }}">
+        <div class="rounded-xl p-4 mb-5 shadow-lg {{ $isUnpaid ? 'bg-[var(--amber-tint)]' : 'bg-[var(--primary-tint)]' }}">
             <div class="flex justify-between items-start mb-3">
                 <div>
                     <p class="text-[11px] font-600 uppercase tracking-wide mb-1 {{ $isUnpaid ? 'text-[var(--amber)]' : 'text-[var(--primary-dark)]' }}">
