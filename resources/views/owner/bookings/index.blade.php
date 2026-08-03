@@ -109,6 +109,13 @@
                                                 Konfirmasi Cash
                                             </button>
                                         </form>
+                                    @elseif ($booking->status === 'paid')
+                                        <form action="{{ route('owner.bookings.confirm-transfer', $booking) }}" method="POST">
+                                            @csrf
+                                            <button class="bg-green-600 hover:bg-green-700 text-white text-xs font-semibold px-3 py-2 rounded-lg" type="submit" onclick="return confirm('Konfirmasi pembayaran ini? Pastikan pembayaran sudah masuk dan Customer sudah datang.')">
+                                                Konfirmasi
+                                            </button>
+                                        </form>
                                     @else
                                         <span class="text-gray-300 text-xs">-</span>
                                     @endif

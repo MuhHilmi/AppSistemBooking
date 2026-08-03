@@ -22,7 +22,7 @@
                 <div
                     class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100"
                 >
-                    🏢
+                    <img src="{{ asset('img/icon/png/city-building.png') }}" alt="Icon" class="h-6 w-6">
                 </div>
 
                 <h3 class="mt-6 text-4xl font-extrabold text-green-600">150+</h3>
@@ -37,7 +37,7 @@
                 <div
                     class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100"
                 >
-                    ⚽
+                    <img src="{{ asset('img/icon/png/soccer-ball-variant.png') }}" alt="Icon" class="h-6 w-6">
                 </div>
 
                 <h3 class="mt-6 text-4xl font-extrabold text-green-600">500+</h3>
@@ -52,7 +52,7 @@
                 <div
                     class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100"
                 >
-                    📅
+                    <img src="{{ asset('img/icon/png/calendar.png') }}" alt="Icon" class="h-6 w-6">
                 </div>
 
                 <h3 class="mt-6 text-4xl font-extrabold text-green-600">12.500+</h3>
@@ -67,7 +67,7 @@
                 <div
                     class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100"
                 >
-                    ⭐
+                    <img src="{{ asset('img/icon/png/star.png') }}" alt="Icon" class="h-6 w-6">
                 </div>
 
                 <h3 class="mt-6 text-4xl font-extrabold text-green-600">98%</h3>

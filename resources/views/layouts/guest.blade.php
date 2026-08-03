@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>
-        {{ config('app.name', 'Sistem Booking Lapangan') }}
+        @yield('title', config('app.name', 'Sistem Booking Lapangan'))
     </title>
 
     <meta name="description" content="Sistem Booking Lapangan">

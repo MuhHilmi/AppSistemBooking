@@ -58,7 +58,7 @@
                 </a>
                 <a href="{{ route('owner.fields.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.fields.index') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
                     <img src="{{ asset('img/icon/soccer-field.svg') }}" alt="Icon Lapang" class="w-4 h-4">
-                    Lapang
+                    Lapangan
                 </a>
                 <a href="{{ route('owner.operating-schedules.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.operating-schedules.index') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
                     <img src="{{ asset('img/icon/calendar-clock.svg') }}" alt="Icon Lapang" class="w-4 h-4">
@@ -78,13 +78,6 @@
                     <img src="{{ asset('img/icon/settings.svg') }}" alt="Icon Pengaturan" class="w-4 h-4">
                     Pengaturan
                 </a>
-                <form action="{{ route('logout')}}" method="post">
-                    @csrf
-                    <button type="submit" class="mt-2 w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-semibold text-white/70 bg-red-500 hover:bg-red-700 hover:text-white transition">
-                        <img src="{{ asset('img/icon/sign-out-alt.svg') }}" alt="Icon Logout" class="w-4 h-4">
-                        Logout
-                    </button>
-                </form>
             </nav>
 
             <div class="px-3 py-4 border-t border-white/10">
@@ -92,6 +85,25 @@
                     <div class="w-7 h-7 rounded-full bg-[var(--primary)] flex items-center justify-center text-[12px] font-600">{{ substr(auth()->user()->name ?? 'O', 0, 1) }}</div>
                     <span class="truncate">{{ auth()->user()->name ?? 'Owner' }}</span>
                 </a>
+                <form action="{{ route('logout')}}" method="post">
+                    @csrf
+                    <button type="submit" class="mt-2 w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-semibold text-white/70 hover:bg-red-500 hover:text-white transition">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            id="Layer_1"
+                            data-name="Layer 1"
+                            viewBox="0 0 24 24"
+                            width="15"
+                            height="15"
+                            class="rotate-180">
+                                <path d="M22.763,10.232l-4.95-4.95L16.4,6.7,20.7,11H6.617v2H20.7l-4.3,4.3,1.414,1.414,4.95-4.95a2.5,2.5,0,0,0,0-3.536Z"
+                                    fill="#fff"/>
+                                <path d="M10.476,21a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V3A1,1,0,0,1,3,2H9.476a1,1,0,0,1,1,1V8.333h2V3a3,3,0,0,0-3-3H3A3,3,0,0,0,0,3V21a3,3,0,0,0,3,3H9.476a3,3,0,0,0,3-3V15.667h-2Z"
+                                    fill="#fff"/>
+                            </svg>
+                        Logout
+                    </button>
+                </form>
             </div>
         </aside>
 
@@ -100,7 +112,7 @@
             <header class="h-16 flex items-center justify-between px-8 bg-[var(--surface)] border-b border-[var(--line)]">
                 <div>
                     <h1 class="font-display font-600 text-[17px] leading-tight">@yield('title', 'Dashboard')</h1>
-                    <p class="text-[12.5px] text-[var(--ink-soft)]">{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</p>
+                    <p class="text-[12.5px] text-[var(--ink-soft)]">{{ \Carbon\Carbon::now()->locale('id')->translatedFormat('l, d F Y') }}</p>
                 </div>
                 <div class="flex items-center gap-3">
                     @yield('header-actions')

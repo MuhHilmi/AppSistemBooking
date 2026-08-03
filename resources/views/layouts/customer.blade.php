@@ -44,15 +44,26 @@
             </nav>
 
             <div class="flex items-center gap-3">
-                <form action="{{ route('customer.logout') }}" method="post">
-                    @csrf
-                    <button type="submit" class="p-4 rounded-full bg-red-500 text-white font-semibold">
-                        <img src="{{ asset('img/icon/sign-out-alt.svg') }}" alt="Icon Logout" class="w-4 h-4">
-                    </button>
-                </form>
-                <a href="{{ route('customer.profile.edit') }}" class="hidden md:flex w-12 h-12 rounded-full bg-[var(--primary-tint)] items-center justify-center text-[12px] font-600 text-[var(--primary-dark)]">
+                <a href="{{ route('customer.profile.edit') }}" class="hidden md:flex w-12 h-12 rounded-full bg-[var(--primary-tint)] hover:bg-green-200 transition items-center justify-center text-[12px] font-600 text-[var(--primary-dark)]">
                     {{ strtoupper(substr(auth('customer')->user()->name ?? 'P', 0, 1)) }}
                 </a>
+                <form action="{{ route('customer.logout') }}" method="post">
+                    @csrf
+                    <button type="submit" class="p-4 rounded-full bg-[var(--primary-tint)] hover:bg-red-300 transition">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            id="Layer_1"
+                            data-name="Layer 1"
+                            viewBox="0 0 24 24"
+                            width="15"
+                            height="15"
+                            class="rotate-180">
+                                <path d="M22.763,10.232l-4.95-4.95L16.4,6.7,20.7,11H6.617v2H20.7l-4.3,4.3,1.414,1.414,4.95-4.95a2.5,2.5,0,0,0,0-3.536Z" fill="var(--primary-dark)"/>
+                                <path d="M10.476,21a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V3A1,1,0,0,1,3,2H9.476a1,1,0,0,1,1,1V8.333h2V3a3,3,0,0,0-3-3H3A3,3,0,0,0,0,3V21a3,3,0,0,0,3,3H9.476a3,3,0,0,0,3-3V15.667h-2Z"
+                                fill="var(--primary-dark)"/>
+                            </svg>
+                    </button>
+                </form>
             </div>
         </div>
     </header>

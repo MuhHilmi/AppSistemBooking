@@ -212,4 +212,20 @@ class BookingController extends Controller
 
         return back()->with('success', "Pembayaran cash untuk booking {$booking->booking_code} berhasil dikonfirmasi.");
     }
+
+    public function confirmTransferPayment(Booking $booking)
+    {
+        abort_unless($booking->field->venue->owner_id === auth()->id(), 403);
+
+        if ($booking->status !== 'paid') {
+            return back()->with('error', 'Booking ini tidak sedang menunggu konfirmasi (belum berstatus paid).');
+        }
+
+        $booking->update([
+            'status' => 'confirmed',
+            'checked_in_at' => now(),
+        ]);
+
+        return back()->with('success', "Booking {$booking->booking_code} berhasil dikonfirmasi.");
+    }
 }

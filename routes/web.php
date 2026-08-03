@@ -107,6 +107,7 @@ Route::prefix('owner')
     Route::get('/bookings/customers/search', [OwnerBookingController::class, 'searchCustomers'])->name('bookings.customers.search');
     Route::get('/fields/{field}/slots', [BookingController::class, 'availableSlots'])->name('bookings.slots');
     Route::patch('/bookings/{booking}/confirm-cash', [OwnerBookingController::class, 'confirmCashPayment'])->name('bookings.confirm-cash');
+    Route::post('/bookings/{booking}/confirm-transfer', [OwnerBookingController::class, 'confirmTransferPayment'])->name('bookings.confirm-transfer');
 
     Route::resource('venues', VenueController::class);
 
