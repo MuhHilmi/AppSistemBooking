@@ -64,7 +64,7 @@
                     <img src="{{ asset('img/icon/calendar-clock.svg') }}" alt="Icon Lapang" class="w-4 h-4">
                     Jadwal Lapang
                 </a>
-                <a href="{{ route('owner.customers.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.customers.*') ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
+                <a href="{{ route('owner.customers.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.customers.*') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
                     <img src="{{ asset('img/icon/user.svg') }}" alt="Icon Pelanggan" class="w-4 h-4">
                     Pelanggan
                 </a>
