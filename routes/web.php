@@ -10,6 +10,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\OperatingScheduleController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Owner\BookingController as OwnerBookingController;
+use App\Http\Controllers\Owner\CustomerController as OwnerCustomerController;
 use App\Http\Controllers\BookingPaymentController;
 use App\Http\Controllers\MidtransWebhookController;
 use Illuminate\Support\Facades\Route;
@@ -108,6 +109,9 @@ Route::prefix('owner')
     Route::get('/fields/{field}/slots', [BookingController::class, 'availableSlots'])->name('bookings.slots');
     Route::patch('/bookings/{booking}/confirm-cash', [OwnerBookingController::class, 'confirmCashPayment'])->name('bookings.confirm-cash');
     Route::post('/bookings/{booking}/confirm-transfer', [OwnerBookingController::class, 'confirmTransferPayment'])->name('bookings.confirm-transfer');
+
+    Route::get('/customers', [OwnerCustomerController::class, 'index'])->name('customers.index');
+    Route::get('/customers/{customer}', [OwnerCustomerController::class, 'show'])->name('customers.show');
 
     Route::resource('venues', VenueController::class);
 

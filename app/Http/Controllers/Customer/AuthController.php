@@ -89,6 +89,9 @@ class AuthController extends Controller
     {
         Auth::guard('customer')
             ->logout();
+        // $request // Di uncomment ketika production
+        //     ->session()
+        //     ->invalidate();
         $request
             ->session()
             ->regenerateToken();

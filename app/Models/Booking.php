@@ -48,6 +48,22 @@ class Booking extends Model
     }
 
     /**
+     * Generate kode booking yang dijamin unik (booking_code kolomnya UNIQUE).
+     * Pola sebelumnya (created_at terakhir + 1) tidak aman dipakai lintas request
+     * concurrent karena tidak di-lock, sehingga dua booking bisa mendapat kode
+     * yang sama persis dan gagal insert (duplicate key). Di sini dicoba ulang
+     * sampai benar-benar unik.
+     */
+    public static function generateBookingCode(): string
+    {
+        do {
+            $code = 'BK-' . now()->format('YmdHis') . '-' . str_pad((string) random_int(0, 999), 3, '0', STR_PAD_LEFT);
+        } while (self::where('booking_code', $code)->exists());
+
+        return $code;
+    }
+
+    /**
      * Terapkan status transaksi dari Midtrans (dipakai oleh webhook maupun polling manual)
      * ke status booking. Dipanggil dengan payload dari Notification atau Transaction::status().
      */
