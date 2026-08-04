@@ -70,7 +70,7 @@
                 </a>
 
                 <p class="px-3 text-[11px] uppercase tracking-wider text-white/40 font-600 mt-6 mb-2">Laporan</p>
-                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 text-white/70 hover:bg-white/10 hover:text-white transition">
+                <a href="{{ route('owner.revenue.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.revenue.*') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
                     <img src="{{ asset('img/icon/graph.svg') }}" alt="Icon Pendapatan" class="w-4 h-4">
                     Pendapatan
                 </a>
