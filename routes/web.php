@@ -12,6 +12,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Owner\BookingController as OwnerBookingController;
 use App\Http\Controllers\Owner\CustomerController as OwnerCustomerController;
 use App\Http\Controllers\Owner\RevenueController as OwnerRevenueController;
+use App\Http\Controllers\Owner\SettingController as OwnerSettingController;
 use App\Http\Controllers\BookingPaymentController;
 use App\Http\Controllers\MidtransWebhookController;
 use Illuminate\Support\Facades\Route;
@@ -116,6 +117,9 @@ Route::prefix('owner')
 
     Route::get('/revenue', [OwnerRevenueController::class, 'index'])->name('revenue.index');
     Route::get('/revenue/export', [OwnerRevenueController::class, 'export'])->name('revenue.export');
+
+    Route::get('/settings', [OwnerSettingController::class, 'edit'])->name('settings.edit');
+    Route::put('/settings', [OwnerSettingController::class, 'update'])->name('settings.update');
 
     Route::resource('venues', VenueController::class);
 

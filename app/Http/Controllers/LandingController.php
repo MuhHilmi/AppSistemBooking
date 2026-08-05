@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Field;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 
 class LandingController extends Controller
@@ -18,7 +19,9 @@ class LandingController extends Controller
             ->take(6)
             ->get();
 
-        return view('landing.index', compact('fields'));
+        $siteSettings = SiteSetting::current();
+
+        return view('landing.index', compact('fields', 'siteSettings'));
     }
 
     public function allFields()
@@ -29,7 +32,9 @@ class LandingController extends Controller
             ->paginate(9)
             ->withQueryString();
 
-        return view('fields.index', compact('fields'));
+        $siteSettings = SiteSetting::current();
+
+        return view('fields.index', compact('fields', 'siteSettings'));
     }
 
     /**
