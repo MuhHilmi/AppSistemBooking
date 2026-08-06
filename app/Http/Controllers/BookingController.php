@@ -20,7 +20,7 @@ class BookingController extends Controller
         $search = $request->query('search');
         $sportType = $request->query('sport_type');
 
-        $fields = Field::with(['venue'])
+        $fields = Field::with(['venue', 'operatingSchedules'])
             ->where('status', 1)
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
@@ -266,12 +266,7 @@ class BookingController extends Controller
             $end = Carbon::parse($request->end_time);
             $duration = $start->diffInHours($end); // Durasi dalam jam
 
-            // JIka ingin list booking berurutan
-            $last = Booking::latest() -> first();
-            $number = $last ? $last -> id + 1 : 1;
-
-            // $code = 'BK-' . now()->format('YmdHis') . '-' . rand(100,999);
-            $code = 'BK-' . now()->format('YmdHis') . '-' . $number; // Gunakan ini jika ingin booking list berurutan
+            $code = Booking::generateBookingCode();
 
             // Buat booking
             $booking = Booking::create([

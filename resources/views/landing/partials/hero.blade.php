@@ -20,22 +20,16 @@
                 <span
                     class="inline-flex items-center rounded-full bg-green-100 px-4 py-2 text-sm font-semibold text-green-700"
                 >
-                    Booking Lapangan Kini Lebih Mudah
+                    {{ $siteSettings->hero_badge_text }}
                 </span>
 
                 <h1 class="mt-6 text-5xl font-black leading-tight text-slate-900 lg:text-7xl">
-                    Booking
-                    <span class="text-green-600"> Lapangan </span>
-
-                    Tanpa
-                    <br />
-
-                    Ribet.
+                    {{ $siteSettings->hero_headline }}
                 </h1>
 
                 <p
                     class="mt-8 max-w-xl text-lg leading-8 text-slate-600"
-                >Temukan lapangan futsal, badminton, basket, tenis, dan berbagai olahraga lainnya. Pilih jadwal yang tersedia, lakukan pembayaran, dan nikmati pengalaman booking yang cepat, aman, dan praktis.</p>
+                >{{ $siteSettings->hero_subheadline }}</p>
 
                 <div class="mt-10 flex flex-wrap gap-4">
                     <a
@@ -56,21 +50,21 @@
                 {{-- Statistics --}}
                 <div class="mt-16 grid grid-cols-3 gap-8">
                     <div>
-                        <h3 class="text-3xl font-bold text-green-600">300+</h3>
+                        <h3 class="text-3xl font-bold text-green-600">{{ $siteSettings->stat_1_value }}</h3>
 
-                        <p class="mt-2 text-sm text-slate-500">Lapangan</p>
+                        <p class="mt-2 text-sm text-slate-500">{{ $siteSettings->stat_1_label }}</p>
                     </div>
 
                     <div>
-                        <h3 class="text-3xl font-bold text-green-600">4.500+</h3>
+                        <h3 class="text-3xl font-bold text-green-600">{{ $siteSettings->stat_2_value }}</h3>
 
-                        <p class="mt-2 text-sm text-slate-500">Booking</p>
+                        <p class="mt-2 text-sm text-slate-500">{{ $siteSettings->stat_2_label }}</p>
                     </div>
 
                     <div>
-                        <h3 class="text-3xl font-bold text-green-600">98%</h3>
+                        <h3 class="text-3xl font-bold text-green-600">{{ $siteSettings->stat_3_value }}</h3>
 
-                        <p class="mt-2 text-sm text-slate-500">Kepuasan</p>
+                        <p class="mt-2 text-sm text-slate-500">{{ $siteSettings->stat_3_label }}</p>
                     </div>
                 </div>
             </div>
@@ -80,7 +74,7 @@
                 {{-- Main Mockup --}}
                 <div class="overflow-hidden rounded-3xl border border-white/60 bg-white shadow-2xl">
                     <img
-                        src="{{ asset('/img/field/FutsalArenaorStadium.jpeg') }}"
+                        src="{{ $siteSettings->hero_image_url ?? asset('/img/field/FutsalArenaorStadium.jpeg') }}"
                         alt="Dashboard"
                         class="w-full"
                     />

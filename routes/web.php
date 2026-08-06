@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Customer\AuthController;
 use App\Http\Controllers\Customer\ProfileController as CustomerProfileController;
+use App\Http\Controllers\Customer\ReceiptController as CustomerReceiptController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VenueController;
@@ -10,6 +11,9 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\OperatingScheduleController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Owner\BookingController as OwnerBookingController;
+use App\Http\Controllers\Owner\CustomerController as OwnerCustomerController;
+use App\Http\Controllers\Owner\RevenueController as OwnerRevenueController;
+use App\Http\Controllers\Owner\SettingController as OwnerSettingController;
 use App\Http\Controllers\BookingPaymentController;
 use App\Http\Controllers\MidtransWebhookController;
 use Illuminate\Support\Facades\Route;
@@ -48,8 +52,9 @@ Route::prefix('customer')
 
     Route::middleware(['customer'])->group(function(){
         Route::get('/dashboard', [BookingController::class, 'dashboardView']) -> name('dashboard');
-        Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+        Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
         Route::get('/bookings/history', [BookingController::class, 'historyCustomer'])->name('bookings.history');
         Route::get('/bookings/{field}/create', [BookingController::class, 'create'])->name('bookings.create');
         Route::post('/bookings/{field}', [BookingController::class, 'store'])->name('bookings.store');
@@ -60,6 +65,8 @@ Route::prefix('customer')
         Route::post('/bookings/{booking}/payment', [BookingPaymentController::class, 'store'])->name('bookings.payment.store');
         Route::get('/bookings/{booking}/payment/pending', [BookingPaymentController::class, 'pending'])->name('bookings.payment.pending');
         Route::get('/bookings/{booking}/payment/check-status', [BookingPaymentController::class, 'checkStatus'])->name('bookings.payment.check-status');
+        Route::get('/bookings/{booking}/receipt', [CustomerReceiptController::class, 'show'])->name('bookings.receipt');
+        Route::get('/bookings/{booking}/receipt/download', [CustomerReceiptController::class, 'download'])->name('bookings.receipt.download');
 
         Route::get('/profile', [CustomerProfileController::class, 'edit'])->name('profile.edit');
         Route::put('/profile/password', [CustomerProfileController::class, 'updatePassword'])->name('profile.password.update');
@@ -108,6 +115,15 @@ Route::prefix('owner')
     Route::get('/fields/{field}/slots', [BookingController::class, 'availableSlots'])->name('bookings.slots');
     Route::patch('/bookings/{booking}/confirm-cash', [OwnerBookingController::class, 'confirmCashPayment'])->name('bookings.confirm-cash');
     Route::post('/bookings/{booking}/confirm-transfer', [OwnerBookingController::class, 'confirmTransferPayment'])->name('bookings.confirm-transfer');
+
+    Route::get('/customers', [OwnerCustomerController::class, 'index'])->name('customers.index');
+    Route::get('/customers/{customer}', [OwnerCustomerController::class, 'show'])->name('customers.show');
+
+    Route::get('/revenue', [OwnerRevenueController::class, 'index'])->name('revenue.index');
+    Route::get('/revenue/export', [OwnerRevenueController::class, 'export'])->name('revenue.export');
+
+    Route::get('/settings', [OwnerSettingController::class, 'edit'])->name('settings.edit');
+    Route::put('/settings', [OwnerSettingController::class, 'update'])->name('settings.update');
 
     Route::resource('venues', VenueController::class);
 

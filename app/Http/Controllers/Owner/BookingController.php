@@ -52,7 +52,7 @@ class BookingController extends Controller
             $query->whereDate('booking_date', '<=', $request->date_to);
         }
 
-        $bookings = $query->orderByDesc('booking_code')
+        $bookings = $query->orderByDesc('id')
             ->orderByDesc('start_time')
             ->paginate(15)
             ->withQueryString();
@@ -165,12 +165,7 @@ class BookingController extends Controller
             $end = Carbon::parse($request->end_time);
             $duration = $start->diffInHours($end);
 
-            // JIka ingin list booking berurutan
-            $last = Booking::latest() -> first();
-            $number = $last ? $last -> id + 1 : 1;
-
-            // $code = 'BK-' . now()->format('YmdHis') . '-' . rand(100,999);
-            $code = 'BK-' . now()->format('YmdHis') . '-' . $number; // Gunakan ini jika ingin booking list berurutan
+            $code = Booking::generateBookingCode();
 
             $booking = Booking::create([
                 'booking_code' => $code,
