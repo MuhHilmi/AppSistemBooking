@@ -147,6 +147,25 @@
                 </div>
             </div>
 
+            {{-- Struk / Bukti Booking --}}
+            <div class="bg-white rounded-xl shadow p-6">
+                <h2 class="font-semibold text-gray-800 mb-1">Struk / Bukti Booking</h2>
+                <p class="text-sm text-gray-500 mb-4">Teks ini akan tampil di struk yang bisa diunduh customer setelah booking dikonfirmasi.</p>
+
+                <div class="space-y-4">
+                    <div>
+                        <label for="receipt_header" class="block text-sm text-gray-600 mb-1">Teks Header Struk</label>
+                        <textarea id="receipt_header" name="receipt_header" rows="2" placeholder="mis. Terima kasih telah melakukan booking."
+                            class="w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring-green-500">{{ old('receipt_header', $setting->receipt_header) }}</textarea>
+                    </div>
+                    <div>
+                        <label for="receipt_footer" class="block text-sm text-gray-600 mb-1">Teks Footer Struk</label>
+                        <textarea id="receipt_footer" name="receipt_footer" rows="3" placeholder="mis. Syarat &amp; ketentuan, catatan tambahan, dsb."
+                            class="w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring-green-500">{{ old('receipt_footer', $setting->receipt_footer) }}</textarea>
+                    </div>
+                </div>
+            </div>
+
             <div class="flex justify-end gap-3">
                 <a href="{{ url('/') }}" target="_blank" rel="noopener noreferrer" class="px-6 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50">Lihat Landing Page</a>
                 <button type="submit" class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold">Simpan Perubahan</button>

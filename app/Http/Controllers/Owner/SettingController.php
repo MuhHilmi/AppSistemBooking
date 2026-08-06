@@ -42,6 +42,8 @@ class SettingController extends Controller
             'instagram_url' => 'nullable|url|max:255',
             'whatsapp_url' => 'nullable|url|max:255',
             'youtube_url' => 'nullable|url|max:255',
+            'receipt_header' => 'nullable|string|max:500',
+            'receipt_footer' => 'nullable|string|max:1000',
         ]);
 
         if ($request->hasFile('logo')) {

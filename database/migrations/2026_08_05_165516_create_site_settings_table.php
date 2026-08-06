@@ -43,6 +43,9 @@ return new class extends Migration
             $table->string('whatsapp_url')->nullable();
             $table->string('youtube_url')->nullable();
 
+            $table->text('receipt_header')->nullable();
+            $table->text('receipt_footer')->nullable();
+
             $table->timestamps();
         });
     }

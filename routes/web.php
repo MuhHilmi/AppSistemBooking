@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Customer\AuthController;
 use App\Http\Controllers\Customer\ProfileController as CustomerProfileController;
+use App\Http\Controllers\Customer\ReceiptController as CustomerReceiptController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VenueController;
@@ -51,8 +52,9 @@ Route::prefix('customer')
 
     Route::middleware(['customer'])->group(function(){
         Route::get('/dashboard', [BookingController::class, 'dashboardView']) -> name('dashboard');
-        Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+        Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
         Route::get('/bookings/history', [BookingController::class, 'historyCustomer'])->name('bookings.history');
         Route::get('/bookings/{field}/create', [BookingController::class, 'create'])->name('bookings.create');
         Route::post('/bookings/{field}', [BookingController::class, 'store'])->name('bookings.store');
@@ -63,6 +65,8 @@ Route::prefix('customer')
         Route::post('/bookings/{booking}/payment', [BookingPaymentController::class, 'store'])->name('bookings.payment.store');
         Route::get('/bookings/{booking}/payment/pending', [BookingPaymentController::class, 'pending'])->name('bookings.payment.pending');
         Route::get('/bookings/{booking}/payment/check-status', [BookingPaymentController::class, 'checkStatus'])->name('bookings.payment.check-status');
+        Route::get('/bookings/{booking}/receipt', [CustomerReceiptController::class, 'show'])->name('bookings.receipt');
+        Route::get('/bookings/{booking}/receipt/download', [CustomerReceiptController::class, 'download'])->name('bookings.receipt.download');
 
         Route::get('/profile', [CustomerProfileController::class, 'edit'])->name('profile.edit');
         Route::put('/profile/password', [CustomerProfileController::class, 'updatePassword'])->name('profile.password.update');

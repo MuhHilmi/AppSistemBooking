@@ -194,6 +194,13 @@
                             <a href="{{ route('customer.bookings.payment.pending', $booking) }}" class="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold">Cek Pembayaran</a>
                         </div>
                     @endif
+                    @if (in_array($booking->status, ['confirmed', 'completed']))
+                        <a href="{{ route('customer.bookings.receipt', $booking) }}" target="_blank"
+                            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 text-white font-semibold text-sm hover:bg-indigo-700">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            Lihat &amp; Download Struk
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>

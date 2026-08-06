@@ -28,6 +28,8 @@ class SiteSetting extends Model
         'instagram_url',
         'whatsapp_url',
         'youtube_url',
+        'receipt_header',
+        'receipt_footer',
     ];
 
     protected $appends = ['logo_url', 'hero_image_url'];
@@ -54,6 +56,8 @@ class SiteSetting extends Model
             'support_email' => 'support@bookinglapangan.com',
             'phone' => '+62 812-3456-7890',
             'address' => 'Bandung, Jawa Barat',
+            'receipt_header' => 'Terima kasih telah melakukan booking.',
+            'receipt_footer' => "Struk ini adalah bukti booking yang sah.\nSimpan struk ini sebagai bukti saat datang ke lokasi."
         ]);
     }
 
