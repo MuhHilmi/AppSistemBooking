@@ -30,7 +30,7 @@
                             href="{{ $siteSettings->facebook_url }}" target="_blank" rel="noopener"
                             class="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-800 transition hover:bg-green-600"
                         >
-                            📘
+                            <img src="{{ asset('img/icon/png/facebook.png') }}" alt="Facebook Icon">
                         </a>
                     @endif
 
@@ -39,7 +39,7 @@
                             href="{{ $siteSettings->instagram_url }}" target="_blank" rel="noopener"
                             class="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-800 transition hover:bg-green-600"
                         >
-                            📷
+                            <img src="{{ asset('img/icon/png/instagram.png') }}" alt="Instagram Icon">
                         </a>
                     @endif
 
@@ -48,7 +48,7 @@
                             href="{{ $siteSettings->whatsapp_url }}" target="_blank" rel="noopener"
                             class="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-800 transition hover:bg-green-600"
                         >
-                            💬
+                            <img src="{{ asset('img/icon/png/whatsapp.png') }}" alt="WhatsApp Icon">
                         </a>
                     @endif
 
@@ -57,7 +57,7 @@
                             href="{{ $siteSettings->youtube_url }}" target="_blank" rel="noopener"
                             class="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-800 transition hover:bg-green-600"
                         >
-                            ▶
+                            <img src="{{ asset('img/icon/png/youtube.png') }}" alt="YouTube Icon">
                         </a>
                     @endif
                 </div>
@@ -80,8 +80,8 @@
                 <h3 class="text-lg font-semibold text-white">Layanan</h3>
 
                 <ul class="mt-6 space-y-4">
-                    <li><a href="#" class="hover:text-green-400">Booking Lapangan</a></li>
-                    <li><a href="#" class="hover:text-green-400">Jadwal Operasional</a></li>
+                    <li><a href="{{ route('customer.bookings.index') }}" class="hover:text-green-400">Booking Lapangan</a></li>
+                    <li><a href="{{ route('customer.bookings.index') }}" class="hover:text-green-400">Jadwal Operasional</a></li>
                     <li><a href="#" class="hover:text-green-400">Tempat Usaha</a></li>
                     <li><a href="#" class="hover:text-green-400">Rating & Review</a></li>
                 </ul>
@@ -92,10 +92,10 @@
                 <h3 class="text-lg font-semibold text-white">Bantuan</h3>
 
                 <ul class="mt-6 space-y-4">
-                    <li>❓ FAQ</li>
-                    <li>📄 Privacy Policy</li>
-                    <li>📜 Terms & Conditions</li>
-                    <li>🛟 Support Center</li>
+                    <li>FAQ</li>
+                    <li>Privacy Policy</li>
+                    <li>Terms & Conditions</li>
+                    <li>Support Center</li>
                 </ul>
 
                 <div class="mt-8">
@@ -103,15 +103,24 @@
 
                     <div class="mt-4 space-y-3 text-sm">
                         @if ($siteSettings->support_email)
-                            <p>📧 {{ $siteSettings->support_email }}</p>
+                            <p class="flex gap-2">
+                                <img src="{{ asset('img/icon/png/email.png') }}" alt="Email Icon" class="h-6 w-6">
+                                {{ $siteSettings->support_email }}
+                            </p>
                         @endif
 
                         @if ($siteSettings->phone)
-                            <p>📞 {{ $siteSettings->phone }}</p>
+                            <p class="flex gap-2">
+                                <img src="{{ asset('img/icon/png/smartphone.png') }}" alt="Phone Icon" class="h-6 w-6">
+                                {{ $siteSettings->phone }}
+                            </p>
                         @endif
 
                         @if ($siteSettings->address)
-                            <p>📍 {{ $siteSettings->address }}</p>
+                            <p class="flex gap-2">
+                                <img src="{{ asset('img/icon/png/placeholder.png') }}" alt="Point Icon" class="h-6 w-6">
+                                {{ $siteSettings->address }}
+                            </p>
                         @endif
                     </div>
                 </div>
