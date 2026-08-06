@@ -133,8 +133,8 @@ Route::prefix('owner')
 
         Route::put('/fields/{field}/operating-schedules', [OperatingScheduleController::class, 'update'])->name('operating-schedules.update');
 
-        Route::get('/customers', [OwnerCustomerController::class, 'index'])->name('customers.index');
-        Route::get('/customers/{customer}', [OwnerCustomerController::class, 'show'])->name('customers.show');
+    Route::get('/customers', [OwnerCustomerController::class, 'index'])->name('customers.index');
+    Route::get('/customers/{customer}', [OwnerCustomerController::class, 'show'])->name('customers.show');
 
         Route::get('/reviews', [OwnerReviewController::class, 'index'])->name('reviews.index');
         Route::post('/reviews/{review}/approve', [OwnerReviewController::class, 'approve'])->name('reviews.approve');
