@@ -7,19 +7,19 @@ use App\Http\Controllers\Customer\MembershipController as CustomerMembershipCont
 use App\Http\Controllers\Customer\ProfileController as CustomerProfileController;
 use App\Http\Controllers\Customer\ReceiptController as CustomerReceiptController;
 use App\Http\Controllers\Customer\ReviewController as CustomerReviewController;
+use App\Http\Controllers\OtpController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\VenueController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\MidtransWebhookController;
 use App\Http\Controllers\OperatingScheduleController;
-use App\Http\Controllers\OtpController;
 use App\Http\Controllers\Owner\BookingController as OwnerBookingController;
 use App\Http\Controllers\Owner\CustomerController as OwnerCustomerController;
-use App\Http\Controllers\Owner\RevenueController as OwnerRevenueController;
 use App\Http\Controllers\Owner\ReviewController as OwnerReviewController;
+use App\Http\Controllers\Owner\RevenueController as OwnerRevenueController;
 use App\Http\Controllers\Owner\SettingController as OwnerSettingController;
 use App\Http\Controllers\Owner\StaffController as OwnerStaffController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\VenueController;
 use Illuminate\Support\Facades\Route;
 
 // Route Guest
@@ -132,7 +132,6 @@ Route::prefix('owner')
         })->name('test');
 
         Route::get('/fields/{field}/operating-schedules', [OperatingScheduleController::class, 'edit'])->name('operating-schedules.edit');
-
         Route::put('/fields/{field}/operating-schedules', [OperatingScheduleController::class, 'update'])->name('operating-schedules.update');
 
         Route::get('/customers', [OwnerCustomerController::class, 'index'])->name('customers.index');
