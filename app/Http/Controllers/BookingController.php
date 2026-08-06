@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Booking;
 use App\Models\Field;
 use App\Models\OperatingSchedule;
+use App\Models\Review;
 use App\Models\Venue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -307,9 +308,13 @@ class BookingController extends Controller
             'field.venue',
         ]);
 
+        $hasReview = Review::where('customer_id', $booking->customer_id)
+            ->where('field_id', $booking->field_id)
+            ->exists();
+
         return view(
             'customer.bookings.show',
-            compact('booking')
+            compact('booking', 'hasReview')
         );
     }
 
