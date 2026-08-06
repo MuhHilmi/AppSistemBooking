@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Field;
+use App\Models\Review;
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 
@@ -19,9 +20,16 @@ class LandingController extends Controller
             ->take(6)
             ->get();
 
+        $reviews = Review::with(['customer', 'field'])
+            ->where('status', 'approved')
+            ->where('has_pending_edit', false)
+            ->latest()
+            ->take(6)
+            ->get();
+
         $siteSettings = SiteSetting::current();
 
-        return view('landing.index', compact('fields', 'siteSettings'));
+        return view('landing.index', compact('fields', 'reviews', 'siteSettings'));
     }
 
     public function allFields()

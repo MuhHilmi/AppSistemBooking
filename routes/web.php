@@ -3,6 +3,7 @@
 use App\Http\Controllers\Customer\AuthController;
 use App\Http\Controllers\Customer\ProfileController as CustomerProfileController;
 use App\Http\Controllers\Customer\ReceiptController as CustomerReceiptController;
+use App\Http\Controllers\Customer\ReviewController as CustomerReviewController;
 use App\Http\Controllers\OtpController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VenueController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\OperatingScheduleController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\Owner\BookingController as OwnerBookingController;
 use App\Http\Controllers\Owner\CustomerController as OwnerCustomerController;
+use App\Http\Controllers\Owner\ReviewController as OwnerReviewController;
 use App\Http\Controllers\Owner\RevenueController as OwnerRevenueController;
 use App\Http\Controllers\Owner\SettingController as OwnerSettingController;
 use App\Http\Controllers\BookingPaymentController;
@@ -53,7 +55,6 @@ Route::prefix('customer')
     Route::middleware(['customer'])->group(function(){
         Route::get('/dashboard', [BookingController::class, 'dashboardView']) -> name('dashboard');
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
         Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
         Route::get('/bookings/history', [BookingController::class, 'historyCustomer'])->name('bookings.history');
         Route::get('/bookings/{field}/create', [BookingController::class, 'create'])->name('bookings.create');
@@ -66,7 +67,9 @@ Route::prefix('customer')
         Route::get('/bookings/{booking}/payment/pending', [BookingPaymentController::class, 'pending'])->name('bookings.payment.pending');
         Route::get('/bookings/{booking}/payment/check-status', [BookingPaymentController::class, 'checkStatus'])->name('bookings.payment.check-status');
         Route::get('/bookings/{booking}/receipt', [CustomerReceiptController::class, 'show'])->name('bookings.receipt');
-        Route::get('/bookings/{booking}/receipt/download', [CustomerReceiptController::class, 'download'])->name('bookings.receipt.download');
+        // Route::get('/bookings/{booking}/receipt/download', [CustomerReceiptController::class, 'download'])->name('bookings.receipt.download');
+        Route::get('/fields/{field}/review', [CustomerReviewController::class, 'edit'])->name('reviews.edit');
+        Route::post('/fields/{field}/review', [CustomerReviewController::class, 'store'])->name('reviews.store');
 
         Route::get('/profile', [CustomerProfileController::class, 'edit'])->name('profile.edit');
         Route::put('/profile/password', [CustomerProfileController::class, 'updatePassword'])->name('profile.password.update');
@@ -118,6 +121,10 @@ Route::prefix('owner')
 
     Route::get('/customers', [OwnerCustomerController::class, 'index'])->name('customers.index');
     Route::get('/customers/{customer}', [OwnerCustomerController::class, 'show'])->name('customers.show');
+
+    Route::get('/reviews', [OwnerReviewController::class, 'index'])->name('reviews.index');
+    Route::post('/reviews/{review}/approve', [OwnerReviewController::class, 'approve'])->name('reviews.approve');
+    Route::post('/reviews/{review}/reject', [OwnerReviewController::class, 'reject'])->name('reviews.reject');
 
     Route::get('/revenue', [OwnerRevenueController::class, 'index'])->name('revenue.index');
     Route::get('/revenue/export', [OwnerRevenueController::class, 'export'])->name('revenue.export');
