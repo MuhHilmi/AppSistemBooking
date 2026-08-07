@@ -11,13 +11,6 @@
         <div
             class="mx-auto max-w-5xl rounded-[2rem] border border-white/20 bg-white/10 p-10 text-center backdrop-blur-lg lg:p-16"
         >
-            {{-- Badge --}}
-            <span
-                class="inline-flex rounded-full bg-white/20 px-4 py-2 text-sm font-semibold text-white"
-            >
-                🚀 Mulai Sekarang
-            </span>
-
             {{-- Heading --}}
             <h2 class="mt-6 text-4xl font-extrabold leading-tight text-white lg:text-5xl">
                 Siap Booking Lapangan Favorit Anda?
@@ -31,7 +24,7 @@
             {{-- Button --}}
             <div class="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
                 <a
-                    href="{{ route('register') }}"
+                    href="{{ route('customer.login') }}"
                     class="rounded-xl bg-white px-8 py-4 font-semibold text-green-700 transition hover:bg-slate-100"
                 >
                     Booking Sekarang
@@ -47,21 +40,18 @@
 
             {{-- Bottom Feature --}}
             <div class="mt-12 grid gap-6 text-sm text-green-100 sm:grid-cols-3">
-                <div class="flex items-center justify-center gap-2">
-                    ✅
-
+                <div class="flex items-center justify-center gap-2 bg-gradient-to-br from-green-500 to-green-700 py-2 rounded-lg text-white shadow">
+                    <img src="{{ asset('img/icon/png/atm-card.png') }}" alt="Icon" class="h-6 w-6">
                     <span>Tanpa Biaya Tersembunyi</span>
                 </div>
 
-                <div class="flex items-center justify-center gap-2">
-                    🕒
-
+                <div class="flex items-center justify-center gap-2 bg-gradient-to-br from-green-500 to-green-700 py-2 rounded-lg text-white shadow">
+                    <img src="{{ asset('img/icon/png/calendar.png') }}" alt="Icon" class="h-6 w-6">
                     <span>Booking 24 Jam</span>
                 </div>
 
-                <div class="flex items-center justify-center gap-2">
-                    🔒
-
+                <div class="flex items-center justify-center gap-2 bg-gradient-to-br from-green-500 to-green-700 py-2 rounded-lg text-white shadow">
+                    <img src="{{ asset('img/icon/png/safe.png') }}" alt="Icon" class="h-6 w-6">
                     <span>Pembayaran Aman</span>
                 </div>
             </div>

@@ -89,16 +89,7 @@
 
             {{-- Bantuan & Kontak --}}
             <div>
-                <h3 class="text-lg font-semibold text-white">Bantuan</h3>
-
-                <ul class="mt-6 space-y-4">
-                    <li>FAQ</li>
-                    <li>Privacy Policy</li>
-                    <li>Terms & Conditions</li>
-                    <li>Support Center</li>
-                </ul>
-
-                <div class="mt-8">
+                <div>
                     <h4 class="font-semibold text-white">Hubungi Kami</h4>
 
                     <div class="mt-4 space-y-3 text-sm">
@@ -133,14 +124,6 @@
         {{-- Bottom --}}
         <div class="flex flex-col items-center justify-between gap-6 text-sm md:flex-row">
             <p class="text-slate-500">© {{ date('Y') }} {{ $siteSettings->site_name }}. Seluruh hak cipta dilindungi.</p>
-
-            <div class="flex flex-wrap gap-6">
-                <a href="#" class="hover:text-green-400"> Privacy Policy </a>
-
-                <a href="#" class="hover:text-green-400"> Terms & Conditions </a>
-
-                <a href="#" class="hover:text-green-400"> Cookie Policy </a>
-            </div>
         </div>
     </div>
 </footer>
