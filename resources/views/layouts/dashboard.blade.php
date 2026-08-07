@@ -37,8 +37,16 @@
         {{-- Sidebar --}}
         <aside class="w-64 shrink-0 bg-[var(--primary-dark)] text-white flex flex-col h-screen sticky top-0 overflow-y-auto">
             <div class="flex items-center gap-2.5 px-6 h-16 border-b border-white/10">
-                <div class="w-8 h-8 rounded-md bg-[var(--primary)] flex items-center justify-center font-display font-700 text-sm">L</div>
-                <span class="font-display font-600 text-[15px] tracking-tight">Kelola Lapang</span>
+                @if ($siteSettings->logo_url)
+                    <img src="{{ $siteSettings->logo_url }}" alt="{{ $siteSettings->site_name }}" class="h-11 w-11 rounded-xl object-cover shadow-md">
+                @else
+                    <div
+                        class="flex h-11 w-11 items-center justify-center rounded-xl bg-green-600 text-white font-bold text-xl shadow-md"
+                    >
+                        {{ strtoupper(substr($siteSettings->site_name, 0, 1)) }}
+                    </div>
+                @endif
+                <span class="font-display font-600 text-[15px] tracking-tight">{{ $siteSettings->site_name }}</span>
             </div>
 
             <nav class="flex-1 px-3 py-5 space-y-0.5">

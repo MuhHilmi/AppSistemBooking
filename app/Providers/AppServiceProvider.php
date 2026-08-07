@@ -7,7 +7,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use App\Models\Booking;
-use App\Models\Sitesetting;
+use App\Models\SiteSetting;
 use App\Policies\BookingPolicy;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Booking::class, BookingPolicy::class);
 
         View::composer(
-            ['landing.partials.navbar', 'landing.partials.hero', 'landing.partials.footer'],
+            ['landing.partials.navbar', 'landing.partials.hero', 'landing.partials.footer', 'layouts.dashboard'],
             function ($view) {
                 $view->with('siteSettings', SiteSetting::current());
             }

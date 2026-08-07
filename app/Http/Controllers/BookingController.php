@@ -8,6 +8,7 @@ use App\Models\Field;
 use App\Models\OperatingSchedule;
 use App\Models\Review;
 use App\Models\Venue;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -159,6 +160,8 @@ class BookingController extends Controller
             ->orderByDesc('total')
             ->get();
 
+        $siteSettings = SiteSetting::current();
+
         return view('owner.dashboard', compact(
             'todayCount',
             'todayRevenue',
@@ -167,7 +170,8 @@ class BookingController extends Controller
             'activeFieldsCount',
             'todaySchedule',
             'needsAttention',
-            'revenueBySport'
+            'revenueBySport',
+            'siteSettings'
         ));
     }
 
