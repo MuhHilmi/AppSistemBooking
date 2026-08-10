@@ -1,7 +1,7 @@
 @extends ('layouts.landing')
 
-@section ('title', 'Booking Lapangan')
-@section ('description', 'Platform booking lapangan olahraga online.')
+@section ('title', $siteSettings->site_name)
+@section ('description', $siteSettings->hero_subheadline ?? 'Platform booking lapangan olahraga online.')
 
 @section ('content')
     @include ('landing.partials.navbar')

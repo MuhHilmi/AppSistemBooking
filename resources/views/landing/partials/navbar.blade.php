@@ -12,16 +12,20 @@
         <div class="flex items-center justify-between h-20">
             {{-- Logo --}}
             <a href="/" class="flex items-center gap-3">
-                <div
-                    class="flex h-11 w-11 items-center justify-center rounded-xl bg-green-600 text-white font-bold text-xl shadow-md"
-                >
-                    B
-                </div>
+                @if ($siteSettings->logo_url)
+                    <img src="{{ $siteSettings->logo_url }}" alt="{{ $siteSettings->site_name }}" class="h-11 w-11 rounded-xl object-cover shadow-md">
+                @else
+                    <div
+                        class="flex h-11 w-11 items-center justify-center rounded-xl bg-green-600 text-white font-bold text-xl shadow-md"
+                    >
+                        {{ strtoupper(substr($siteSettings->site_name, 0, 1)) }}
+                    </div>
+                @endif
 
                 <div>
-                    <h1 class="font-bold text-lg text-slate-800">Booking Lapangan</h1>
+                    <h1 class="font-bold text-lg text-slate-800">{{ $siteSettings->site_name }}</h1>
 
-                    <p class="text-xs text-slate-500">Sport Reservation</p>
+                    <p class="text-xs text-slate-500">{{ $siteSettings->tagline }}</p>
                 </div>
             </a>
 

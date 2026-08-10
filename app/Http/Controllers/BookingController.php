@@ -6,7 +6,9 @@ use Carbon\Carbon;
 use App\Models\Booking;
 use App\Models\Field;
 use App\Models\OperatingSchedule;
+use App\Models\Review;
 use App\Models\Venue;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +22,7 @@ class BookingController extends Controller
         $search = $request->query('search');
         $sportType = $request->query('sport_type');
 
-        $fields = Field::with(['venue'])
+        $fields = Field::with(['venue', 'operatingSchedules'])
             ->where('status', 1)
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
@@ -158,6 +160,8 @@ class BookingController extends Controller
             ->orderByDesc('total')
             ->get();
 
+        $siteSettings = SiteSetting::current();
+
         return view('owner.dashboard', compact(
             'todayCount',
             'todayRevenue',
@@ -166,7 +170,8 @@ class BookingController extends Controller
             'activeFieldsCount',
             'todaySchedule',
             'needsAttention',
-            'revenueBySport'
+            'revenueBySport',
+            'siteSettings'
         ));
     }
 
@@ -266,12 +271,7 @@ class BookingController extends Controller
             $end = Carbon::parse($request->end_time);
             $duration = $start->diffInHours($end); // Durasi dalam jam
 
-            // JIka ingin list booking berurutan
-            $last = Booking::latest() -> first();
-            $number = $last ? $last -> id + 1 : 1;
-
-            // $code = 'BK-' . now()->format('YmdHis') . '-' . rand(100,999);
-            $code = 'BK-' . now()->format('YmdHis') . '-' . $number; // Gunakan ini jika ingin booking list berurutan
+            $code = Booking::generateBookingCode();
 
             // Buat booking
             $booking = Booking::create([
@@ -312,9 +312,13 @@ class BookingController extends Controller
             'field.venue',
         ]);
 
+        $hasReview = Review::where('customer_id', $booking->customer_id)
+            ->where('field_id', $booking->field_id)
+            ->exists();
+
         return view(
             'customer.bookings.show',
-            compact('booking')
+            compact('booking', 'hasReview')
         );
     }
 

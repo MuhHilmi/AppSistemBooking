@@ -37,8 +37,16 @@
         {{-- Sidebar --}}
         <aside class="w-64 shrink-0 bg-[var(--primary-dark)] text-white flex flex-col h-screen sticky top-0 overflow-y-auto">
             <div class="flex items-center gap-2.5 px-6 h-16 border-b border-white/10">
-                <div class="w-8 h-8 rounded-md bg-[var(--primary)] flex items-center justify-center font-display font-700 text-sm">L</div>
-                <span class="font-display font-600 text-[15px] tracking-tight">Kelola Lapang</span>
+                @if ($siteSettings->logo_url)
+                    <img src="{{ $siteSettings->logo_url }}" alt="{{ $siteSettings->site_name }}" class="h-11 w-11 rounded-xl object-cover shadow-md">
+                @else
+                    <div
+                        class="flex h-11 w-11 items-center justify-center rounded-xl bg-green-600 text-white font-bold text-xl shadow-md"
+                    >
+                        {{ strtoupper(substr($siteSettings->site_name, 0, 1)) }}
+                    </div>
+                @endif
+                <span class="font-display font-600 text-[15px] tracking-tight">{{ $siteSettings->site_name }}</span>
             </div>
 
             <nav class="flex-1 px-3 py-5 space-y-0.5">
@@ -64,17 +72,21 @@
                     <img src="{{ asset('img/icon/calendar-clock.svg') }}" alt="Icon Lapang" class="w-4 h-4">
                     Jadwal Lapang
                 </a>
-                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 text-white/70 hover:bg-white/10 hover:text-white transition">
+                <a href="{{ route('owner.customers.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.customers.*') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
                     <img src="{{ asset('img/icon/user.svg') }}" alt="Icon Pelanggan" class="w-4 h-4">
                     Pelanggan
                 </a>
+                <a href="{{ route('owner.reviews.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.reviews.*') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
+                    <img src="{{ asset('img/icon/user.svg') }}" alt="Icon Pelanggan" class="w-4 h-4">
+                    Review &amp; Testimoni
+                </a>
 
                 <p class="px-3 text-[11px] uppercase tracking-wider text-white/40 font-600 mt-6 mb-2">Laporan</p>
-                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 text-white/70 hover:bg-white/10 hover:text-white transition">
+                <a href="{{ route('owner.revenue.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.revenue.*') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
                     <img src="{{ asset('img/icon/graph.svg') }}" alt="Icon Pendapatan" class="w-4 h-4">
                     Pendapatan
                 </a>
-                <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 text-white/70 hover:bg-white/10 hover:text-white transition">
+                <a href="{{ route('owner.settings.edit') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.settings.*') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
                     <img src="{{ asset('img/icon/settings.svg') }}" alt="Icon Pengaturan" class="w-4 h-4">
                     Pengaturan
                 </a>
