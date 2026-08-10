@@ -23,6 +23,7 @@ return new class extends Migration
             ]);
             $table->enum('value_type', ['percentage', 'fixed_amount', 'boolean', 'text']);
             $table->string('value')->nullable();
+            $table->unsignedInteger('point_cost')->nullable();
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();

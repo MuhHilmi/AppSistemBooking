@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Customer\AuthController;
 use App\Http\Controllers\Customer\ProfileController as CustomerProfileController;
+use App\Http\Controllers\Customer\MembershipController as CustomerMembershipController;
 use App\Http\Controllers\Customer\ReceiptController as CustomerReceiptController;
 use App\Http\Controllers\Customer\ReviewController as CustomerReviewController;
 use App\Http\Controllers\OtpController;
@@ -71,6 +72,9 @@ Route::prefix('customer')
         Route::get('/fields/{field}/review', [CustomerReviewController::class, 'edit'])->name('reviews.edit');
         Route::post('/fields/{field}/review', [CustomerReviewController::class, 'store'])->name('reviews.store');
 
+        Route::get('/membership', [CustomerMembershipController::class, 'index'])->name('membership.index');
+        Route::post('/membership/redeem/{benefit}', [CustomerMembershipController::class, 'redeem'])->name('membership.redeem');
+
         Route::get('/profile', [CustomerProfileController::class, 'edit'])->name('profile.edit');
         Route::put('/profile/password', [CustomerProfileController::class, 'updatePassword'])->name('profile.password.update');
         Route::delete('/profile', [CustomerProfileController::class, 'destroy'])->name('profile.destroy');
@@ -78,9 +82,9 @@ Route::prefix('customer')
 });
 
 // Route verifikasi auth
-// Route::get('/dashboard', function () {
-//     return view('dashboard-test');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', function () {
+    return view('dashboard-test');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 // Route Admin
 Route::prefix('admin')
