@@ -151,10 +151,13 @@ class BookingController extends Controller
                 $customer = Customer::findOrFail($request->customer_id);
             } else {
                 // Pelanggan walk-in yang belum terdaftar: buat akun ringan otomatis.
+                // Email diisi placeholder karena kolom email wajib (unique, not null),
+                // walk-in biasanya tidak memberikan email saat booking di tempat.
                 $customer = Customer::firstOrCreate(
                     ['phone' => $request->customer_phone],
                     [
                         'name' => $request->customer_name,
+                        'email' => 'walkin+'.preg_replace('/\D/', '', $request->customer_phone).'@placeholder.local',
                         'password' => Hash::make(Str::random(24)),
                         'is_verified' => true,
                     ]

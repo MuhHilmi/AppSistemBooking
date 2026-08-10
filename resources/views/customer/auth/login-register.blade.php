@@ -1,6 +1,6 @@
 <x-guest-layout>
     @section('title', 'Login Customer - '. config('app.name'))
-    <div x-data="{ isLogin: true }" class="auth-background min-h-screen flex items-center">
+    <div x-data="{ isLogin: {{ $showLogin ? 'true' : 'false' }} }" class="auth-background min-h-screen flex items-center">
         <div class="auth-container w-full">
             <div class="auth-card soft-shadow overflow-hidden">
                 <div class="relative min-h-[720px] overflow-hidden">
@@ -115,12 +115,16 @@
                                 </div>
                                 <form action="{{ route('customer.register') }}" method="POST" class="space-y-5">
                                     @csrf
-                                    <input type="text" class="input" name="name" placeholder="Nama Lengkap">
+                                    <input type="text" class="input" name="name" value="{{ old('name') }}" placeholder="Nama Lengkap">
                                     @error('name')
                                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                     @enderror
-                                    <input type="text" class="input" name="phone" placeholder="Nomor HP">
+                                    <input type="text" class="input" name="phone" value="{{ old('phone') }}" placeholder="Nomor HP">
                                     @error('phone')
+                                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                    @enderror
+                                    <input type="email" class="input" name="email" value="{{ old('email') }}" placeholder="email@email.com">
+                                    @error('email')
                                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                     @enderror
                                     <input type="password" class="input" name="password" placeholder="Password">

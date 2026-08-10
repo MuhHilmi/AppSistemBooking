@@ -28,10 +28,34 @@
                     />
                 </div>
                 <div>
-                    <label class="block text-sm mb-1"> Password </label>
+                    <label class="block text-sm mb-1">Email</label>
+                    <input
+                        type="email"
+                        name="email"
+                        value="{{ old('email') }}"
+                        class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500"
+                        placeholder="email@email.com"
+                    />
+                    @error('email')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label class="block text-sm mb-1">Password</label>
                     <input
                         type="password"
                         name="password"
+                        class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500"
+                    />
+                    @error('password')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label class="block text-sm mb-1">Konfirmasi Password</label>
+                    <input
+                        type="password"
+                        name="password_confirmation"
                         class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500"
                     />
                 </div>
