@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('point_transactions', function (Blueprint $table) {
@@ -22,12 +25,14 @@ return new class extends Migration
             $table->string('note')->nullable();
             $table->date('expired_at')->nullable();
             $table->timestamps();
-
             $table->index(['customer_id', 'type']);
             $table->index('expired_at');
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('point_transactions');

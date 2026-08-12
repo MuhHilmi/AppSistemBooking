@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('tier_benefits', function (Blueprint $table) {
@@ -17,11 +20,13 @@ return new class extends Migration
             // null = one-time/unlimited, selain itu: day, week, month, cycle
             $table->string('limit_period')->nullable();
             $table->timestamps();
-
             $table->unique(['tier_id', 'benefit_id']);
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('tier_benefits');
