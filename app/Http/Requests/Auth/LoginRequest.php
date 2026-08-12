@@ -51,6 +51,16 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+
+        $user = Auth::user();
+
+        if ($user->isPenjaga() && ! $user->is_active) {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'email' => 'Akun ini sudah dinonaktifkan. Hubungi owner venue untuk info lebih lanjut.',
+            ]);
+        }
     }
 
     /**

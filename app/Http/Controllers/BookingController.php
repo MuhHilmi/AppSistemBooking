@@ -92,15 +92,15 @@ class BookingController extends Controller
     }
 
     public function dashboardOwnerView() {
-        $ownerId = auth()->id();
+        $venueIds = auth()->user()->accessibleVenueIds();
 
         $activeStatuses = ['waiting_payment_method', 'pending_payment', 'paid', 'confirmed'];
 
         $startOfWeek = now()->startOfWeek();
         $endOfWeek = now()->endOfWeek();
 
-        $ownerBookings = Booking::whereHas('field.venue', function ($query) use ($ownerId) {
-            $query->where('owner_id', $ownerId);
+        $ownerBookings = Booking::whereHas('field.venue', function ($query) use ($venueIds) {
+            $query->whereIn('id', $venueIds);
         });
 
         $todayCount = (clone $ownerBookings)
@@ -117,8 +117,8 @@ class BookingController extends Controller
             ->whereIn('status', ['paid', 'confirmed', 'completed'])
             ->sum('total_price');
 
-        $ownerFields = Field::whereHas('venue', function ($query) use ($ownerId) {
-            $query->where('owner_id', $ownerId);
+        $ownerFields = Field::whereHas('venue', function ($query) use ($venueIds) {
+            $query->whereIn('id', $venueIds);
         })->with('operatingSchedules')->where('status', 1)->get();
 
         $dayOfWeek = now()->dayOfWeekIso;
@@ -439,7 +439,7 @@ class BookingController extends Controller
 
         $booking->update([
             'status' => 'canceled',
-            'canceled_by' => 'owner',
+            'canceled_by' => auth()->user()->isPenjaga() ? 'penjaga' : 'owner',
             'cancel_reason' => 'owner_request',
             'canceled_at' => now(),
         ]);

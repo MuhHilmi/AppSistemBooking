@@ -38,7 +38,7 @@ return new class extends Migration
             $table->timestamp('reservation_expires_at')->nullable();
             $table->timestamp('payment_due_at')->nullable();
             $table->timestamp('checked_in_at')->nullable();
-            $table->enum('canceled_by', ['customer', 'owner', 'system'])->nullable();
+            $table->enum('canceled_by', ['customer', 'owner', 'penjaga', 'system'])->nullable();
             $table->enum('cancel_reason', ['reservation_timeout', 'payment_timeout', 'customer_request', 'owner_request', 'double_booking', 'weather', 'maintenance', 'no_show'])->nullable();
             $table->timestamp('canceled_at')->nullable();
             $table->text('notes')->nullable();

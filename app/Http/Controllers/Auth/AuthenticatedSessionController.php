@@ -28,9 +28,15 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        if (auth()->user()->isAdmin()) {
+        $user = auth()->user();
+
+        if ($user->must_change_password) {
+            return redirect()->route('password.force-change.edit');
+        }
+
+        if ($user->isAdmin()) {
             $defaultRedirect = route('admin.dashboard', absolute: false);
-        } elseif (auth()->user()->isOwner()) {
+        } elseif ($user->isOwner() || $user->isPenjaga()) {
             $defaultRedirect = route('owner.dashboard', absolute: false);
         } else {
             $defaultRedirect = route('dashboard', absolute: false);

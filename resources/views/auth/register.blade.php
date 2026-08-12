@@ -33,7 +33,7 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <!-- Role -->
+        {{-- <!-- Role -->
         <div class="mt-4">
             <x-input-label for="role" :value="__('Role')" />
             <select
@@ -45,7 +45,7 @@
                 <option value="admin">{{ __('Admin') }}</option>
             </select>
             <x-input-error :messages="$errors->get('role')" class="mt-2" />
-        </div>
+        </div> --}}
 
         <!-- Password -->
         <div class="mt-4">

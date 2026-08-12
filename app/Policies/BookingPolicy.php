@@ -73,6 +73,6 @@ class BookingPolicy
 
     public function ownerCancel(User $user, Booking $booking)
     {
-        return $booking->field->venue->owner_id === $user->id;
+        return $user->canManageVenue($booking->field->venue_id);
     }
 }
