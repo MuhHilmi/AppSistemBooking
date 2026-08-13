@@ -41,6 +41,7 @@
                 <x-nav-link route="customer.dashboard">Beranda</x-nav-link>
                 <x-nav-link route="customer.bookings.index">Booking Lapang</x-nav-link>
                 <x-nav-link route="customer.bookings.history">Riwayat Booking</x-nav-link>
+                <x-nav-link route="customer.membership.index">Membership</x-nav-link>
             </nav>
 
             <div class="flex items-center gap-3">
@@ -85,6 +86,10 @@
                 <a href="{{ route('customer.bookings.history') }}" class="flex flex-col items-center justify-center gap-1 h-14 w-14 rounded-lg {{ request()->routeIs('customer.bookings.history') ? 'bg-green-50 text-[var(--primary)]' : 'text-[var(--ink-soft)]' }}">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18"/></svg>
                     <span class="text-[10.5px] font-500">Booking</span>
+                </a>
+                <a href="{{ route('customer.membership.index') }}" class="flex flex-col items-center justify-center gap-1 h-14 w-14 rounded-lg {{ request()->routeIs('customer.membership.*') ? 'bg-green-50 text-[var(--primary)]' : 'text-[var(--ink-soft)]' }}">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.6 6.5L21 9l-5 4.6L17.4 21 12 17.3 6.6 21 8 13.6 3 9l6.4-.5z"/></svg>
+                    <span class="text-[10.5px] font-500">Member</span>
                 </a>
                 <a href="{{ route('customer.profile.edit') }}" class="flex flex-col items-center justify-center gap-1 h-14 w-14 rounded-lg {{ request()->routeIs('customer.profile.*') ? 'bg-green-50 text-[var(--primary)]' : 'text-[var(--ink-soft)]' }}">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>

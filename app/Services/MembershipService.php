@@ -103,10 +103,16 @@ class MembershipService
      * Tukar poin customer dengan benefit tertentu. Poin dipotong secara FIFO
      * dari batch earning yang paling dulu kedaluwarsa.
      *
-     * @throws \RuntimeException jika poin tidak cukup
+     * @throws \RuntimeException jika benefit tidak bisa ditukar poin atau poin tidak cukup
      */
-    public function redeemBenefit(Customer $customer, Benefit $benefit, int $pointCost): \App\Models\BenefitRedemption
+    public function redeemBenefit(Customer $customer, Benefit $benefit): \App\Models\BenefitRedemption
     {
+        if (! $benefit->isRedeemable()) {
+            throw new \RuntimeException('Benefit ini tidak bisa ditukar dengan poin.');
+        }
+
+        $pointCost = $benefit->point_cost;
+
         return DB::transaction(function () use ($customer, $benefit, $pointCost) {
             $membership = $customer->membership()->lockForUpdate()->first();
 

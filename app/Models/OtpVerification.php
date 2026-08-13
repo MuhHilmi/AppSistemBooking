@@ -9,8 +9,9 @@ class OtpVerification extends Model
     protected $fillable = [
         'customers_id',
         'otp',
+        'attempts',
         'expired_at',
-        'is_used'
+        'is_used',
     ];
 
     public function customer()
