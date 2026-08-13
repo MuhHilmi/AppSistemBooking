@@ -26,16 +26,16 @@ class RoleMiddleware
     public function handle(
         Request $request,
         Closure $next,
-        string $roles
+        string ...$roles
     ): Response
     {
         if (! auth()->check()) {
             abort(403);
         }
 
-        $allowedRoles = explode(',', $roles);
+        // $allowedRoles = explode(',', $roles);
 
-        if (! in_array(auth()->user()->role, $allowedRoles, true)) {
+        if (! in_array(auth()->user()->role, $roles, true)) {
             abort(403);
         }
 
