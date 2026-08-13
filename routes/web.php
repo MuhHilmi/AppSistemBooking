@@ -144,8 +144,8 @@ Route::prefix('owner')
         Route::post('/reviews/{review}/approve', [OwnerReviewController::class, 'approve'])->name('reviews.approve');
         Route::post('/reviews/{review}/reject', [OwnerReviewController::class, 'reject'])->name('reviews.reject');
 
-        Route::get('/revenue', [OwnerRevenueController::class, 'index'])->name('revenue.index');
-        Route::get('/revenue/export', [OwnerRevenueController::class, 'export'])->name('revenue.export');
+        // Route::get('/revenue', [OwnerRevenueController::class, 'index'])->name('revenue.index');
+        // Route::get('/revenue/export', [OwnerRevenueController::class, 'export'])->name('revenue.export');
 
         Route::get('/settings', [OwnerSettingController::class, 'edit'])->name('settings.edit');
         Route::put('/settings', [OwnerSettingController::class, 'update'])->name('settings.update');

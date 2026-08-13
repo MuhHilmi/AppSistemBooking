@@ -53,7 +53,7 @@
                                 </div>
                                 <div class="mt-14">
                                     <h1 class="section-title">
-                                        Welcome Back
+                                        Selamat Datang Kembali
                                     </h1>
                                     <p class="section-subtitle">
                                         Silakan login menggunakan akun Anda.
@@ -72,9 +72,9 @@
                                     </div>
                                     <div>
                                         <label class="block mb-2 text-sm font-medium">
-                                            Password
+                                            Kata Sandi
                                         </label>
-                                        <input type="password" name="password" class="input" placeholder="Masukkan password">
+                                        <input type="password" name="password" class="input" placeholder="Masukkan kata sandi Anda">
                                         @error('password')
                                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                         @enderror
@@ -85,7 +85,7 @@
                                             Ingat Saya
                                         </label>
                                         <a href="#" class="text-emerald-600 hover:text-emerald-700">
-                                            Lupa Password?
+                                            Lupa Kata Sandi?
                                         </a>
                                     </div>
                                     <button class="btn-primary">
@@ -127,11 +127,11 @@
                                     @error('email')
                                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                     @enderror
-                                    <input type="password" class="input" name="password" placeholder="Password">
+                                    <input type="password" class="input" name="password" placeholder="Kata sandi">
                                     @error('password')
                                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                     @enderror
-                                    <input type="password" class="input" name="password_confirmation" placeholder="Konfirmasi Password">
+                                    <input type="password" class="input" name="password_confirmation" placeholder="Konfirmasi kata sandi">
                                     <button class="btn-primary">
                                         Daftar
                                     </button>
