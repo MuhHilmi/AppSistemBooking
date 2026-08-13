@@ -68,7 +68,7 @@ Route::prefix('customer')
             Route::get('/bookings/{booking}/payment/pending', [BookingPaymentController::class, 'pending'])->name('bookings.payment.pending');
             Route::get('/bookings/{booking}/payment/check-status', [BookingPaymentController::class, 'checkStatus'])->name('bookings.payment.check-status');
             Route::get('/bookings/{booking}/receipt', [CustomerReceiptController::class, 'show'])->name('bookings.receipt');
-            // Route::get('/bookings/{booking}/receipt/download', [CustomerReceiptController::class, 'download'])->name('bookings.receipt.download');
+            Route::get('/bookings/{booking}/receipt/download', [CustomerReceiptController::class, 'download'])->name('bookings.receipt.download');
             Route::get('/fields/{field}/review', [CustomerReviewController::class, 'edit'])->name('reviews.edit');
             Route::post('/fields/{field}/review', [CustomerReviewController::class, 'store'])->name('reviews.store');
 
