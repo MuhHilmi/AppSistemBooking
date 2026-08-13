@@ -60,6 +60,7 @@
                     <img src="{{ asset('img/icon/booking.svg') }}" alt="Icon Booking" class="w-4 h-4">
                     Booking
                 </a>
+                @if (auth()->user()->isOwner())
                 <a href="{{ route('owner.venues.index')}}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.venues.index') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
                     <img src="{{ asset('img/icon/home.svg') }}" alt="Icon Venue" class="w-4 h-4">
                     Venue
@@ -80,19 +81,35 @@
                     <img src="{{ asset('img/icon/user-experience.svg') }}" alt="Icon Feedback" class="w-4 h-4">
                     Review &amp; Testimoni
                 </a>
+                @endif
 
                 <p class="px-3 text-[11px] uppercase tracking-wider text-white/40 font-600 mt-6 mb-2">Laporan</p>
                 <a href="{{ route('owner.revenue.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.revenue.*') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
                     <img src="{{ asset('img/icon/graph.svg') }}" alt="Icon Pendapatan" class="w-4 h-4">
                     Pendapatan
                 </a>
+                @if (auth()->user()->isOwner())
                 <a href="{{ route('owner.settings.edit') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.settings.*') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
                     <img src="{{ asset('img/icon/settings.svg') }}" alt="Icon Pengaturan" class="w-4 h-4">
                     Pengaturan
                 </a>
+
+                <p class="px-3 text-[11px] uppercase tracking-wider text-white/40 font-600 mt-6 mb-2">Manajemen</p>
+                <a href="{{ route('owner.staff.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.staff.*') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
+                    <img src="{{ asset('img/icon/user.svg') }}" alt="Icon Penjaga" class="w-4 h-4">
+                    Kelola Penjaga
+                </a>
+                @endif
             </nav>
 
             <div class="px-3 py-4 border-t border-white/10">
+                @if (auth()->user()->isPenjaga())
+                <div class="px-3 mb-2">
+                    <span class="inline-flex items-center rounded-full bg-amber-500/20 text-amber-200 text-[11px] font-600 px-2.5 py-1">
+                        Penjaga — {{ auth()->user()->venue->name ?? '-' }}
+                    </span>
+                </div>
+                @endif
                 <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('profile.*') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
                     <div class="w-7 h-7 rounded-full bg-[var(--primary)] flex items-center justify-center text-[12px] font-600">{{ substr(auth()->user()->name ?? 'O', 0, 1) }}</div>
                     <span class="truncate">{{ auth()->user()->name ?? 'Owner' }}</span>

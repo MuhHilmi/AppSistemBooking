@@ -31,4 +31,9 @@ class Venue extends Model
     {
         return $this->hasMany(Field::class);
     }
+
+    public function staff()
+    {
+        return $this->hasMany(User::class, 'venue_id')->where('role', 'penjaga');
+    }
 }

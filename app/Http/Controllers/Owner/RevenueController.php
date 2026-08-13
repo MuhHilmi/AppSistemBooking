@@ -18,10 +18,10 @@ class RevenueController extends Controller
     public function index(Request $request)
     {
         $range = $this->resolveRange($request);
-        $ownerId = auth()->id();
+        $venueIds = auth()->user()->accessibleVenueIds();
 
-        $baseQuery = fn () => Booking::whereHas('field.venue', function ($q) use ($ownerId) {
-            $q->where('owner_id', $ownerId);
+        $baseQuery = fn () => Booking::whereHas('field.venue', function ($q) use ($venueIds) {
+            $q->whereIn('id', $venueIds);
         })
             ->whereIn('status', self::REVENUE_STATUSES)
             ->whereBetween('booking_date', [$range['from']->toDateString(), $range['to']->toDateString()]);
@@ -60,11 +60,11 @@ class RevenueController extends Controller
     public function export(Request $request)
     {
         $range = $this->resolveRange($request);
-        $ownerId = auth()->id();
+        $venueIds = auth()->user()->accessibleVenueIds();
 
         $bookings = Booking::with(['customer', 'field.venue'])
-            ->whereHas('field.venue', function ($q) use ($ownerId) {
-                $q->where('owner_id', $ownerId);
+            ->whereHas('field.venue', function ($q) use ($venueIds) {
+                $q->whereIn('id', $venueIds);
             })
             ->whereIn('status', self::REVENUE_STATUSES)
             ->whereBetween('booking_date', [$range['from']->toDateString(), $range['to']->toDateString()])

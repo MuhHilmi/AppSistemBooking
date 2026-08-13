@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Customer\AuthController;
 use App\Http\Controllers\Customer\ProfileController as CustomerProfileController;
+// use App\Http\Controllers\Customer\MembershipController as CustomerMembershipController;
 use App\Http\Controllers\Customer\ReceiptController as CustomerReceiptController;
 use App\Http\Controllers\Customer\ReviewController as CustomerReviewController;
 use App\Http\Controllers\OtpController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\Owner\CustomerController as OwnerCustomerController;
 use App\Http\Controllers\Owner\ReviewController as OwnerReviewController;
 use App\Http\Controllers\Owner\RevenueController as OwnerRevenueController;
 use App\Http\Controllers\Owner\SettingController as OwnerSettingController;
+use App\Http\Controllers\Owner\StaffController as OwnerStaffController;
 use App\Http\Controllers\BookingPaymentController;
 use App\Http\Controllers\MidtransWebhookController;
 use Illuminate\Support\Facades\Route;
@@ -71,6 +73,9 @@ Route::prefix('customer')
         Route::get('/fields/{field}/review', [CustomerReviewController::class, 'edit'])->name('reviews.edit');
         Route::post('/fields/{field}/review', [CustomerReviewController::class, 'store'])->name('reviews.store');
 
+        // Route::get('/membership', [CustomerMembershipController::class, 'index'])->name('membership.index');
+        // Route::post('/membership/redeem/{benefit}', [CustomerMembershipController::class, 'redeem'])->name('membership.redeem');
+
         Route::get('/profile', [CustomerProfileController::class, 'edit'])->name('profile.edit');
         Route::put('/profile/password', [CustomerProfileController::class, 'updatePassword'])->name('profile.password.update');
         Route::delete('/profile', [CustomerProfileController::class, 'destroy'])->name('profile.destroy');
@@ -94,49 +99,64 @@ Route::prefix('admin')
     Route::get('/', function () { return view('admin'); })->name('index');
 });
 
-// Route Owner
+// Route Owner & Penjaga
 Route::prefix('owner')
     ->name('owner.')
-    ->middleware(['auth','role:owner',])
+    ->middleware(['auth', 'force.password.change'])
     ->group(function () {
-    Route::get('/dashboard', [BookingController::class, 'dashboardOwnerView']) -> name('dashboard');
 
-    Route::get('/test', function () {
-        return 'Owner';
-    })->name('test');
+    // Bisa diakses owner maupun penjaga (scoped ke venue masing-masing)
+    Route::middleware(['role:owner,penjaga'])->group(function () {
+        Route::get('/dashboard', [BookingController::class, 'dashboardOwnerView'])->name('dashboard');
 
-    Route::get('/fields/{field}/operating-schedules', [OperatingScheduleController::class, 'edit'])->name('operating-schedules.edit');
+        Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancelOwner'])->name('bookings.cancel');
 
-    Route::put('/fields/{field}/operating-schedules', [OperatingScheduleController::class, 'update'])->name('operating-schedules.update');
+        Route::get('/bookings', [OwnerBookingController::class, 'index'])->name('bookings.index');
+        Route::get('/bookings/create', [OwnerBookingController::class, 'create'])->name('bookings.create');
+        Route::post('/bookings', [OwnerBookingController::class, 'store'])->name('bookings.store');
+        Route::get('/bookings/customers/search', [OwnerBookingController::class, 'searchCustomers'])->name('bookings.customers.search');
+        Route::get('/fields/{field}/slots', [BookingController::class, 'availableSlots'])->name('bookings.slots');
+        Route::patch('/bookings/{booking}/confirm-cash', [OwnerBookingController::class, 'confirmCashPayment'])->name('bookings.confirm-cash');
+        Route::post('/bookings/{booking}/confirm-transfer', [OwnerBookingController::class, 'confirmTransferPayment'])->name('bookings.confirm-transfer');
 
-    Route::patch('/bookings/{booking}/cancel', [BookingController::class, 'cancelOwner'])->name('bookings.cancel');
+        Route::get('/revenue', [OwnerRevenueController::class, 'index'])->name('revenue.index');
+        Route::get('/revenue/export', [OwnerRevenueController::class, 'export'])->name('revenue.export');
+    });
 
-    Route::get('/bookings', [OwnerBookingController::class, 'index'])->name('bookings.index');
-    Route::get('/bookings/create', [OwnerBookingController::class, 'create'])->name('bookings.create');
-    Route::post('/bookings', [OwnerBookingController::class, 'store'])->name('bookings.store');
-    Route::get('/bookings/customers/search', [OwnerBookingController::class, 'searchCustomers'])->name('bookings.customers.search');
-    Route::get('/fields/{field}/slots', [BookingController::class, 'availableSlots'])->name('bookings.slots');
-    Route::patch('/bookings/{booking}/confirm-cash', [OwnerBookingController::class, 'confirmCashPayment'])->name('bookings.confirm-cash');
-    Route::post('/bookings/{booking}/confirm-transfer', [OwnerBookingController::class, 'confirmTransferPayment'])->name('bookings.confirm-transfer');
+    // Khusus owner: venue, staf/penjaga, dan hal-hal di luar operasional harian
+    Route::middleware(['role:owner'])->group(function () {
+        Route::get('/test', function () {
+            return 'Owner';
+        })->name('test');
 
-    Route::get('/customers', [OwnerCustomerController::class, 'index'])->name('customers.index');
-    Route::get('/customers/{customer}', [OwnerCustomerController::class, 'show'])->name('customers.show');
+        Route::get('/fields/{field}/operating-schedules', [OperatingScheduleController::class, 'edit'])->name('operating-schedules.edit');
 
-    Route::get('/reviews', [OwnerReviewController::class, 'index'])->name('reviews.index');
-    Route::post('/reviews/{review}/approve', [OwnerReviewController::class, 'approve'])->name('reviews.approve');
-    Route::post('/reviews/{review}/reject', [OwnerReviewController::class, 'reject'])->name('reviews.reject');
+        Route::put('/fields/{field}/operating-schedules', [OperatingScheduleController::class, 'update'])->name('operating-schedules.update');
 
-    Route::get('/revenue', [OwnerRevenueController::class, 'index'])->name('revenue.index');
-    Route::get('/revenue/export', [OwnerRevenueController::class, 'export'])->name('revenue.export');
+        Route::get('/customers', [OwnerCustomerController::class, 'index'])->name('customers.index');
+        Route::get('/customers/{customer}', [OwnerCustomerController::class, 'show'])->name('customers.show');
 
-    Route::get('/settings', [OwnerSettingController::class, 'edit'])->name('settings.edit');
-    Route::put('/settings', [OwnerSettingController::class, 'update'])->name('settings.update');
+        Route::get('/reviews', [OwnerReviewController::class, 'index'])->name('reviews.index');
+        Route::post('/reviews/{review}/approve', [OwnerReviewController::class, 'approve'])->name('reviews.approve');
+        Route::post('/reviews/{review}/reject', [OwnerReviewController::class, 'reject'])->name('reviews.reject');
 
-    Route::resource('venues', VenueController::class);
+        Route::get('/settings', [OwnerSettingController::class, 'edit'])->name('settings.edit');
+        Route::put('/settings', [OwnerSettingController::class, 'update'])->name('settings.update');
 
-    Route::resource('fields', FieldController::class);
+        Route::get('/staff', [OwnerStaffController::class, 'index'])->name('staff.index');
+        Route::get('/staff/create', [OwnerStaffController::class, 'create'])->name('staff.create');
+        Route::post('/staff', [OwnerStaffController::class, 'store'])->name('staff.store');
+        Route::get('/staff/{staff}/edit', [OwnerStaffController::class, 'edit'])->name('staff.edit');
+        Route::put('/staff/{staff}', [OwnerStaffController::class, 'update'])->name('staff.update');
+        Route::patch('/staff/{staff}/toggle-active', [OwnerStaffController::class, 'toggleActive'])->name('staff.toggle-active');
+        Route::delete('/staff/{staff}', [OwnerStaffController::class, 'destroy'])->name('staff.destroy');
 
-    Route::resource('operating-schedules', OperatingScheduleController::class);
+        Route::resource('venues', VenueController::class);
+
+        Route::resource('fields', FieldController::class);
+
+        Route::resource('operating-schedules', OperatingScheduleController::class);
+    });
 });
 
 // Route Profile

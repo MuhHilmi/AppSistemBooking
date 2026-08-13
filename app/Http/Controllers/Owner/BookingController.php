@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Customer;
 use App\Models\Field;
-use App\Models\Venue;
+// use App\Models\Venue;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,11 +21,11 @@ class BookingController extends Controller
      */
     public function index(Request $request)
     {
-        $ownerId = auth()->id();
+        $venueIds = auth()->user()->accessibleVenueIds();
 
         $query = Booking::with(['customer', 'field.venue'])
-            ->whereHas('field.venue', function ($q) use ($ownerId) {
-                $q->where('owner_id', $ownerId);
+            ->whereHas('field.venue', function ($q) use ($venueIds) {
+                $q->whereIn('id', $venueIds);
             });
 
         if ($request->filled('search')) {
@@ -57,8 +57,8 @@ class BookingController extends Controller
             ->paginate(15)
             ->withQueryString();
 
-        $fields = Field::whereHas('venue', function ($q) use ($ownerId) {
-            $q->where('owner_id', $ownerId);
+        $fields = Field::whereHas('venue', function ($q) use ($venueIds) {
+            $q->whereIn('id', $venueIds);
         })->orderBy('name')->get();
 
         return view('owner.bookings.index', [
@@ -73,11 +73,11 @@ class BookingController extends Controller
      */
     public function create(Request $request)
     {
-        $ownerId = auth()->id();
+        $venueIds = auth()->user()->accessibleVenueIds();
 
         $fields = Field::with('venue')
-            ->whereHas('venue', function ($q) use ($ownerId) {
-                $q->where('owner_id', $ownerId);
+            ->whereHas('venue', function ($q) use ($venueIds) {
+                $q->whereIn('id', $venueIds);
             })
             ->where('status', 1)
             ->orderBy('name')
@@ -113,13 +113,13 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
-        $ownerId = auth()->id();
+        $venueIds = auth()->user()->accessibleVenueIds();
 
         $request->validate([
             'field_id' => [
                 'required',
-                Rule::exists('fields', 'id')->where(function ($query) use ($ownerId) {
-                    $query->whereIn('venue_id', Venue::where('owner_id', $ownerId)->pluck('id'));
+                Rule::exists('fields', 'id')->where(function ($query) use ($venueIds) {
+                    $query->whereIn('venue_id', $venueIds);
                 }),
             ],
             'booking_date' => 'required|date',
@@ -151,10 +151,13 @@ class BookingController extends Controller
                 $customer = Customer::findOrFail($request->customer_id);
             } else {
                 // Pelanggan walk-in yang belum terdaftar: buat akun ringan otomatis.
+                // Email diisi placeholder karena kolom email wajib (unique, not null),
+                // walk-in biasanya tidak memberikan email saat booking di tempat.
                 $customer = Customer::firstOrCreate(
                     ['phone' => $request->customer_phone],
                     [
                         'name' => $request->customer_name,
+                        'email' => 'walkin+'.preg_replace('/\D/', '', $request->customer_phone).'@placeholder.local',
                         'password' => Hash::make(Str::random(24)),
                         'is_verified' => true,
                     ]
@@ -194,7 +197,7 @@ class BookingController extends Controller
      */
     public function confirmCashPayment(Booking $booking)
     {
-        abort_unless($booking->field->venue->owner_id === auth()->id(), 403);
+        abort_unless(auth()->user()->canManageVenue($booking->field->venue_id), 403);
 
         if ($booking->payment_method !== 'cash' || $booking->status !== 'pending_payment') {
             return back()->with('error', 'Booking ini tidak sedang menunggu konfirmasi pembayaran cash.');
@@ -210,7 +213,7 @@ class BookingController extends Controller
 
     public function confirmTransferPayment(Booking $booking)
     {
-        abort_unless($booking->field->venue->owner_id === auth()->id(), 403);
+        abort_unless(auth()->user()->canManageVenue($booking->field->venue_id), 403);
 
         if ($booking->status !== 'paid') {
             return back()->with('error', 'Booking ini tidak sedang menunggu konfirmasi (belum berstatus paid).');
