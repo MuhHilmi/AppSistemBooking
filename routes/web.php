@@ -17,6 +17,7 @@ use App\Http\Controllers\Owner\CustomerController as OwnerCustomerController;
 use App\Http\Controllers\Owner\RevenueController as OwnerRevenueController;
 use App\Http\Controllers\Owner\ReviewController as OwnerReviewController;
 use App\Http\Controllers\Owner\SettingController as OwnerSettingController;
+use App\Http\Controllers\Owner\StaffController as OwnerStaffController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VenueController;
 use Illuminate\Support\Facades\Route;

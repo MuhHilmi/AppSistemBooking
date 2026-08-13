@@ -24,7 +24,10 @@ class RevenueController extends Controller
             $q->whereIn('id', $venueIds);
         })
             ->whereIn('status', self::REVENUE_STATUSES)
-            ->whereBetween('booking_date', [$range['from']->toDateString(), $range['to']->toDateString()]);
+            // ->whereBetween('booking_date', [$range['from']->toDateString(), $range['to']->toDateString()]);
+            // Dikasrenakan DB Sqlite sulit membaca data, maka sementara dilakukan seperti dibawah ini
+            ->whereDate('booking_date', '>=', $range['from']->toDateString())
+            ->whereDate('booking_date', '<=', $range['to']->toDateString());
 
         $totalRevenue = (clone $baseQuery())->sum('total_price');
         $totalBookings = (clone $baseQuery())->count();
@@ -67,7 +70,10 @@ class RevenueController extends Controller
                 $q->whereIn('id', $venueIds);
             })
             ->whereIn('status', self::REVENUE_STATUSES)
-            ->whereBetween('booking_date', [$range['from']->toDateString(), $range['to']->toDateString()])
+            // ->whereBetween('booking_date', [$range['from']->toDateString(), $range['to']->toDateString()])
+            // Sama seperti bagian atas
+            ->whereDate('booking_date', '>=', $range['from']->toDateString())
+            ->whereDate('booking_date', '<=', $range['to']->toDateString())
             ->orderBy('booking_date')
             ->orderBy('start_time')
             ->get();
