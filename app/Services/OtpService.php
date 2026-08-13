@@ -32,12 +32,22 @@ class OtpService
                     'status' => $response->status(),
                     'response' => $response->body()
                 ]);
+
                 return false;
             }
-            
+
+            $body = $response->json();
+
+            if (isset($body['status']) && $body['status'] === false) {
+                Log::error('Fonnte reported failure', ['response' => $body]);
+
+                return false;
+            }
+
             return true;
         } catch (\Exception $e) {
-            Log::error('OTP Send Error: ' . $e->getMessage());
+            Log::error('OTP Send Error: '.$e->getMessage());
+
             return false;
         }
     }

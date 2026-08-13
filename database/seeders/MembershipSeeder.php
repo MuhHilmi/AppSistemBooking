@@ -72,7 +72,8 @@ class MembershipSeeder extends Seeder
                 'type' => 'free_item',
                 'value_type' => 'text',
                 'value' => '1 minuman',
-                'description' => 'Tukar poin otomatis gratis 1 minuman di venue.',
+                'point_cost' => 50,
+                'description' => 'Tukar 50 poin dengan 1 minuman gratis di venue.',
             ],
             [
                 'code' => 'birthday-voucher',
@@ -80,7 +81,25 @@ class MembershipSeeder extends Seeder
                 'type' => 'voucher',
                 'value_type' => 'fixed_amount',
                 'value' => '50000',
-                'description' => 'Voucher spesial di bulan ulang tahun member.',
+                'description' => 'Voucher spesial di bulan ulang tahun member (diberikan otomatis, bukan ditukar poin).',
+            ],
+            [
+                'code' => 'discount-voucher-10k',
+                'name' => 'Voucher potongan Rp10.000',
+                'type' => 'voucher',
+                'value_type' => 'fixed_amount',
+                'value' => '10000',
+                'point_cost' => 100,
+                'description' => 'Tukar 100 poin dengan voucher potongan harga booking Rp10.000.',
+            ],
+            [
+                'code' => 'discount-voucher-25k',
+                'name' => 'Voucher potongan Rp25.000',
+                'type' => 'voucher',
+                'value_type' => 'fixed_amount',
+                'value' => '25000',
+                'point_cost' => 220,
+                'description' => 'Tukar 220 poin dengan voucher potongan harga booking Rp25.000.',
             ],
             [
                 'code' => 'exclusive-promo',
@@ -106,30 +125,31 @@ class MembershipSeeder extends Seeder
 
         $priority = Benefit::where('code', 'priority-slot')->first();
         $flexReschedule = Benefit::where('code', 'flex-reschedule')->first();
-        $freeDrink = Benefit::where('code', 'free-drink')->first();
         $birthdayVoucher = Benefit::where('code', 'birthday-voucher')->first();
         $exclusivePromo = Benefit::where('code', 'exclusive-promo')->first();
         $dedicatedCs = Benefit::where('code', 'dedicated-cs')->first();
+
+        // Catatan: benefit dengan point_cost (gratis minuman, voucher potongan harga)
+        // TIDAK di-gate tier di sini — berlaku untuk semua member selama poinnya cukup.
+        // Yang di-gate tier hanya benefit pasif/otomatis (tidak perlu tukar poin).
 
         // Rookie: hanya voucher ulang tahun kecil
         $rookie->benefits()->syncWithoutDetaching([
             $birthdayVoucher->id => ['usage_limit' => 1, 'limit_period' => 'year'],
         ]);
 
-        // Pro: prioritas slot, reschedule fleksibel, gratis minuman 1x/bulan, promo sebagian, voucher lebih besar
+        // Pro: prioritas slot, reschedule fleksibel, promo sebagian, voucher ulang tahun
         $pro->benefits()->syncWithoutDetaching([
             $priority->id => ['usage_limit' => null, 'limit_period' => null],
             $flexReschedule->id => ['usage_limit' => null, 'limit_period' => null],
-            $freeDrink->id => ['usage_limit' => 1, 'limit_period' => 'month'],
             $exclusivePromo->id => ['usage_limit' => null, 'limit_period' => null],
             $birthdayVoucher->id => ['usage_limit' => 1, 'limit_period' => 'year'],
         ]);
 
-        // League: semua benefit, gratis minuman 2x/bulan, dedicated CS
+        // League: semua benefit pasif + dedicated CS
         $league->benefits()->syncWithoutDetaching([
             $priority->id => ['usage_limit' => null, 'limit_period' => null],
             $flexReschedule->id => ['usage_limit' => null, 'limit_period' => null],
-            $freeDrink->id => ['usage_limit' => 2, 'limit_period' => 'month'],
             $exclusivePromo->id => ['usage_limit' => null, 'limit_period' => null],
             $dedicatedCs->id => ['usage_limit' => null, 'limit_period' => null],
             $birthdayVoucher->id => ['usage_limit' => 1, 'limit_period' => 'year'],

@@ -12,9 +12,18 @@ class Benefit extends Model
         'type',
         'value_type',
         'value',
+        'point_cost',
         'description',
         'is_active',
     ];
+
+    /**
+     * Benefit yang bisa ditukar poin kapan saja (tidak melekat otomatis ke tier).
+     */
+    public function isRedeemable(): bool
+    {
+        return ! is_null($this->point_cost);
+    }
 
     protected $casts = [
         'is_active' => 'boolean',

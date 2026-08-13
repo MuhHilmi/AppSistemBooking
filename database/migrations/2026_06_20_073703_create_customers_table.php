@@ -11,15 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-    Schema::create('customers', function (Blueprint $table) {
-        $table->id();
-        $table->string('name');
-        $table->string('phone')->unique();
-        $table->string('password');
-        $table->boolean('is_verified')->default(false);
-        $table->rememberToken();
-        $table->timestamps();
-    });
+        Schema::create('customers', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('phone')->unique();
+            $table->string('password');
+            $table->string('email')->unique();
+            $table->boolean('is_verified')->default(false);
+            $table->rememberToken();
+            $table->timestamps();
+        });
     }
 
     /**
