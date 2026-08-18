@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->enum('role', [ 'admin', 'owner', 'penjaga' ])->default('owner');
-            $table->foreignId('venue_id')->nullable()->constrained('venues')->nullOnDelete();
+            // $table->foreignId('venue_id')->nullable()->constrained('venues')->nullOnDelete();
+            $table->unsignedBigInteger('venue_id')->nullable();
             $table->boolean('is_active')->default(true);
             $table->boolean('must_change_password')->default(false);
             $table->string('password');
