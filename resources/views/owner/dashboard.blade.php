@@ -53,7 +53,7 @@
                 @forelse($todaySchedule as $row)
                     <div class="px-5 py-3.5 flex items-start gap-4">
                         <div class="w-32 shrink-0 border-l-[3px] border-[var(--primary)] pl-2.5 pt-0.5">
-                            <p class="font-600 text-[13.5px] leading-tight">{{ $row['field'] }}</p>
+                            <p class="font-600 text-[13.5px] leading-tight">{{ $row['venue'] }}</p>
                             <p class="text-[11.5px] text-[var(--ink-soft)] uppercase tracking-wide">{{ $row['sport_type'] }}</p>
                         </div>
                         <div class="flex-1 flex flex-wrap gap-1.5 pt-0.5">

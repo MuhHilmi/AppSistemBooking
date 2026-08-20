@@ -113,7 +113,7 @@ class BookingController extends Controller
             ->sum('total_price');
 
         $weekRevenue = (clone $ownerBookings)
-            ->whereDate('booking_date', [$startOfWeek, $endOfWeek])
+            ->whereBetween('booking_date', [$startOfWeek, $endOfWeek])
             ->whereIn('status', ['paid', 'confirmed', 'completed'])
             ->sum('total_price');
 
@@ -138,6 +138,7 @@ class BookingController extends Controller
         $todaySchedule = $ownerFields->map(function ($field) use ($activeStatuses) {
             return [
                 'field' => $field->name,
+                'venue' => $field->venue->name,
                 'sport_type' => $field->sport_type,
                 'bookings' => Booking::where('field_id', $field->id)->whereDate('booking_date', today())->whereIn('status', $activeStatuses)->orderBy('start_time')->get(['start_time', 'end_time', 'status']),
             ];
