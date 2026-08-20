@@ -15,13 +15,15 @@ return new class extends Migration
             $table->id();
             $table->foreignId('venue_id')->constrained('venues')->cascadeOnDelete();
             $table->string('name');
-            $table->string('slug')->unique();
+            $table->string('slug');
+            $table->unique(['venue_id', 'slug'], 'fields_venue_id_slug_unique');
             $table->enum('sport_type', [
                 'futsal',
                 'badminton',
                 'basket',
                 'tennis',
-                'voli'
+                'voli',
+                'padel',
             ]);
             $table->text('description')->nullable();
             $table->string('thumbnail')->nullable();

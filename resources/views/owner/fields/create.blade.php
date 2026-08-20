@@ -73,7 +73,8 @@
                                 'badminton',
                                 'basket',
                                 'tennis',
-                                'voli'
+                                'voli',
+                                'padel'
                             ] as $sport)
                                     <option
                                         value="{{ $sport }}"

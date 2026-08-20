@@ -120,10 +120,22 @@ class FieldController extends Controller
                 ->store('fields', 'public');
         }
 
+        // Buat slug yang diambil dari nama
+        $slug = Str::slug($request->name);
+
+        // Cek slug hanya di venue yang sama
+        $originalSlug = $slug;
+        $count = 1;
+
+        while (Field::where('venue_id', $request->venue_id)->where('slug', $slug)->exists()) {
+            $count++;
+            $slug = $originalSlug.'-'.$count;
+        }
+
         $field = Field::create([
             'venue_id'=>$request->venue_id,
             'name'=>$request->name,
-            'slug'=>Str::slug($request->name),
+            'slug'=>$slug,
             'sport_type'=>$request->sport_type,
             'price_per_hour'=>$request->price_per_hour,
             'capacity'=>$request->capacity,
@@ -132,12 +144,14 @@ class FieldController extends Controller
             'status'=>$request->status
         ]);
 
+        $venue = Venue::findOrFail($request->venue_id);
+
         for ($day = 1; $day <= 7; $day++) {
             OperatingSchedule::create([
                 'field_id'    => $field->id,
                 'day_of_week' => $day,
-                'open_time'   => '08:00',
-                'close_time'  => '22:00',
+                'open_time'   => $venue->open_time,
+                'close_time'  => $venue->close_time,
                 'is_open'     => true,
             ]);
         }
