@@ -105,8 +105,8 @@ class FieldController extends Controller
             ],
             'name' => 'required|max:255',
             'sport_type' => 'required',
-            'price_per_hour' => 'required|numeric|min:0',
-            'capacity' => 'required|integer|min:1',
+            'price_per_hour' => 'required|numeric|gt:0',
+            'capacity' => 'required|integer|gt:0',
             'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'status' => 'required'
         ]);
@@ -209,8 +209,8 @@ class FieldController extends Controller
             ],
             'name' => 'required|max:255',
             'sport_type' => 'required',
-            'price_per_hour' => 'required|numeric|min:0',
-            'capacity' => 'required|integer|min:1',
+            'price_per_hour' => 'required|numeric|gt:0',
+            'capacity' => 'required|integer|gt:0',
             'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'status' => 'required'
         ]);

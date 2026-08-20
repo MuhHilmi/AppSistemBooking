@@ -98,6 +98,10 @@
                                 name="price_per_hour"
                                 value="{{ old('price_per_hour', $field->price_per_hour) }}"
                                 class="w-full border rounded-lg mt-2 p-3"
+                                min="0.01"
+                                step="0.01"
+                                oninput="if (this.value !== '') this.value = Math.max(0.01, parseFloat(this.value) || 0)"
+                                required
                             />
                         </div>
 
@@ -109,6 +113,10 @@
                                 name="capacity"
                                 value="{{ old('capacity', $field->capacity) }}"
                                 class="w-full border rounded-lg mt-2 p-3"
+                                min="1"
+                                step="1"
+                                oninput="if (this.value !== '') this.value = Math.max(1, parseInt(this.value) || 0)"
+                                required
                             />
                         </div>
 
