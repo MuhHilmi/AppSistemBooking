@@ -27,11 +27,22 @@ class Venue extends Model
         );
     }
 
+    /**
+     * Katalog item tukar poin milik venue ini (dikelola owner venue).
+     */
+    public function benefits()
+    {
+        return $this->hasMany(Benefit::class);
+    }
+
     public function fields()
     {
         return $this->hasMany(Field::class);
     }
 
+    /**
+     * Akun penjaga yang di-assign untuk menjaga venue ini.
+     */
     public function staff()
     {
         return $this->hasMany(User::class, 'venue_id')->where('role', 'penjaga');

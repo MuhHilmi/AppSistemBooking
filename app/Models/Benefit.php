@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Benefit extends Model
 {
     protected $fillable = [
+        'venue_id',
         'code',
         'name',
         'type',
@@ -25,9 +26,22 @@ class Benefit extends Model
         return ! is_null($this->point_cost);
     }
 
+    /**
+     * Benefit platform-wide (dikelola admin) vs katalog milik venue tertentu (dikelola owner).
+     */
+    public function isPlatformWide(): bool
+    {
+        return is_null($this->venue_id);
+    }
+
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    public function venue()
+    {
+        return $this->belongsTo(Venue::class);
+    }
 
     public function tierBenefits()
     {

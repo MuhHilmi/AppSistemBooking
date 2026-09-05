@@ -27,9 +27,10 @@ class MembershipController extends Controller
         // Benefit pasif yang otomatis melekat di tier customer saat ini
         $tierBenefits = $membership->tier->benefits;
 
-        // Benefit yang bisa ditukar poin (berlaku untuk semua tier)
+        // Benefit yang bisa ditukar poin: dari venue manapun (platform-wide + katalog tiap venue)
         $redeemableBenefits = Benefit::whereNotNull('point_cost')
             ->where('is_active', true)
+            ->with('venue')
             ->orderBy('point_cost')
             ->get();
 

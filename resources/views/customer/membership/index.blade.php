@@ -153,6 +153,10 @@
                     <div>
                         <p class="font-600">{{ $benefit->name }}</p>
                         <p class="text-xs text-[var(--ink-soft)] mt-0.5">{{ $benefit->description }}</p>
+                        <span class="inline-flex items-center gap-1 mt-1.5 text-[11px] font-500 text-[var(--ink-soft)]">
+                            <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11a7 7 0 1 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                            {{ $benefit->venue->name ?? 'Berlaku di semua venue' }}
+                        </span>
                     </div>
                     <div class="text-right shrink-0">
                         <p class="font-600 tabular mb-2">{{ number_format($benefit->point_cost, 0, ',', '.') }} poin</p>

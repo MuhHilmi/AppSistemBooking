@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('benefit_redemptions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('venue_id')->nullable()->constrained('venues')->cascadeOnDelete();
             $table->foreignId('customer_id')->constrained('customers')->cascadeOnDelete();
             $table->foreignId('benefit_id')->constrained('benefits');
             $table->foreignId('point_transaction_id')->nullable()->constrained('point_transactions')->nullOnDelete();

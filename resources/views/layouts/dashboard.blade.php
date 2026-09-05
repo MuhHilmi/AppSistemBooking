@@ -88,6 +88,10 @@
                     <img src="{{ asset('img/icon/graph.svg') }}" alt="Icon Pendapatan" class="w-4 h-4">
                     Pendapatan
                 </a>
+                <a href="{{ route('owner.redemption-claims.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.redemption-claims.*') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
+                    <img src="{{ asset('img/icon/user-experience.svg') }}" alt="Icon Klaim Poin" class="w-4 h-4">
+                    Verifikasi Tukar Poin
+                </a>
                 @if (auth()->user()->isOwner())
                 <a href="{{ route('owner.settings.edit') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.settings.*') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
                     <img src="{{ asset('img/icon/settings.svg') }}" alt="Icon Pengaturan" class="w-4 h-4">
@@ -98,6 +102,10 @@
                 <a href="{{ route('owner.staff.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.staff.*') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
                     <img src="{{ asset('img/icon/user.svg') }}" alt="Icon Penjaga" class="w-4 h-4">
                     Kelola Penjaga
+                </a>
+                <a href="{{ route('owner.redemptions.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-500 {{ request()->routeIs('owner.redemptions.*') ? 'bg-white/10 text-white hover:text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' }} transition">
+                    <img src="{{ asset('img/icon/user-experience.svg') }}" alt="Icon Katalog Tukar Poin" class="w-4 h-4">
+                    Katalog Tukar Poin
                 </a>
                 @endif
             </nav>
