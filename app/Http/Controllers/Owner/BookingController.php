@@ -52,8 +52,48 @@ class BookingController extends Controller
             $query->whereDate('booking_date', '<=', $request->date_to);
         }
 
-        $bookings = $query->orderByDesc('id')
-            ->orderByDesc('start_time')
+        $allowedSorts = [
+            'booking_code',
+            'customer',
+            'field',
+            'booking_date',
+            'total_price',
+            'payment_method',
+            'status'
+        ];
+
+        $sort = $request->get('sort', 'id');
+        $direction = $request->get('direction', 'desc');
+
+        if (!in_array($sort, $allowedSorts)) {
+            $sort = 'id';
+        }
+
+        if (!in_array($direction, ['asc', 'desc'])) {
+            $direction = 'desc';
+        }
+
+        switch ($sort) {
+            case 'customer':
+                $query->join('customers', 'bookings.customer_id', '=', 'customers.id');
+                $query->select('bookings.*')->orderBy('customers.name', $direction);
+                break;
+
+            case 'field':
+                $query->join('fields', 'bookings.field_id', '=', 'fields.id');
+                $query->select('bookings.*')->orderBy('fields.name', $direction);
+                break;
+
+            case 'booking_date':
+                $query->orderBy('booking_date', $direction)->orderBy('start_time', $direction);
+                break;
+
+            default:
+                $query->orderBy($sort, $direction);
+                break;
+        }
+
+        $bookings = $query
             ->paginate(15)
             ->withQueryString();
 
