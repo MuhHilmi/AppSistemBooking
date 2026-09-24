@@ -24,7 +24,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             // AdminSeeder::class,
-            MembershipSeeder::class,
+            // MembershipSeeder::class,
+            // CustomerPointSeeder::class,
         ]);
     }
 }

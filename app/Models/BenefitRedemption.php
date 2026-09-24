@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class BenefitRedemption extends Model
 {
     protected $fillable = [
+        'venue_id',
         'customer_id',
         'benefit_id',
         'point_transaction_id',
@@ -24,6 +25,11 @@ class BenefitRedemption extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function venue()
+    {
+        return $this->belongsTo(Venue::class);
     }
 
     public function benefit()

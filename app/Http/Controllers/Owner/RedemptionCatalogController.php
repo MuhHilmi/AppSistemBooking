@@ -84,6 +84,8 @@ class RedemptionCatalogController extends Controller
             'value_type' => 'required|in:fixed_amount,percentage,text',
             'value' => 'nullable|string|max:255',
             'point_cost' => 'required|integer|min:1',
+            'redemption_limit' => 'nullable|integer|min:1|required_with:redemption_limit_period',
+            'redemption_limit_period' => ['nullable', 'required_with:redemption_limit', Rule::in(Benefit::LIMIT_PERIODS)],
         ]);
 
         $item = Benefit::create([
@@ -133,6 +135,8 @@ class RedemptionCatalogController extends Controller
             'value_type' => 'required|in:fixed_amount,percentage,text',
             'value' => 'nullable|string|max:255',
             'point_cost' => 'required|integer|min:1',
+            'redemption_limit' => 'nullable|integer|min:1|required_with:redemption_limit_period',
+            'redemption_limit_period' => ['nullable', 'required_with:redemption_limit', Rule::in(Benefit::LIMIT_PERIODS)],
         ]);
 
         $redemption->update($validated);

@@ -129,6 +129,7 @@ Route::prefix('owner')
         // Verifikasi klaim tukar poin: owner & penjaga sama-sama bisa proses di counter venue
         Route::get('/redemption-claims', [OwnerRedemptionClaimController::class, 'index'])->name('redemption-claims.index');
         Route::patch('/redemption-claims/{claim}/mark-used', [OwnerRedemptionClaimController::class, 'markUsed'])->name('redemption-claims.mark-used');
+        Route::patch('/redemption-claims/{claim}/cancel', [OwnerRedemptionClaimController::class, 'cancel'])->name('redemption-claims.cancel');
     });
 
     // Khusus owner: venue, staf/penjaga, dan hal-hal di luar operasional harian

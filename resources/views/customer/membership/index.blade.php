@@ -143,28 +143,59 @@
 
     {{-- Tukar Poin --}}
     <div class="rounded-2xl border border-[var(--line)] bg-white shadow-sm p-6">
-        <h2 class="font-display font-600 text-lg mb-1">Tukar Poin</h2>
-        <p class="text-sm text-[var(--ink-soft)] mb-4">Berlaku untuk semua tier, selama poin kamu cukup.</p>
+        <div class="flex items-start justify-between gap-4 flex-wrap mb-4">
+            <div>
+                <h2 class="font-display font-600 text-lg mb-1">Tukar Poin</h2>
+                <p class="text-sm text-[var(--ink-soft)]">Berlaku untuk semua tier, selama poin kamu cukup.</p>
+            </div>
+            <span class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-600 shrink-0
+                {{ $dailyQuotaRemaining > 0 ? 'bg-[var(--primary-tint)] text-[var(--primary-dark)]' : 'bg-red-50 text-[var(--danger)]' }}">
+                Kuota hari ini: {{ $dailyQuotaRemaining }}/5
+            </span>
+        </div>
 
         <div class="space-y-3">
             @forelse ($redeemableBenefits as $benefit)
-                @php $canAfford = $membership->current_point >= $benefit->point_cost; @endphp
+                @php
+                    $canAfford = $membership->current_point >= $benefit->point_cost;
+                    $benefitRemaining = $benefitQuotaRemaining[$benefit->id] ?? null; // null = tidak dibatasi khusus
+                    $benefitLimitReached = ! is_null($benefitRemaining) && $benefitRemaining <= 0;
+                    $dailyLimitReached = $dailyQuotaRemaining <= 0;
+                    $canRedeem = $canAfford && ! $benefitLimitReached && ! $dailyLimitReached;
+                @endphp
                 <div class="flex items-center justify-between gap-4 rounded-xl border border-[var(--line)] p-4">
                     <div>
                         <p class="font-600">{{ $benefit->name }}</p>
                         <p class="text-xs text-[var(--ink-soft)] mt-0.5">{{ $benefit->description }}</p>
-                        <span class="inline-flex items-center gap-1 mt-1.5 text-[11px] font-500 text-[var(--ink-soft)]">
-                            <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11a7 7 0 1 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-                            {{ $benefit->venue->name ?? 'Berlaku di semua venue' }}
-                        </span>
+                        <div class="flex items-center flex-wrap gap-3 mt-1.5">
+                            <span class="inline-flex items-center gap-1 text-[11px] font-500 text-[var(--ink-soft)]">
+                                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11a7 7 0 1 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                                {{ $benefit->venue->name ?? 'Berlaku di semua venue' }}
+                            </span>
+                            @if (! is_null($benefitRemaining))
+                                <span class="inline-flex items-center gap-1 text-[11px] font-500 {{ $benefitLimitReached ? 'text-[var(--danger)]' : 'text-[var(--ink-soft)]' }}">
+                                    Sisa {{ $benefitRemaining }}/{{ $benefit->redemption_limit }} {{ $benefit->redemptionPeriodLabel() }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
                     <div class="text-right shrink-0">
                         <p class="font-600 tabular mb-2">{{ number_format($benefit->point_cost, 0, ',', '.') }} poin</p>
-                        <form method="POST" action="{{ route('customer.membership.redeem', $benefit) }}">
+                        <form method="POST" action="{{ route('customer.membership.redeem', $benefit) }}" class="flex flex-col items-end gap-2">
                             @csrf
-                            <button type="submit" {{ $canAfford ? '' : 'disabled' }}
+                            @if ($benefit->isPlatformWide())
+                                <select name="venue_id" required
+                                    class="rounded-lg border border-[var(--line)] px-2 py-1.5 text-xs w-40 sm:w-48">
+                                    <option value="">Pilih venue klaim</option>
+                                    @foreach ($activeVenues as $venue)
+                                        <option value="{{ $venue->id }}">{{ $venue->name }}</option>
+                                    @endforeach
+                                </select>
+                            @endif
+                            <button type="submit" {{ $canRedeem ? '' : 'disabled' }}
+                                title="{{ $benefitLimitReached ? 'Batas penukaran benefit ini sudah tercapai' : ($dailyLimitReached ? 'Batas penukaran harian sudah tercapai' : '') }}"
                                 class="rounded-lg px-4 py-2 text-xs font-600 transition
-                                    {{ $canAfford ? 'bg-[var(--primary)] text-white hover:bg-[var(--primary-dark)]' : 'bg-[var(--bg)] text-[var(--ink-soft)] cursor-not-allowed' }}">
+                                    {{ $canRedeem ? 'bg-[var(--primary)] text-white hover:bg-[var(--primary-dark)]' : 'bg-[var(--bg)] text-[var(--ink-soft)] cursor-not-allowed' }}">
                                 Tukar
                             </button>
                         </form>

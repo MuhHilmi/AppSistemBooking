@@ -73,7 +73,9 @@ class MembershipSeeder extends Seeder
                 'value_type' => 'text',
                 'value' => '1 minuman',
                 'point_cost' => 50,
-                'description' => 'Tukar 50 poin dengan 1 minuman gratis di venue.',
+                'redemption_limit' => 5,
+                'redemption_limit_period' => 'week',
+                'description' => 'Tukar 50 poin dengan 1 minuman gratis di venue. Maks 5x per minggu.',
             ],
             [
                 'code' => 'birthday-voucher',
@@ -90,7 +92,9 @@ class MembershipSeeder extends Seeder
                 'value_type' => 'fixed_amount',
                 'value' => '10000',
                 'point_cost' => 100,
-                'description' => 'Tukar 100 poin dengan voucher potongan harga booking Rp10.000.',
+                'redemption_limit' => 1,
+                'redemption_limit_period' => 'month',
+                'description' => 'Tukar 100 poin dengan voucher potongan harga booking Rp10.000. Maks 1x per bulan.',
             ],
             [
                 'code' => 'discount-voucher-25k',
@@ -99,7 +103,9 @@ class MembershipSeeder extends Seeder
                 'value_type' => 'fixed_amount',
                 'value' => '25000',
                 'point_cost' => 220,
-                'description' => 'Tukar 220 poin dengan voucher potongan harga booking Rp25.000.',
+                'redemption_limit' => 1,
+                'redemption_limit_period' => 'month',
+                'description' => 'Tukar 220 poin dengan voucher potongan harga booking Rp25.000. Maks 1x per bulan.',
             ],
             [
                 'code' => 'exclusive-promo',
