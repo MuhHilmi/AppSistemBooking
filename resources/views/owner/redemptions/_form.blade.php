@@ -59,3 +59,21 @@
         <p class="mt-1 text-xs text-gray-400">Isi angka rupiah untuk voucher/diskon, atau teks bebas untuk item fisik.</p>
     </div>
 </div>
+
+<div class="grid sm:grid-cols-2 gap-4">
+    <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Batas Penukaran</label>
+        <input type="number" name="redemption_limit" min="1" value="{{ old('redemption_limit', $item->redemption_limit ?? '') }}" placeholder="Kosongkan = tidak dibatasi"
+            class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:ring-green-500">
+    </div>
+    <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Per Periode</label>
+        <select name="redemption_limit_period" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:ring-green-500">
+            <option value="">-- Tidak dibatasi --</option>
+            @foreach (['day' => 'Hari', 'week' => 'Minggu', 'month' => 'Bulan'] as $value => $label)
+                <option value="{{ $value }}" {{ old('redemption_limit_period', $item->redemption_limit_period ?? '') === $value ? 'selected' : '' }}>{{ $label }}</option>
+            @endforeach
+        </select>
+        <p class="mt-1 text-xs text-gray-400">Mis. batas 5 per Minggu, atau 1 per Bulan. Ini di luar batas 5x tukar poin/hari yang berlaku untuk semua item.</p>
+    </div>
+</div>

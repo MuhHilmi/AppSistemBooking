@@ -15,15 +15,45 @@ class RedemptionCatalogController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $ownerId = Auth::id();
 
-        $items = Benefit::whereHas('venue', function ($q) use ($ownerId) {
+        $query = Benefit::whereHas('venue', function ($q) use ($ownerId) {
             $q->where('owner_id', $ownerId);
         })
-            ->with('venue')
-            ->orderByDesc('created_at')
+            ->with('venue');
+
+        $allowedSorts = [
+            'name',
+            'venue',
+            'type',
+            'point_cost',
+            'is_active',
+            'created_at',
+        ];
+
+        $sort = $request->get('sort', 'created_at');
+        $direction = $request->get('direction', 'desc');
+
+        if (! in_array($sort, $allowedSorts, true)) {
+            $sort = 'created_at';
+        }
+
+        if (! in_array($direction, ['asc', 'desc'], true)) {
+            $direction = 'desc';
+        }
+
+        if ($sort === 'venue') {
+            $query->join('venues', 'benefits.venue_id', '=', 'venues.id')
+                ->select('benefits.*')
+                ->orderBy('venues.name', $direction);
+        } else {
+            $query->orderBy("benefits.{$sort}", $direction);
+        }
+
+        $items = $query
+            ->orderBy('benefits.id')
             ->get();
 
         return view('owner.redemptions.index', ['items' => $items]);
@@ -54,6 +84,8 @@ class RedemptionCatalogController extends Controller
             'value_type' => 'required|in:fixed_amount,percentage,text',
             'value' => 'nullable|string|max:255',
             'point_cost' => 'required|integer|min:1',
+            'redemption_limit' => 'nullable|integer|min:1|required_with:redemption_limit_period',
+            'redemption_limit_period' => ['nullable', 'required_with:redemption_limit', Rule::in(Benefit::LIMIT_PERIODS)],
         ]);
 
         $item = Benefit::create([
@@ -103,6 +135,8 @@ class RedemptionCatalogController extends Controller
             'value_type' => 'required|in:fixed_amount,percentage,text',
             'value' => 'nullable|string|max:255',
             'point_cost' => 'required|integer|min:1',
+            'redemption_limit' => 'nullable|integer|min:1|required_with:redemption_limit_period',
+            'redemption_limit_period' => ['nullable', 'required_with:redemption_limit', Rule::in(Benefit::LIMIT_PERIODS)],
         ]);
 
         $redemption->update($validated);

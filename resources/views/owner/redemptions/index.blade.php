@@ -25,11 +25,37 @@
                 <table class="w-full text-sm text-left">
                     <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
                         <tr>
-                            <th class="px-5 py-3">Nama Item</th>
-                            <th class="px-5 py-3">Venue</th>
-                            <th class="px-5 py-3">Tipe</th>
-                            <th class="px-5 py-3">Poin Dibutuhkan</th>
-                            <th class="px-5 py-3">Status</th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Nama Item"
+                                    column="name"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Venue"
+                                    column="venue"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Tipe"
+                                    column="type"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Poin Dibutuhkan"
+                                    column="point_cost"
+                                />
+                            </th>
+                            <th class="px-5 py-3">Batas Penukaran</th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Status"
+                                    column="is_active"
+                                />
+                            </th>
                             <th class="px-5 py-3 text-right">Aksi</th>
                         </tr>
                     </thead>
@@ -45,6 +71,13 @@
                                 <td class="px-5 py-4 text-gray-600">{{ $item->venue->name ?? '-' }}</td>
                                 <td class="px-5 py-4 text-gray-600 capitalize">{{ str_replace('_', ' ', $item->type) }}</td>
                                 <td class="px-5 py-4 font-semibold text-gray-800">{{ number_format($item->point_cost, 0, ',', '.') }} poin</td>
+                                <td class="px-5 py-4 text-gray-600">
+                                    @if ($item->redemption_limit)
+                                        {{ $item->redemption_limit }}x / {{ ['day' => 'hari', 'week' => 'minggu', 'month' => 'bulan'][$item->redemption_limit_period] ?? $item->redemption_limit_period }}
+                                    @else
+                                        <span class="text-gray-400">Tidak dibatasi</span>
+                                    @endif
+                                </td>
                                 <td class="px-5 py-4">
                                     @if ($item->is_active)
                                         <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-700">Aktif</span>
@@ -70,7 +103,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-5 py-12 text-center text-gray-500">
+                                <td colspan="7" class="px-5 py-12 text-center text-gray-500">
                                     Belum ada item tukar poin. Klik "+ Tambah Item" untuk membuat item pertama.
                                 </td>
                             </tr>

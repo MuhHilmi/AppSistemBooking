@@ -3,12 +3,14 @@
 namespace App\Services;
 
 use App\Models\Benefit;
+use App\Models\BenefitRedemption;
 use App\Models\Booking;
 use App\Models\Customer;
 use App\Models\CustomerMembership;
 use App\Models\MembershipTier;
 use App\Models\PointTransaction;
 use App\Models\TierHistory;
+use App\Models\Venue;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -23,6 +25,12 @@ class MembershipService
      * Masa berlaku 1 batch poin hasil earning, dalam bulan.
      */
     private const POINT_EXPIRY_MONTHS = 6;
+
+    /**
+     * Batas global: berapa kali customer boleh menukar poin (benefit apa saja,
+     * digabung) dalam satu hari. Terpisah dari redemption_limit per-benefit.
+     */
+    private const DAILY_REDEMPTION_LIMIT = 5;
 
     /**
      * Target streak mingguan (booking minimal 1x per minggu).
@@ -103,18 +111,54 @@ class MembershipService
      * Tukar poin customer dengan benefit tertentu. Poin dipotong secara FIFO
      * dari batch earning yang paling dulu kedaluwarsa.
      *
-     * @throws \RuntimeException jika benefit tidak bisa ditukar poin atau poin tidak cukup
+     * $venueId adalah venue tempat customer berencana klaim benefit ini:
+     * - Benefit milik venue tertentu (isPlatformWide() === false): venue_id
+     *   otomatis ikut venue pemilik benefit, parameter $venueId diabaikan.
+     * - Benefit platform-wide (isPlatformWide() === true): $venueId WAJIB
+     *   diisi customer, supaya redemption-nya muncul di tabel verifikasi
+     *   venue yang dipilih.
+     *
+     * @throws \RuntimeException jika benefit tidak bisa ditukar poin, venue
+     *                           tidak valid/tidak dipilih, atau poin tidak cukup
      */
-    public function redeemBenefit(Customer $customer, Benefit $benefit): \App\Models\BenefitRedemption
+    public function redeemBenefit(Customer $customer, Benefit $benefit, ?int $venueId = null): \App\Models\BenefitRedemption
     {
         if (! $benefit->isRedeemable()) {
             throw new \RuntimeException('Benefit ini tidak bisa ditukar dengan poin.');
         }
 
+        if ($benefit->isPlatformWide()) {
+            if (! $venueId || ! Venue::where('id', $venueId)->where('status', true)->exists()) {
+                throw new \RuntimeException('Pilih venue tempat kamu akan klaim benefit ini.');
+            }
+        } else {
+            // Benefit katalog venue: venue klaim otomatis ikut pemilik benefit,
+            // tidak bisa dipilih customer.
+            $venueId = $benefit->venue_id;
+        }
+
         $pointCost = $benefit->point_cost;
 
-        return DB::transaction(function () use ($customer, $benefit, $pointCost) {
+        return DB::transaction(function () use ($customer, $benefit, $pointCost, $venueId) {
+            // Lock baris membership dulu supaya penukaran ganda (klik dobel / dua tab)
+            // dari customer yang sama diproses berurutan, bukan bersamaan.
             $membership = $customer->membership()->lockForUpdate()->first();
+
+            if ($this->countTodayRedemptions($customer) >= self::DAILY_REDEMPTION_LIMIT) {
+                throw new \RuntimeException(
+                    'Kamu sudah mencapai batas ' . self::DAILY_REDEMPTION_LIMIT . ' kali penukaran poin hari ini. Coba lagi besok.'
+                );
+            }
+
+            if ($benefit->hasRedemptionLimit()) {
+                $used = $this->countBenefitRedemptionsInPeriod($customer, $benefit);
+
+                if ($used >= $benefit->redemption_limit) {
+                    throw new \RuntimeException(
+                        "Benefit \"{$benefit->name}\" sudah mencapai batas {$benefit->redemption_limit} kali penukaran {$benefit->redemptionPeriodLabel()}."
+                    );
+                }
+            }
 
             if ($membership->current_point < $pointCost) {
                 throw new \RuntimeException('Poin tidak cukup untuk menukar benefit ini.');
@@ -134,6 +178,7 @@ class MembershipService
             $membership->decrement('current_point', $pointCost);
 
             return \App\Models\BenefitRedemption::create([
+                'venue_id' => $venueId,
                 'customer_id' => $customer->id,
                 'benefit_id' => $benefit->id,
                 'point_transaction_id' => $redeemTransaction->id,
@@ -141,6 +186,90 @@ class MembershipService
                 'status' => 'pending',
                 'redeemed_at' => now(),
             ]);
+        });
+    }
+
+    /**
+     * Jumlah redemption (semua benefit) customer hari ini yang dihitung ke
+     * batas harian global. Redemption yang dibatalkan ('canceled') tidak
+     * dihitung — kuotanya dikembalikan ke customer.
+     */
+    private function countTodayRedemptions(Customer $customer): int
+    {
+        // Tidak perlu lockForUpdate lagi di sini: baris membership customer
+        // sudah dikunci di awal redeemBenefit(), jadi penukaran customer yang
+        // sama otomatis berurutan, tidak bersamaan.
+        return BenefitRedemption::where('customer_id', $customer->id)
+            ->where('status', '!=', 'canceled')
+            ->whereDate('redeemed_at', Carbon::today())
+            ->count();
+    }
+
+    /**
+     * Jumlah redemption customer untuk 1 benefit tertentu, dalam periode
+     * limit benefit tsb (day/week/month) yang sedang berjalan. Redemption
+     * yang dibatalkan ('canceled') tidak dihitung.
+     */
+    private function countBenefitRedemptionsInPeriod(Customer $customer, Benefit $benefit): int
+    {
+        $periodStart = $benefit->redemptionPeriodStart(Carbon::now());
+
+        return BenefitRedemption::where('customer_id', $customer->id)
+            ->where('benefit_id', $benefit->id)
+            ->where('status', '!=', 'canceled')
+            ->where('redeemed_at', '>=', $periodStart)
+            ->count();
+    }
+
+    /**
+     * Sisa kuota harian global customer (dipakai untuk tampilan di halaman membership).
+     */
+    public function remainingDailyQuota(Customer $customer): int
+    {
+        return max(0, self::DAILY_REDEMPTION_LIMIT - $this->countTodayRedemptions($customer));
+    }
+
+    /**
+     * Sisa kuota customer untuk 1 benefit tertentu (dipakai untuk tampilan di
+     * halaman membership). Null berarti benefit ini tidak punya batas khusus.
+     */
+    public function remainingBenefitQuota(Customer $customer, Benefit $benefit): ?int
+    {
+        if (! $benefit->hasRedemptionLimit()) {
+            return null;
+        }
+
+        return max(0, $benefit->redemption_limit - $this->countBenefitRedemptionsInPeriod($customer, $benefit));
+    }
+
+    /**
+     * Batalkan sebuah redemption yang masih pending (dipakai venue saat, misalnya,
+     * stok benefit habis). Poin yang sudah dipotong dikembalikan penuh ke customer,
+     * dan penukaran ini tidak lagi dihitung ke batas harian/periode manapun.
+     *
+     * @throws \RuntimeException jika redemption sudah tidak berstatus pending
+     */
+    public function cancelRedemption(BenefitRedemption $redemption): void
+    {
+        if ($redemption->status !== 'pending') {
+            throw new \RuntimeException('Penukaran ini sudah diproses sebelumnya dan tidak bisa dibatalkan.');
+        }
+
+        DB::transaction(function () use ($redemption) {
+            $customer = $redemption->customer()->lockForUpdate()->first();
+            $pointsUsed = $redemption->points_used;
+
+            if ($pointsUsed > 0) {
+                $this->creditPoints(
+                    $customer,
+                    $pointsUsed,
+                    referenceType: 'benefit_redemption_cancel',
+                    referenceId: (string) $redemption->id,
+                    note: "Pengembalian poin: penukaran \"{$redemption->benefit->name}\" dibatalkan",
+                );
+            }
+
+            $redemption->update(['status' => 'canceled']);
         });
     }
 

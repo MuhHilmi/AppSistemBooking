@@ -14,9 +14,16 @@ class Benefit extends Model
         'value_type',
         'value',
         'point_cost',
+        'redemption_limit',
+        'redemption_limit_period',
         'description',
         'is_active',
     ];
+
+    /**
+     * Periode limit yang valid untuk redemption_limit_period.
+     */
+    public const LIMIT_PERIODS = ['day', 'week', 'month'];
 
     /**
      * Benefit yang bisa ditukar poin kapan saja (tidak melekat otomatis ke tier).
@@ -24,6 +31,39 @@ class Benefit extends Model
     public function isRedeemable(): bool
     {
         return ! is_null($this->point_cost);
+    }
+
+    /**
+     * Apakah benefit ini punya batas penukaran khusus (di luar batas harian global).
+     */
+    public function hasRedemptionLimit(): bool
+    {
+        return ! is_null($this->redemption_limit) && ! is_null($this->redemption_limit_period);
+    }
+
+    /**
+     * Awal periode berjalan untuk batas penukaran benefit ini, relatif ke $now.
+     * day = mulai hari ini, week = Senin minggu ini, month = tanggal 1 bulan ini.
+     */
+    public function redemptionPeriodStart(\Carbon\Carbon $now): \Carbon\Carbon
+    {
+        return match ($this->redemption_limit_period) {
+            'week' => $now->copy()->startOfWeek(),
+            'month' => $now->copy()->startOfMonth(),
+            default => $now->copy()->startOfDay(),
+        };
+    }
+
+    /**
+     * Label periode dalam Bahasa Indonesia, untuk pesan error & tampilan UI.
+     */
+    public function redemptionPeriodLabel(): string
+    {
+        return match ($this->redemption_limit_period) {
+            'week' => 'minggu ini',
+            'month' => 'bulan ini',
+            default => 'hari ini',
+        };
     }
 
     /**

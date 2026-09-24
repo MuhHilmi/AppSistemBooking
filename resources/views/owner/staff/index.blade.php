@@ -34,10 +34,30 @@
                 <table class="w-full text-sm text-left">
                     <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
                         <tr>
-                            <th class="px-5 py-3">Nama</th>
-                            <th class="px-5 py-3">Email</th>
-                            <th class="px-5 py-3">Venue</th>
-                            <th class="px-5 py-3">Status</th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Nama"
+                                    column="name"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Email"
+                                    column="email"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Venue"
+                                    column="venue"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Status"
+                                    column="is_active"
+                                />
+                            </th>
                             <th class="px-5 py-3 text-right">Aksi</th>
                         </tr>
                     </thead>

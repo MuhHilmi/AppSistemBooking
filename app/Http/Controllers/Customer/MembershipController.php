@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Benefit;
 use App\Models\MembershipTier;
 use App\Models\PointTransaction;
+use App\Models\Venue;
 use App\Services\MembershipService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class MembershipController extends Controller
 {
@@ -34,6 +36,17 @@ class MembershipController extends Controller
             ->orderBy('point_cost')
             ->get();
 
+        // Dipakai buat dropdown pilih venue saat redeem benefit platform-wide
+        // (benefit venue-specific tidak perlu pilih, otomatis ikut venue-nya).
+        $activeVenues = Venue::where('status', true)->orderBy('name')->get();
+
+        $dailyQuotaRemaining = $this->membershipService->remainingDailyQuota($customer);
+
+        // key => sisa kuota (null = benefit ini tidak punya batas khusus)
+        $benefitQuotaRemaining = $redeemableBenefits->mapWithKeys(
+            fn (Benefit $benefit) => [$benefit->id => $this->membershipService->remainingBenefitQuota($customer, $benefit)]
+        );
+
         $pointHistory = PointTransaction::where('customer_id', $customer->id)
             ->orderByDesc('created_at')
             ->limit(20)
@@ -51,6 +64,9 @@ class MembershipController extends Controller
             'tiers' => $tiers,
             'tierBenefits' => $tierBenefits,
             'redeemableBenefits' => $redeemableBenefits,
+            'activeVenues' => $activeVenues,
+            'dailyQuotaRemaining' => $dailyQuotaRemaining,
+            'benefitQuotaRemaining' => $benefitQuotaRemaining,
             'pointHistory' => $pointHistory,
             'redemptionHistory' => $redemptionHistory,
         ]);
@@ -60,8 +76,17 @@ class MembershipController extends Controller
     {
         $customer = Auth::guard('customer')->user();
 
+        // venue_id cuma wajib & divalidasi untuk benefit platform-wide;
+        // untuk benefit venue-specific, kolom ini tidak ditampilkan di form sama sekali.
+        $validated = $request->validate([
+            'venue_id' => [
+                $benefit->isPlatformWide() ? 'required' : 'nullable',
+                Rule::exists('venues', 'id')->where('status', true),
+            ],
+        ]);
+
         try {
-            $this->membershipService->redeemBenefit($customer, $benefit);
+            $this->membershipService->redeemBenefit($customer, $benefit, $validated['venue_id'] ?? null);
         } catch (\RuntimeException $e) {
             return back()->with('error', $e->getMessage());
         }

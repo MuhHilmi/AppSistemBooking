@@ -68,13 +68,48 @@
                 <table class="w-full text-sm text-left">
                     <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
                         <tr>
-                            <th class="px-5 py-3">Kode Booking</th>
-                            <th class="px-5 py-3">Customer</th>
-                            <th class="px-5 py-3">Lapangan</th>
-                            <th class="px-5 py-3">Jadwal</th>
-                            <th class="px-5 py-3">Total</th>
-                            <th class="px-5 py-3">Metode</th>
-                            <th class="px-5 py-3">Status</th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Kode Booking"
+                                    column="booking_code"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Customer"
+                                    column="customer"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Lapangan"
+                                    column="field"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Jadwal"
+                                    column="booking_date"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Total"
+                                    column="total_price"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Metode"
+                                    column="payment_method"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Status"
+                                    column="status"
+                                />
+                            </th>
                             <th class="px-5 py-3 text-right">Aksi</th>
                         </tr>
                     </thead>

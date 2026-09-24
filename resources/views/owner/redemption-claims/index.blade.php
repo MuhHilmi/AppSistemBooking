@@ -20,11 +20,37 @@
                 <table class="w-full text-sm text-left">
                     <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
                         <tr>
-                            <th class="px-5 py-3">Customer</th>
-                            <th class="px-5 py-3">Item</th>
-                            <th class="px-5 py-3">Poin</th>
-                            <th class="px-5 py-3">Waktu Tukar</th>
-                            <th class="px-5 py-3">Status</th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Customer"
+                                    column="customer"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Item"
+                                    column="benefit"
+                                />
+                            </th>
+                            <th class="px-5 py-3">Venue</th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Poin"
+                                    column="points_used"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Waktu Tukar"
+                                    column="redeemed_at"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Status"
+                                    column="status"
+                                />
+                            </th>
                             <th class="px-5 py-3 text-right">Aksi</th>
                         </tr>
                     </thead>
@@ -33,6 +59,7 @@
                             <tr class="hover:bg-gray-50">
                                 <td class="px-5 py-4 font-medium text-gray-800">{{ $claim->customer->name ?? '-' }}</td>
                                 <td class="px-5 py-4 text-gray-600">{{ $claim->benefit->name ?? '-' }}</td>
+                                <td class="px-5 py-4 text-gray-600">{{ $claim->venue->name ?? '-' }}</td>
                                 <td class="px-5 py-4 text-gray-600">{{ number_format($claim->points_used, 0, ',', '.') }} poin</td>
                                 <td class="px-5 py-4 text-gray-600">{{ $claim->redeemed_at?->translatedFormat('d M Y, H:i') }}</td>
                                 <td class="px-5 py-4">
@@ -51,12 +78,18 @@
                                             @method('PATCH')
                                             <button type="submit" class="text-green-600 hover:text-green-700 font-semibold text-xs">Tandai Sudah Diklaim</button>
                                         </form>
+                                        <form action="{{ route('owner.redemption-claims.cancel', $claim) }}" method="POST" class="inline ml-3"
+                                            onsubmit="return confirm('Batalkan penukaran ini? Poin dan kuota akan dikembalikan ke customer.');">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="text-red-600 hover:text-red-700 font-semibold text-xs">Batalkan</button>
+                                        </form>
                                     @endif
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-5 py-12 text-center text-gray-500">
+                                <td colspan="7" class="px-5 py-12 text-center text-gray-500">
                                     Belum ada penukaran poin dari customer.
                                 </td>
                             </tr>
