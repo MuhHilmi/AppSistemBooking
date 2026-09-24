@@ -13,12 +13,47 @@ class RedemptionClaimController extends Controller
     {
         $venueIds = Auth::user()->accessibleVenueIds();
 
-        $claims = BenefitRedemption::with(['customer', 'benefit'])
+        $query = BenefitRedemption::with(['customer', 'benefit'])
             ->whereHas('benefit', function ($q) use ($venueIds) {
                 $q->whereIn('venue_id', $venueIds);
-            })
-            ->orderByDesc('redeemed_at')
-            ->paginate(20);
+            });
+
+        $allowedSorts = [
+            'customer',
+            'benefit',
+            'points_used',
+            'redeemed_at',
+            'status',
+        ];
+
+        $sort = $request->get('sort', 'redeemed_at');
+        $direction = $request->get('direction', 'desc');
+
+        if (!in_array($sort, $allowedSorts)) {
+            $sort = 'redeemed_at';
+        }
+
+        if (!in_array($direction, ['asc', 'desc'])) {
+            $direction = 'desc';
+        }
+
+        switch ($sort) {
+            case 'customer':
+                $query->join('customers', 'benefit_redemptions.customer_id', '=', 'customers.id')->select('benefit_redemptions.*')->orderBy('customers.name', $direction);
+                break;
+
+            case 'benefit':
+                $query->join('benefits', 'benefit_redemptions.benefit_id', '=', 'benefits.id')->select('benefit_redemptions.*')->orderBy('benefits.name', $direction);
+                break;
+
+            default:
+                $query->orderBy($sort, $direction);
+                break;
+        }
+
+        $claims = $query
+            ->paginate(20)
+            ->withQueryString();
 
         return view('owner.redemption-claims.index', ['claims' => $claims]);
     }

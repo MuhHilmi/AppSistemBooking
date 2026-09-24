@@ -25,11 +25,36 @@
                 <table class="w-full text-sm text-left">
                     <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
                         <tr>
-                            <th class="px-5 py-3">Nama Item</th>
-                            <th class="px-5 py-3">Venue</th>
-                            <th class="px-5 py-3">Tipe</th>
-                            <th class="px-5 py-3">Poin Dibutuhkan</th>
-                            <th class="px-5 py-3">Status</th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Nama Item"
+                                    column="name"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Venue"
+                                    column="venue"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Tipe"
+                                    column="type"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Poin Dibutuhkan"
+                                    column="point_cost"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Status"
+                                    column="is_active"
+                                />
+                            </th>
                             <th class="px-5 py-3 text-right">Aksi</th>
                         </tr>
                     </thead>

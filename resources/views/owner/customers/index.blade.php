@@ -32,12 +32,42 @@
                 <table class="w-full text-sm text-left">
                     <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
                         <tr>
-                            <th class="px-5 py-3">Nama</th>
-                            <th class="px-5 py-3">No. HP</th>
-                            <th class="px-5 py-3">Status</th>
-                            <th class="px-5 py-3">Jumlah Booking</th>
-                            <th class="px-5 py-3">Total Belanja</th>
-                            <th class="px-5 py-3">Booking Terakhir</th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Nama"
+                                    column="name"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="No. Telp"
+                                    column="phone"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Status"
+                                    column="is_verified"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Jumlah Booking"
+                                    column="booking_count"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Total Belanja"
+                                    column="total_spent"
+                                />
+                            </th>
+                            <th class="px-5 py-3">
+                                <x-sortable-column
+                                    label="Tanggal Booking Terakhir"
+                                    column="last_booking_date"
+                                />
+                            </th>
                             <th class="px-5 py-3 text-right">Aksi</th>
                         </tr>
                     </thead>

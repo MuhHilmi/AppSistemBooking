@@ -39,7 +39,29 @@ class CustomerController extends Controller
             });
         }
 
-        $customers = $query->orderByDesc('last_booking_date')
+        $allowedSorts = [
+            'name',
+            'phone',
+            'is_verified',
+            'bookings_count',
+            'total_spent',
+            'last_booking_date',
+        ];
+
+        $sort = $request->get('sort', 'id');
+        $direction = $request->get('direction', 'desc');
+
+        if (!in_array($sort, $allowedSorts)) {
+            $sort = 'id';
+        }
+
+        if (!in_array($direction, ['asc', 'desc'])) {
+            $direction = 'desc';
+        }
+
+        $query->orderBy($sort, $direction);
+
+        $customers = $query
             ->paginate(15)
             ->withQueryString();
 

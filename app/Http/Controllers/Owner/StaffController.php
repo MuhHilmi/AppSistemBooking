@@ -16,16 +16,44 @@ class StaffController extends Controller
     /**
      * Daftar semua akun penjaga milik venue-venue owner yang login.
      */
-    public function index()
+    public function index(Request $request)
     {
         $ownerId = Auth::id();
 
-        $staff = User::where('role', 'penjaga')
+        $query = User::where('role', 'penjaga')
             ->whereHas('venue', function ($q) use ($ownerId) {
                 $q->where('owner_id', $ownerId);
             })
-            ->with('venue')
-            ->orderBy('name')
+            ->with('venue');
+
+        $allowedSorts = [
+            'name',
+            'email',
+            'venue',
+            'is_active',
+        ];
+
+        $sort = $request->get('sort', 'name');
+        $direction = $request->get('direction', 'asc');
+
+        if (! in_array($sort, $allowedSorts, true)) {
+            $sort = 'name';
+        }
+
+        if (! in_array($direction, ['asc', 'desc'], true)) {
+            $direction = 'asc';
+        }
+
+        if ($sort === 'venue') {
+            $query->join('venues', 'users.venue_id', '=', 'venues.id')
+                ->select('users.*')
+                ->orderBy('venues.name', $direction);
+        } else {
+            $query->orderBy("users.{$sort}", $direction);
+        }
+
+        $staff = $query
+            ->orderBy('users.id')
             ->get();
 
         return view('owner.staff.index', ['staff' => $staff]);
