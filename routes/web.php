@@ -45,17 +45,25 @@ Route::prefix('customer')
     ->group(function () {
         Route::get('/register', [AuthController::class, 'registerForm'])->name('register.form');
 
-        Route::post('/register', [AuthController::class, 'register'])->name('register');
+        Route::post('/register', [AuthController::class, 'register'])
+            ->name('register')
+            ->middleware('throttle:5,1');
 
         Route::get('/verify', [OtpController::class, 'form'])->name('verify');
 
-        Route::post('/verify', [OtpController::class, 'verify'])->name('verify.otp');
+        Route::post('/verify', [OtpController::class, 'verify'])
+            ->name('verify.otp')
+            ->middleware('throttle:5,1');
 
-        Route::get('/resend-otp', [OtpController::class, 'resend'])->name('resend-otp');
+        Route::get('/resend-otp', [OtpController::class, 'resend'])
+            ->name('resend-otp')
+            ->middleware('throttle:3,1');
 
         Route::get('/login', [AuthController::class, 'loginForm'])->name('login.form');
 
-        Route::post('/login', [AuthController::class, 'login'])->name('login');
+        Route::post('/login', [AuthController::class, 'login'])
+            ->name('login')
+            ->middleware('throttle:5,1');
 
         Route::middleware(['customer'])->group(function () {
             Route::get('/dashboard', [BookingController::class, 'dashboardView'])->name('dashboard');

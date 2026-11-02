@@ -15,7 +15,7 @@ class Field extends Model
         'thumbnail',
         'price_per_hour',
         'capacity',
-        'status'
+        'status',
     ];
 
     protected $appends = [
@@ -38,16 +38,19 @@ class Field extends Model
         );
     }
 
-    public function bookings() {
+    public function bookings()
+    {
         return $this->hasMany(Booking::class);
     }
 
-    public function reviews() {
+    public function reviews()
+    {
         return $this->hasMany(Review::class);
     }
 
-    public function approvedReviews() {
-        return $this->hasMany(Review::class);
+    public function approvedReviews()
+    {
+        return $this->hasMany(Review::class)->where('status', 'approved')->where('has_pending_edit', false);
     }
 
     public function getThumbnailUrlAttribute(): string

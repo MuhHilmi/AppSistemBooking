@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use App\Models\Booking;
 use App\Models\Field;
-use App\Models\OperatingSchedule;
 use App\Models\Review;
-use App\Models\Venue;
 use App\Models\SiteSetting;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +16,8 @@ class BookingController extends Controller
     /**
      * Display a listing of the resource.
      */
-        public function index(Request $request) {
+    public function index(Request $request)
+    {
         $search = $request->query('search');
         $sportType = $request->query('sport_type');
 
@@ -40,7 +39,8 @@ class BookingController extends Controller
         return view('customer.bookings.index', compact('fields'));
     }
 
-    public function dashboardView() {
+    public function dashboardView()
+    {
         $customerId = auth('customer')->id();
 
         $upcomingBooking = Booking::with('field.venue')
@@ -76,7 +76,7 @@ class BookingController extends Controller
 
         $recentBookings = Booking::with('field')
             ->where('customer_id', $customerId)
-            ->whereIn('status', ['waiting_payment_method', 'payment_method', 'paid', 'completed', 'confirmed', 'canceled'])
+            ->whereIn('status', ['waiting_payment_method', 'pending_payment', 'paid', 'completed', 'confirmed', 'canceled'])
             ->orderByDesc('booking_date')
             ->orderByDesc('start_time')
             ->take(5)
@@ -91,7 +91,8 @@ class BookingController extends Controller
         ));
     }
 
-    public function dashboardOwnerView() {
+    public function dashboardOwnerView()
+    {
         $venueIds = auth()->user()->accessibleVenueIds();
 
         $activeStatuses = ['waiting_payment_method', 'pending_payment', 'paid', 'confirmed'];
@@ -176,7 +177,8 @@ class BookingController extends Controller
         ));
     }
 
-    public function historyCustomer(Request $request) {
+    public function historyCustomer(Request $request)
+    {
         $customerId = auth('customer')->id();
         $filter = $request->query('status', 'all');
 
@@ -222,8 +224,9 @@ class BookingController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Field $field) {
-        $field -> load(['venue', 'operatingSchedules']);
+    public function create(Field $field)
+    {
+        $field->load(['venue', 'operatingSchedules']);
 
         return view('customer.bookings.create', compact('field'));
     }
@@ -231,7 +234,8 @@ class BookingController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $request->validate([
             'booking_date' => 'required|date',
             'start_time' => 'required',
@@ -242,12 +246,17 @@ class BookingController extends Controller
         return DB::transaction(function () use ($request) {
             // Memeriksa jika slot masih tersedia
             $field = Field::where('id', $request->field_id)->lockForUpdate()->firstOrFail();
+
+            if (! $field->status) {
+                return redirect()->back()->with('error', 'Lapangan saat ini tidak aktif untuk dipesan.');
+            }
+
             $dayOfWeek = Carbon::parse($request->booking_date)->dayOfWeekIso;
             $schedule = $field->operatingSchedules()
                 ->where('day_of_week', $dayOfWeek)
                 ->first();
 
-            if (!$schedule || !$schedule->is_open) {
+            if (! $schedule || ! $schedule->is_open) {
                 return redirect()->back()->with('error', 'Lapangan tidak buka pada tanggal yang dipilih.');
             }
 
@@ -257,9 +266,9 @@ class BookingController extends Controller
                 ->where(function ($query) use ($request) {
                     $query->where(function ($q) use ($request) {
                         $q->where('start_time', '<', $request->end_time)
-                        ->where('end_time', '>', $request->start_time);
+                            ->where('end_time', '>', $request->start_time);
                     })
-                    ->whereIn('status', ['waiting_payment_method', 'pending_payment', 'paid', 'confirmed']);
+                        ->whereIn('status', ['waiting_payment_method', 'pending_payment', 'paid', 'confirmed']);
                 })
                 ->first();
 
@@ -301,10 +310,9 @@ class BookingController extends Controller
     /**
      * Menampilkan Slot yang sudah dibooking oleh customer
      */
-    public function show(Booking $booking) {
-        // Catatan: guard customer bukan guard default ('web'), jadi $this->authorize()
-        // (yang menggunakan Auth::user() dari guard default) tidak akan pernah berhasil
-        // untuk customer. Gunakan pengecekan manual berbasis guard customer.
+    public function show(Booking $booking)
+    {
+        // Pengecekan akses manual berbasis guard customer (bukan guard default 'web').
         abort_unless($booking->customer_id === auth('customer')->id(), 403);
 
         $booking->load([
@@ -329,7 +337,7 @@ class BookingController extends Controller
     public function availableSlots(Request $request, Field $field)
     {
         $request->validate([
-            'date' => ['required', 'date']
+            'date' => ['required', 'date'],
         ]);
 
         $selectedDate = Carbon::parse($request->date);
@@ -345,7 +353,7 @@ class BookingController extends Controller
             ->whereIn('status', ['waiting_payment_method', 'pending_payment', 'paid', 'confirmed'])
             ->get();
 
-        if (!$schedule || !$schedule->is_open) {
+        if (! $schedule || ! $schedule->is_open) {
             return response()->json(['slots' => []]);
         }
 
@@ -405,16 +413,18 @@ class BookingController extends Controller
         $start = Carbon::parse($startTime);
         $end = Carbon::parse($endTime);
         $hours = $start->diffInHours($end);
+
         return $field->price_per_hour * $hours;
     }
 
     /**
      * Metode cancel untuk customer
      */
-    public function cancelCustomer(Booking $booking) {
+    public function cancelCustomer(Booking $booking)
+    {
         abort_unless($booking->customer_id === auth('customer')->id(), 403);
 
-        if (!in_array($booking->status, ['waiting_payment_method', 'pending_payment'])) {
+        if (! in_array($booking->status, ['waiting_payment_method', 'pending_payment'])) {
             return back()->with('error', 'Booking tidak dapat dibatalkan!');
         }
 
@@ -422,7 +432,7 @@ class BookingController extends Controller
             'status' => 'canceled',
             'canceled_by' => 'customer',
             'cancel_reason' => 'customer_request',
-            'canceled_at' => now()
+            'canceled_at' => now(),
         ]);
 
         return back()->with('success', 'Booking berhasil dibatalkan');
@@ -431,10 +441,11 @@ class BookingController extends Controller
     /**
      * Metode cancel untuk owner
      */
-    public function cancelOwner(Booking $booking) {
+    public function cancelOwner(Booking $booking)
+    {
         $this->authorize('ownerCancel', $booking);
 
-        if (!in_array($booking->status, ['waiting_payment_method', 'pending_payment'])) {
+        if (! in_array($booking->status, ['waiting_payment_method', 'pending_payment'])) {
             return back()->with('error', 'Booking tidak dapat dibatalkan');
         }
 

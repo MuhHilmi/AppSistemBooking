@@ -9,9 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 class MidtransWebhookController extends Controller
 {
-    public function __construct(protected MidtransService $midtrans)
-    {
-    }
+    public function __construct(protected MidtransService $midtrans) {}
 
     /**
      * Endpoint yang didaftarkan sebagai "Payment Notification URL" di dashboard Midtrans.
@@ -22,7 +20,8 @@ class MidtransWebhookController extends Controller
         try {
             $notification = $this->midtrans->readNotification();
         } catch (\Exception $e) {
-            Log::error('Midtrans notification tidak valid: ' . $e->getMessage());
+            Log::error('Midtrans notification tidak valid: '.$e->getMessage());
+
             return response()->json(['message' => 'Invalid notification'], 400);
         }
 
@@ -33,9 +32,22 @@ class MidtransWebhookController extends Controller
             ->orWhere('booking_code', $orderId)
             ->first();
 
-        if (!$booking) {
+        if (! $booking) {
             Log::warning("Midtrans notification: booking dengan order_id {$orderId} tidak ditemukan.");
+
             return response()->json(['message' => 'Booking not found'], 404);
+        }
+
+        // Jika booking sudah final, notifikasi ini duplikat — catat dalam log dan abaikan.
+        if (in_array($booking->status, ['confirmed', 'completed', 'canceled'])) {
+            Log::info('Midtrans notifikasi duplikat diterima (booking sudah final)', [
+                'order_id' => $orderId,
+                'booking_code' => $booking->booking_code,
+                'status' => $booking->status,
+                'transaction_status' => $notification->transaction_status,
+            ]);
+
+            return response()->json(['message' => 'OK']);
         }
 
         $booking->applyMidtransStatus(
