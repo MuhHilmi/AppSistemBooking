@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 
 class Booking extends Model
 {
@@ -39,28 +41,54 @@ class Booking extends Model
         'canceled_at' => 'datetime',
     ];
 
-    public function customer() {
+    public function customer()
+    {
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
-    public function field() {
+    public function field()
+    {
         return $this->belongsTo(Field::class);
     }
 
     /**
      * Generate kode booking yang dijamin unik (booking_code kolomnya UNIQUE).
-     * Pola sebelumnya (created_at terakhir + 1) tidak aman dipakai lintas request
-     * concurrent karena tidak di-lock, sehingga dua booking bisa mendapat kode
-     * yang sama persis dan gagal insert (duplicate key). Di sini dicoba ulang
-     * sampai benar-benar unik.
+     *
+     * Menggunakan retry loop dengan database transaction untuk mencegah race
+     * condition: dua request concurrent tidak akan menghasilkan kode yang sama
+     * karena insert dilakukan secara atomic dan duplicate key akan dicoba ulang.
+     *
+     * @param  int  $maxRetries  Maksimal percobaan sebelum gagal.
+     * @return string Kode booking yang unik.
+     *
+     * @throws QueryException jika gagal setelah maxRetries.
      */
-    public static function generateBookingCode(): string
+    public static function generateBookingCode(int $maxRetries = 5): string
     {
-        do {
-            $code = 'BK-' . now()->format('YmdHis') . '-' . str_pad((string) random_int(0, 999), 3, '0', STR_PAD_LEFT);
-        } while (self::where('booking_code', $code)->exists());
+        $attempt = 0;
 
-        return $code;
+        while ($attempt < $maxRetries) {
+            $attempt++;
+
+            $code = 'BK-'.now()->format('YmdHis').'-'.str_pad((string) random_int(0, 999), 3, '0', STR_PAD_LEFT);
+
+            try {
+                DB::transaction(function () use ($code): void {
+                    self::create(['booking_code' => $code]);
+                });
+
+                return $code;
+            } catch (QueryException $e) {
+                // Jika duplicate key pada booking_code, coba ulang dengan kode baru.
+                if ($e->getCode() === '23000' || str_contains($e->getMessage(), 'booking_code')) {
+                    continue;
+                }
+
+                throw $e;
+            }
+        }
+
+        throw new \Exception('Gagal generate booking code unik setelah '.$maxRetries.' percobaan.');
     }
 
     /**

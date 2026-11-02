@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $ownerId = auth()->id();
 
         $query = Review::with(['customer', 'field.venue'])->whereHas('field.venue', function ($q) use ($ownerId) {
@@ -35,10 +36,11 @@ class ReviewController extends Controller
         return view('owner.reviews.index', compact('reviews', 'summary'));
     }
 
-    public function approve(Review $review) {
+    public function approve(Review $review)
+    {
         abort_unless($review->field->venue->owner_id === auth()->id(), 403);
 
-        if ($review->has_peding_edit) {
+        if ($review->has_pending_edit) {
             $review->update([
                 'rating' => $review->pending_rating,
                 'comment' => $review->pending_comment,
@@ -56,10 +58,11 @@ class ReviewController extends Controller
         return back()->with('success', 'Review berhasil disetujui dan sekarang tampil ke publik.');
     }
 
-    public function reject(Review $review) {
+    public function reject(Review $review)
+    {
         abort_unless($review->field->venue->owner_id === auth()->id(), 403);
 
-        if ($review->has_peding_edit) {
+        if ($review->has_pending_edit) {
             $review->update([
                 'pending_rating' => null,
                 'pending_comment' => null,
