@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Booking;
+use Illuminate\Support\Facades\Log;
 use Midtrans\Config;
 use Midtrans\Notification;
 use Midtrans\Snap;
@@ -46,10 +47,10 @@ class MidtransService
             ],
             'item_details' => [
                 [
-                    'id' => 'BOOKING-' . $booking->id,
+                    'id' => 'BOOKING-'.$booking->id,
                     'price' => (int) $booking->total_price,
                     'quantity' => 1,
-                    'name' => 'Sewa ' . $booking->field->name . ' (' . $booking->duration . ' jam)',
+                    'name' => 'Sewa '.$booking->field->name.' ('.$booking->duration.' jam)',
                 ],
             ],
             'enabled_payments' => match ($booking->payment_method) {
@@ -76,9 +77,32 @@ class MidtransService
 
     /**
      * Baca & verifikasi notifikasi dari Midtrans (dipanggil dari webhook).
+     *
+     * @throws \Exception jika notifikasi tidak valid atau signature tidak cocok
      */
     public function readNotification(): Notification
     {
-        return new Notification();
+        $notification = new Notification;
+
+        // Verifikasi signature Midtrans untuk mencegah notifikasi palsu (spoofing).
+        // Signature dihitung dari: order_id + status_code + gross_amount + server_key.
+        $serverKey = config('midtrans.server_key');
+        $orderId = $notification->order_id;
+        $statusCode = $notification->status_code;
+        $grossAmount = $notification->gross_amount;
+        $expectedSignature = hash('sha512', "{$orderId}{$statusCode}{$grossAmount}{$serverKey}");
+
+        if (! hash_equals($expectedSignature, $notification->signature_key ?? '')) {
+            Log::warning('Midtrans signature verification failed', [
+                'order_id' => $orderId,
+                'status_code' => $statusCode,
+                'gross_amount' => $grossAmount,
+                'received_signature' => $notification->signature_key ?? null,
+            ]);
+
+            throw new \Exception('Invalid Midtrans notification signature');
+        }
+
+        return $notification;
     }
 }
